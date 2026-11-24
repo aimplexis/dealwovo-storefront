@@ -32,7 +32,7 @@ begin
  'merchants',(select count(*) from public.catalog_merchants where status='approved'),
  'products',(select count(*) from public.catalog_products where status='published'),
  'authorizedSources',(select count(*) from public.catalog_feed_sources where status='authorized'),
- 'currentOffers',(select count(*) from public.catalog_offers o join public.catalog_products p on p.id=o.product_id join public.catalog_categories c on c.id=p.category_id join public.catalog_merchants m on m.id=o.merchant_id where o.status='approved' and o.verified_at<=now() and o.expires_at>now() and p.status='published' and c.status='published' and m.status='approved')),
+ 'currentOffers',(select count(*) from public.catalog_offers o join public.catalog_products p on p.id=o.product_id join public.catalog_categories c on c.id=p.category_id join public.catalog_merchants m on m.id=o.merchant_id where o.status='approved' and o.verified_at<=now() and o.expires_at>now() and p.status='published' and c.status='published' and m.status='approved'),
  'recordedTransactions',(select count(*) from (select distinct source_id,transaction_ref from public.marketing_commission_entries) x)))
  into result;
  return result;
