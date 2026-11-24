@@ -4,7 +4,7 @@ import {revalidatePath} from "next/cache";
 import {createSupabaseServer} from "../../../src/lib/supabase/server";
 import {parseFeedCSV} from "../../../src/lib/catalog/feed-csv";
 
-const uid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const uid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const input=(f:FormData,n:string)=>String(f.get(n)??"").trim();
 const fail=(message:string):never=>redirect("/admin/imports?error="+encodeURIComponent(message.slice(0,120)));
 const success=(message:string):never=>{revalidatePath("/admin/imports");redirect("/admin/imports?success="+encodeURIComponent(message))};
@@ -36,21 +36,24 @@ export async function authorizeFeedSourceAction(data:FormData){
 export async function stageFeedCSVAction(data:FormData){
  const {db,user}=await authorized();
  const source_id=input(data,"source_id"),attachment=data.get("file");
- if(!uid.test(source_id)||!(attachment instanceof File)||attachment.size<1||attachment.size>102400)fail("Select a CSV file smaller than 100 KB");
+ if(!uid.test(source_id))return fail("Invalid source ID");
+ if(!(attachment instanceof File))return fail("Select a valid CSV file");
+ if(attachment.size<1||attachment.size>102400)return fail("Select a CSV file smaller than 100 KB");
  const {data:source,error:sourceError}=await db.from("catalog_feed_sources").select("id,status").eq("id",source_id).maybeSingle();
- if(sourceError||!source||source.status!=="authorized")fail("Source is not authorized");
- let rows:ReturnType<typeof parseFeedCSV>;
+ if(sourceError||!source||source.status!=="authorized")return fail("Source is not authorized");
+ let rows:ReturnType<typeof parseFeedCSV>=[];
  try{rows=parseFeedCSV(await attachment.text());}
- catch(e){fail(e instanceof Error?e.message:"Invalid CSV")}
+ catch(e){return fail(e instanceof Error?e.message:"Invalid CSV")}
  const {data:batch,error:batchError}=await db.from("catalog_feed_batches").insert({source_id,created_by:user.id,row_count:rows.length,status:"staged"}).select("id").single();
- if(batchError||!batch){console.error("Batch insert failed",batchError?.code);fail("Unable to create import batch")}
- const {error}=await db.from("catalog_feed_candidates").insert(rows.map(x=>({...x,batch_id:batch.id,status:"staged"})));
+ if(batchError||!batch){console.error("Batch insert failed",batchError?.code);return fail("Unable to create import batch")}
+ const batchId=batch.id;
+ const {error}=await db.from("catalog_feed_candidates").insert(rows.map(x=>({...x,batch_id:batchId,status:"staged"})));
  if(error){
-  await db.from("catalog_feed_batches").delete().eq("id",batch.id);
+  await db.from("catalog_feed_batches").delete().eq("id",batchId);
   console.error("Candidate batch insert failed",error.code);
-  fail("CSV staging rejected; no candidate rows saved");
+  return fail("CSV staging rejected; no candidate rows saved");
  }
- success(rows.length+" feed candidates staged privately");
+ return success(rows.length+" feed candidates staged privately");
 }
 export async function rejectFeedCandidateAction(data:FormData){
  const {db}=await authorized();const id=input(data,"candidate_id");
