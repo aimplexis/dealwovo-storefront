@@ -1,3 +1,4 @@
+import AmazonEditorial from "./AmazonEditorial";
 import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import Image from "next/image";
@@ -39,7 +40,7 @@ export default async function ShopPage(){
    </Link>)}</div>
    <p className="dw2-shop-illustration">The images above are editorial illustrations of shopping interests, not live product listings.</p>
   </div></section>
-  <ShopCatalog offers={offers} configured={catalogConfigured()}/>
+  <ShopCatalog offers={offers} configured={catalogConfigured()}/><AmazonEditorial/>
   <section className="wrap dw2-shop-commitment"><div><span className="dw2-eyebrow">WHAT MAKES A GOOD FIND?</span><h2>Discovery with<br/><em>a little more intention.</em></h2></div><div><p>Our product listings are built around approved retailers, reviewable sources, and time-limited offer verification. We don't claim a discount unless we can substantiate it.</p><Link href="/affiliate-disclosure">How our affiliate links work ↗</Link></div></section>
  </main>;
 }
