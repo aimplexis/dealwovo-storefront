@@ -37,3 +37,8 @@ PRs #3 (catalog foundation), #4 (WOW experience), #5 (verified product navigatio
 
 ## Next action
 Inspect the cumulative candidate configuration and migration 008; complete read-only release review and identify the smallest safe corrections. Do not publish offers or merge to main as part of this checkpoint.
+
+## Follow-up: Marketing Studio database activation
+- Release branch Supabase URL and publishable key configured for preview only; deployment dpl_BoLUDC7PcG76Jn81yNsjhnSX1uVY READY: https://dealwovo-storefront-3f41pkg3f-frhairshop.vercel.app.
+- Applied existing migration 008 (dealwovo_marketing_agent_os) after confirming all three marketing tables absent and owner guard present. All three tables now have RLS; six policies total; anonymous SELECT and INSERT denied on each. Security advisor reports only existing leaked-password protection warning.
+- Weekly planner function installed, but no cron schedule activated. Authenticated browser smoke test, atomic manual generation and database-enforced cooldown remain pending. Production deployment unchanged; shared Dealwovo database schema updated.
