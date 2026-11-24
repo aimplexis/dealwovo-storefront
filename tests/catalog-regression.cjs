@@ -1,0 +1,53 @@
+// Dependency-free regression checks; uses the project's existing TypeScript compiler.
+const assert=require("node:assert/strict");
+const {execFileSync}=require("node:child_process");
+const {mkdtempSync,rmSync}=require("node:fs");
+const {tmpdir}=require("node:os");
+const {join}=require("node:path");
+const out=mkdtempSync(join(tmpdir(),"dealwovo-tests-"));
+let passed=0;
+function check(name,fn){fn();passed++;console.log("PASS "+name);}
+try{
+ execFileSync(process.execPath,[require.resolve("typescript/bin/tsc"),"--target","ES2020","--module","commonjs","--strict","--skipLibCheck","--outDir",out,"src/lib/catalog/feed-csv.ts","src/lib/catalog/awin-feed.ts","src/lib/catalog/quality.ts","src/lib/catalog/deal-evaluation.ts"],{stdio:"inherit"});
+ const {validExternalHttps,parseFeedCSV,readCsvRows}=require(join(out,"feed-csv.js"));
+ const {parseAwinCSV}=require(join(out,"awin-feed.js"));
+ const {buildQualityReport}=require(join(out,"quality.js"));
+ const {evaluateDeals}=require(join(out,"deal-evaluation.js"));
+ const h="external_product_id,title,description,category_hint,image_url,affiliate_url,price_usd";
+ const row=(id="1",price="19.99")=>id+',Test product,"One, two",Home,,https://shop.example.com/item,'+price;
+ check("external HTTPS accepted",()=>assert.equal(validExternalHttps("https://shop.example.com/item?q=1"),true));
+ check("unsafe destinations rejected",()=>{for(const u of ["http://shop.example.com","https://localhost","https://foo.local.","https://127.0.0.1","https://2130706433","https://[::1]","https://user:pass@shop.example.com","https://shop.example.com:8443","https://shop.example.com/a b","https://shop.example.com\\x","https://foo.internal","https://foo.onion"])assert.equal(validExternalHttps(u),false,u)});
+ check("CSV quoted field and exact cents",()=>{const r=parseFeedCSV(h+"\r\n"+row())[0];assert.equal(r.description,"One, two");assert.equal(r.price_cents,1999)});
+ check("CSV escaped quotes",()=>assert.equal(readCsvRows('h\n"say ""hello"""')[1][0],'say "hello"'));
+ check("CSV quoted newline",()=>assert.equal(readCsvRows('h\n"one\ntwo"')[1][0],"one\ntwo"));
+ check("CSV malformed closing quote rejected",()=>assert.throws(()=>readCsvRows('h\n"abc"x')));
+ check("CSV unclosed quote rejected",()=>assert.throws(()=>readCsvRows('h\n"abc')));
+ check("CSV duplicate IDs rejected",()=>assert.throws(()=>parseFeedCSV(h+"\n"+row()+"\n"+row())));
+ check("CSV exact 100 rows accepted",()=>assert.equal(parseFeedCSV(h+"\n"+Array.from({length:100},(_,i)=>row(String(i))).join("\n")).length,100));
+ check("CSV 101 rows without trailing newline rejected",()=>assert.throws(()=>parseFeedCSV(h+"\n"+Array.from({length:101},(_,i)=>row(String(i))).join("\n"))));
+ check("CSV oversized input rejected",()=>assert.throws(()=>readCsvRows("h\n"+"x".repeat(102400))));
+ check("CSV invalid price rejected",()=>assert.throws(()=>parseFeedCSV(h+"\n"+row("1","1.999"))));
+ check("CSV absent price stays null",()=>assert.equal(parseFeedCSV(h+"\n"+row("1",""))[0].price_cents,null));
+ check("Awin explicit USD mapped",()=>assert.equal(parseAwinCSV("product_id,product_name,aw_deep_link,price,currency\n1,Test product,https://shop.example.com/a,12.34,USD")[0].price_cents,1234));
+ check("Awin absent currency drops price",()=>assert.equal(parseAwinCSV("product_id,product_name,aw_deep_link,price\n1,Test product,https://shop.example.com/a,12.34")[0].price_cents,null));
+ check("Awin non-USD rejected",()=>assert.throws(()=>parseAwinCSV("product_id,product_name,aw_deep_link,price,currency\n1,Test product,https://shop.example.com/a,12.34,EUR")));
+ check("Awin duplicate header rejected",()=>assert.throws(()=>parseAwinCSV("product_id,product_name,aw_deep_link,product_id\n1,Test product,https://shop.example.com/a,1")));
+ const now="2026-11-24T12:00:00Z",past="2026-11-23T12:00:00Z",future="2026-12-01T12:00:00Z";
+ const cats=[{id:"c",name:"Home",status:"published"}],merchants=[{id:"m1",name:"Merchant A",status:"approved"},{id:"m2",name:"Merchant B",status:"approved"},{id:"m3",name:"Merchant C",status:"disabled"}],products=[{id:"p",title:"Fixture",slug:"fixture",status:"published",category_id:"c",image_url:null}];
+ const offer=(id,merchant_id="m1",over={})=>({id,product_id:"p",merchant_id,status:"approved",verified_at:past,expires_at:future,price_cents:1000,created_at:past,updated_at:past,...over});
+ const offers=[offer("good"),offer("other","m2",{price_cents:1200}),offer("same","m1",{price_cents:500}),offer("expired","m2",{expires_at:now,price_cents:100}),offer("soon","m2",{expires_at:"2026-11-27T12:00:00Z",price_cents:200}),offer("blocked","m3"),offer("draft","m1",{status:"draft"}),offer("paused","m1",{status:"paused"}),offer("future","m1",{verified_at:future}),offer("missing","m1",{expires_at:null})];
+ const report=buildQualityReport(cats,merchants,products,offers,now);
+ const byId=Object.fromEntries(report.items.map(x=>[x.id,x]));
+ for(const [id,status] of Object.entries({good:"eligible",other:"eligible",same:"eligible",expired:"expired",soon:"expiring",blocked:"blocked",draft:"draft",paused:"paused",future:"blocked",missing:"blocked"}))check("quality "+id,()=>assert.equal(byId[id].classification,status));
+ check("quality empty input",()=>assert.equal(buildQualityReport([],[],[],[],now).totalOffers,0));
+ check("quality unpublished dependency blocked",()=>assert.equal(buildQualityReport([{...cats[0],status:"draft"}],merchants,products,[offer("x")],now).items[0].classification,"blocked"));
+ const deals=evaluateDeals(report.items,Object.fromEntries(offers.map(x=>[x.id,"USD"])));
+ const d=Object.fromEntries(deals.map(x=>[x.offer.id,x]));
+ check("comparison excludes same merchant, expired and expiring offers",()=>{assert.equal(d.good.comparisonMerchant,"Merchant B");assert.equal(d.good.comparisonCents,200)});
+ check("expired and paused offers held",()=>{assert.equal(d.expired.reviewPriority,"hold");assert.equal(d.paused.reviewPriority,"hold")});
+ check("expiring offer requires recheck",()=>assert.equal(d.soon.reviewPriority,"recheck"));
+ check("eligible is editorial review only",()=>assert.equal(d.good.reviewPriority,"editorial-review"));
+ check("unknown currency excluded",()=>assert.equal(evaluateDeals(report.items,{good:"USD",other:"EUR"}).find(x=>x.offer.id==="good").comparisonCents,null));
+ check("missing price excluded",()=>assert.equal(evaluateDeals([{...byId.good,price_cents:null}],{good:"USD"})[0].priceKnown,false));
+ console.log("Catalog regression suite: "+passed+" checks passed.");
+}finally{rmSync(out,{recursive:true,force:true});}
