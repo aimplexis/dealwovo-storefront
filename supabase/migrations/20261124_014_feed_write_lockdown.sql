@@ -4,7 +4,7 @@ create function dealwovo_private.safe_feed_url(value text) returns boolean
 language sql immutable set search_path='' as $$
  select coalesce(length(value)<=2000 and value ~* '^https://([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z][a-z0-9-]*(:443)?([/?#][^[:space:]]*)?$'
  and value !~ '[[:cntrl:][:space:]]' and strpos(value,chr(92))=0
- and split_part(split_part(split_part(split_part(lower(substring(value from 9)),'/'),'?'),'#'),':',1) !~ '\.(localhost|local|internal|test|example|invalid|onion)$',false);
+ and split_part(split_part(split_part(split_part(lower(substring(value from 9)),'/',1),'?',1),'#',1),':',1) !~ '\.(localhost|local|internal|test|example|invalid|onion)$',false);
 $$;
 revoke all on function dealwovo_private.safe_feed_url(text) from public,anon,authenticated;
 create function dealwovo_private.stage_catalog_feed(p_source_id uuid,p_rows jsonb) returns integer
