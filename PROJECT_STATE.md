@@ -47,3 +47,8 @@ Inspect the cumulative candidate configuration and migration 008; complete read-
 - Migration 009 applied; owner-only private definer with public invoker wrapper, fixed search path, transaction advisory lock, 30-minute cooldown, no direct authenticated inserts. Application invokes RPC and accurately labels weekly scheduling inactive.
 - Transactional SQL test with simulated JWT claims passed: non-owner denied, owner produced one run and four drafts, immediate repeat returned zero; rolled back. Anonymous RPC and direct authenticated inserts denied. Existing leaked-password warning only. Actual browser session test and concurrent-request stress test remain pending.
 - Old marketing previews using direct insert are superseded; use new release branch preview. No external publication, scheduling, paid AI, production deployment or catalog activation.
+
+## Marketing Agent OS V1.2 — weekly scheduling
+- Migration 010 applied. One active pg_cron job dealwovo-weekly-marketing-drafts, Monday 14:00 UTC (GMT scheduler), invokes private planner as postgres. No external actions. To stop only this job: select cron.unschedule('dealwovo-weekly-marketing-drafts');
+- Rollback test: four private drafts, duplicate weekly run suppressed. Status RPC tested with simulated owner/non-admin claims: owner active, non-admin denied; anon execute denied. Actual scheduled execution history and authenticated browser smoke test pending. Existing password protection warning remains.
+- UI reads actual scheduler status, fails to unknown if unavailable. Seasonal intelligence and generative AI are not yet implemented; fixed editorial templates only. Production website unchanged, shared database scheduler active.
