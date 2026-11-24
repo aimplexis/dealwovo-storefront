@@ -3,6 +3,7 @@ import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 import {createSupabaseServer} from "../../../src/lib/supabase/server";
 import {parseFeedCSV} from "../../../src/lib/catalog/feed-csv";
+import {quickCandidate} from "../../../src/lib/catalog/quick-import";
 import {parseAwinCSV} from "../../../src/lib/catalog/awin-feed";
 
 const uid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -65,4 +66,18 @@ export async function convertFeedCandidateAction(data:FormData){
  if(error){console.error("Candidate conversion failed",error.code);fail("Conversion failed. Check source authorization, selections, and slug uniqueness")}
  revalidatePath("/admin");
  success("Candidate converted to DRAFT product and DRAFT offer — not published");
+}
+
+export async function quickStageProductAction(form:FormData){
+ const {db}=await authorized(),source_id=input(form,"source_id");
+ const row=quickCandidate(Object.fromEntries(form.entries()));
+ if(!uid.test(source_id)||!row)return fail("Enter valid product information and confirm usage rights");
+ const {data:source,error}=await db.from("catalog_feed_sources").select("id,status,provider").eq("id",source_id).maybeSingle();
+ if(error||!source||source.status!=="authorized")return fail("Source is not authorized");
+ // Amazon requires a dedicated direct-link publication path; do not route its products through the generic redirect flow.
+ if(source.provider==="amazon")return fail("Amazon product intake is held until direct-link compliance is implemented");
+ const h=new URL(row.affiliate_url).hostname.toLowerCase();if(h==="amzn.to"||h==="a.co"||/(^|\.)amazon\.[a-z.]+$/.test(h))return fail("Use the dedicated Amazon workflow when available");
+ const {data:count,error:stageError}=await db.rpc("stage_catalog_feed",{p_source_id:source_id,p_rows:[row]});
+ if(stageError||count!==1)return fail("Product staging rejected");
+ return success("Product staged privately. Review and convert it to a draft below.");
 }
