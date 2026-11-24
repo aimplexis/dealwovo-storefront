@@ -8,5 +8,6 @@ assert.ok(m.auditMetadata([{path:"/a",title:"Same",description:"a"},{path:"/b",t
 assert.equal(m.productMetadata(null).alternates,undefined);assert.equal(m.productMetadata({slug:"../bad",title:"x",description:"x"}).alternates,undefined);
 assert.equal(m.productMetadata({slug:"real-product",title:"x",description:"y"}).alternates.canonical,"https://dealwovo.com/product/real-product");
 assert.ok(m.reviewCopy("Best deal $50, 20% off").length>=2);assert.ok(m.reviewCopy("").includes("No copy supplied"));assert.equal(m.reviewCopy("Editorial ideas. Affiliate disclosure.").length,0);
+assert.ok(m.reviewCopy("#1 choice").some(x=>x.includes("Ranking")));assert.ok(m.reviewCopy("Top-rated pick").some(x=>x.includes("Ranking")));assert.ok(m.auditMetadata([{path:"/a",title:"First",description:"Same description"},{path:"/b",title:"Second",description:" same  description "}]).every(x=>x.issues.includes("Duplicate description")));
 console.log("PASS SEO readiness: 11 canonical metadata entries, indexing hold, duplicate detection, product guard and copy flags");
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
