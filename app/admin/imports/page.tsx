@@ -2,6 +2,7 @@ import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createSupabaseServer} from "../../../src/lib/supabase/server";
 import {createFeedSourceAction,authorizeFeedSourceAction,stageFeedCSVAction,quickStageProductAction,convertFeedCandidateAction,rejectFeedCandidateAction} from "./actions";
+import {suggestExistingCategory,suggestDepartment} from "../../../src/lib/catalog/category-suggestions";
 import {suggestSlug} from "../../../src/lib/catalog/quick-import";
 import "../admin.css";
 import "./imports.css";
@@ -73,7 +74,7 @@ export default async function ImportDashboard({searchParams}:{searchParams:Promi
        {c.status==="staged"?<>
         <form action={convertFeedCandidateAction} className="dw-admin-form"><input type="hidden" name="candidate_id" value={c.id}/>
           <label>Product slug<input name="slug" pattern="[a-z0-9]+(-[a-z0-9]+)*" defaultValue={suggestSlug(c.title,c.id)} required/></label>
-          <label>Category<select name="category_id" required defaultValue=""><option value="" disabled>Select category</option>{categories.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+          <p className="dw-admin-muted">{suggestExistingCategory(c.title,c.category_hint,categories)?"Suggested category: "+suggestExistingCategory(c.title,c.category_hint,categories)!.name+". Review and override if needed.":suggestDepartment(c.title,c.category_hint)?"Suggested department: "+suggestDepartment(c.title,c.category_hint)!.name+". No unique matching catalog category; select one or create it in Catalog.":"No unambiguous category suggestion. Select a category manually."}</p><label>Category<select name="category_id" required defaultValue={suggestExistingCategory(c.title,c.category_hint,categories)?.id??""}><option value="" disabled>Select category</option>{categories.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
           <label>Retailer<select name="merchant_id" required defaultValue=""><option value="" disabled>Select registered retailer</option>{merchants.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
           <button type="submit" disabled={!categories.length||!merchants.length}>Convert to DRAFT product and offer</button>
         </form>
