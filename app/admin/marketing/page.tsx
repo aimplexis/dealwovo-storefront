@@ -20,14 +20,16 @@ export default async function MarketingStudio({searchParams}:{searchParams:Promi
  const {data:{user}}=await db.auth.getUser();if(!user)redirect("/admin/login");
  const {data:member}=await db.from("catalog_admins").select("role").eq("user_id",user.id).maybeSingle();
  if(!member)redirect("/admin/login?status=denied");
- const [runsResult,draftsResult,schedulerResult]=await Promise.all([
+ const [runsResult,draftsResult,schedulerResult,seasonResult]=await Promise.all([
   db.from("marketing_agent_runs").select("id,source,created_at,summary,draft_count,verified_offer_count").order("created_at",{ascending:false}).limit(25),
   db.from("marketing_campaign_drafts").select("id,channel,agent,campaign_name,focus,hook,body,cta,supporting_evidence,compliance_note,status,suggested_day").order("created_at",{ascending:false}).limit(100),
-  db.rpc("marketing_scheduler_status")
+  db.rpc("marketing_scheduler_status"),
+  db.rpc("marketing_season_preview")
  ]);
  if(runsResult.error||draftsResult.error)return <main className="dw-admin"><div className="dw-admin-shell"><Link href="/admin">← Catalog</Link><h1>Marketing Agent Studio</h1><p role="alert" className="dw-admin-warning">Marketing tables or permissions unavailable. Verify migration 008.</p></div></main>;
  const runs=(runsResult.data||[]) as Run[],drafts=(draftsResult.data||[]) as Draft[];
  const owner=member.role==="owner",notice=(await searchParams).notice;
+ const seasons=(seasonResult.data||[]) as {event_name:string;event_date:string;prep_days:number;theme:string;categories:string;days_until:number}[];
  const scheduler=schedulerResult.error?"unknown":schedulerResult.data==="active"?"active":"inactive";
  return <main className="dw-admin dw-marketing"><div className="dw-admin-shell">
   <Link href="/admin" className="dw-marketing-back">← Catalog Command Center</Link>
@@ -41,6 +43,7 @@ export default async function MarketingStudio({searchParams}:{searchParams:Promi
    <small>{runs[0]?("Most recent: "+new Date(runs[0].created_at).toLocaleString("en-US")+" · "+runs[0].source+" · "+runs[0].summary):"No campaign runs yet."}</small>
    </div><form action={generateMarketingDraftsAction}><button disabled={!owner} type="submit">Generate 4 new drafts ↗</button><small>{owner?"Manual runs are limited by the database to once every 30 minutes.":"Only the owner may create campaigns."}</small></form>
   </section>
+  <section className="dw-marketing-section"><p className="dw-admin-kicker">SEASONAL INTELLIGENCE / US SHOPPING CALENDAR</p><h2>Plan ahead. <em>Stay relevant.</em></h2><p className="dw-admin-muted">Calendar-based editorial opportunities, not verified demand or discount forecasts. The planner adapts new drafts to the nearest occasion inside its preparation window.</p>{seasonResult.error?<p role="alert">Seasonal calendar unavailable.</p>:<div className="dw-marketing-personas">{seasons.map(e=><article key={e.event_name+e.event_date}><span>{e.days_until<=e.prep_days?"PLAN NOW":"UPCOMING"}</span><h3>{e.event_name}</h3><p>{e.event_date} · {e.days_until} days away</p><p>{e.theme}</p><p>{e.categories}</p></article>)}</div>}</section>
   <section className="dw-marketing-section"><p className="dw-admin-kicker">YOUR AGENT TEAM</p><h2>Five roles. <em>One mission.</em></h2><div className="dw-marketing-personas">{agents.map(([symbol,name,desc])=><article key={name}><span>{symbol}</span><h3>{name}</h3><p>{desc}</p></article>)}</div></section>
   <section className="dw-marketing-section"><p className="dw-admin-kicker">PRIVATE CONTENT QUEUE</p><h2>Ideas ready for <em>human judgment.</em></h2>
     {drafts.length===0?<div className="dw-marketing-empty"><span>✳</span><h3>No drafts yet</h3><p>Generate your first private batch using the planner above, or allow the enabled weekly planner to run.</p></div>:<div className="dw-marketing-drafts">{drafts.map(d=><article key={d.id}>
