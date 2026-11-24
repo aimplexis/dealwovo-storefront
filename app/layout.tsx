@@ -1,3 +1,4 @@
+import {indexingHold} from "../src/lib/marketing/seo-readiness";
 import type {Metadata} from "next";
 import "./globals.css";
 import "./experience.css";
@@ -11,7 +12,7 @@ import SiteFooter from "../src/components/SiteFooter";
 export const metadata:Metadata={
  title:{default:"Dealwovo — Discover More. Save Smarter.",template:"%s | Dealwovo"},
  description:"Meet your next favorite find. Explore thoughtful gifts, clever tech and everyday inspiration with Dealwovo.",
- robots:{index:false,follow:false}
+ robots:indexingHold
 };
 export default function RootLayout({children}:{children:React.ReactNode}){
  return <html lang="en"><body>

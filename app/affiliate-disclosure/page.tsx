@@ -1,1 +1,3 @@
+import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
+export const metadata=pageMetadata("/affiliate-disclosure");
 export default function Disclosure(){return <main className="shell content-page info-page"><span className="eyebrow">TRANSPARENCY</span><h1>Affiliate <em>disclosure.</em></h1><p>When Dealwovo begins publishing approved affiliate shopping links, we may earn a commission when you buy from a partner retailer through those links. There may be no additional cost to you.</p><p>We intend to clearly identify qualifying affiliate links and distinguish advertisements from editorial recommendations.</p><p className="notice">Draft for prelaunch review; approved merchant partnerships are not connected yet.</p></main>}

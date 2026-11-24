@@ -1,13 +1,16 @@
+import {cache} from "react";
+import {productMetadata} from "../../../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import {notFound} from "next/navigation";
 import {getVerifiedProductBySlug} from "../../../src/lib/catalog/public";
 import "./product.css";
 
 export const dynamic="force-dynamic";
-export const metadata={title:"Verified product discoveries | Dealwovo",robots:{index:false,follow:false}};
+const readProduct=cache(getVerifiedProductBySlug);
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const info=await readProduct(slug);return productMetadata(info?.product??null);}
 export default async function ProductDetail({params}:{params:Promise<{slug:string}>}){
   const {slug}=await params;
-  const info=await getVerifiedProductBySlug(slug);
+  const info=await readProduct(slug);
   if(!info)notFound();
   const {product,offers}=info;
   return <main className="dw-product-page">

@@ -1,3 +1,4 @@
+import {pageMetadata} from "../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import Image from "next/image";
 import ShopSpotlight from "./shop/ShopSpotlight";
@@ -6,7 +7,7 @@ import {getPublicOffers} from "../src/lib/catalog/public";
 import {catalogConfigured} from "../src/lib/supabase/config";
 import "./shop/shop.css";
 export const dynamic="force-dynamic";
-export const metadata={title:"Dealwovo — The good stuff is out there.",description:"Discover thoughtful gifts, creative tech and everyday inspiration. An extraordinary shopping-discovery experience."};
+export const metadata=pageMetadata("/");
 const collections=[
  {number:"01",type:"THE CURIOUS EDIT",title:"Clever tech.",subtitle:"For the ‘wait, that's brilliant’ moments.",href:"/trending",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1400&q=86",tone:"lime",alt:"Modern headphones on a golden yellow background"},
  {number:"02",type:"THE THOUGHTFUL EDIT",title:"Gifts with feeling.",subtitle:"Less guessing. More ‘you really get me.’",href:"/gifts",image:"https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1400&q=86",tone:"pink",alt:"Beautifully wrapped gifts and ribbons"},

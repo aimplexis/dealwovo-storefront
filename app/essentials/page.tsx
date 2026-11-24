@@ -1,5 +1,6 @@
+import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
 import EditorialCategory from "../../src/components/EditorialCategory";
-export const metadata={title:"Everyday Living",description:"Thoughtful ideas for home, personal care and practical everyday inspiration."};
+export const metadata=pageMetadata("/essentials");
 export default function Essentials(){return <EditorialCategory data={{
  eyebrow:"02 / LITTLE THINGS, BIG DIFFERENCE",title:"EVERYDAY,",accent:"ELEVATED.",
  intro:"The coziest corners, calmer routines, and thoughtful little upgrades. Find inspiration that makes the ordinary feel surprisingly good.",

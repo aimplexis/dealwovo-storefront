@@ -1,1 +1,3 @@
+import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
+export const metadata=pageMetadata("/terms");
 export default function Terms(){return <main className="shell content-page info-page"><span className="eyebrow">IMPORTANT INFORMATION</span><h1>Site <em>terms.</em></h1><p>Dealwovo is currently a demonstration and prelaunch product-discovery experience. The site does not sell products, accept payments, or guarantee product availability or pricing.</p><p>When retail partner offers become available, individual purchases will be governed by the merchant's own checkout and terms.</p><p className="notice">Final commercial terms require legal review before launch.</p></main>}

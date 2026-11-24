@@ -1,5 +1,6 @@
+import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
 import EditorialCategory from "../../src/components/EditorialCategory";
-export const metadata={title:"Seasonal Inspiration",description:"Discover thoughtful seasonal ideas and celebrations. Verified deals appear only when confirmed."};
+export const metadata=pageMetadata("/deals");
 export default function Deals(){return <EditorialCategory data={{
  eyebrow:"03 / CELEBRATE THE MOMENT",title:"MAKE IT",accent:"MEMORABLE.",
  intro:"For meaningful moments, small celebrations, and all the people you love. Come for the inspiration; stay for that ‘perfect idea’ feeling.",

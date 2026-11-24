@@ -1,1 +1,3 @@
+import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
+export const metadata=pageMetadata("/privacy");
 export default function Privacy(){return <main className="shell content-page info-page"><span className="eyebrow">YOUR PRIVACY</span><h1>Privacy <em>notice.</em></h1><p>This preview does not intentionally collect visitor account information or process purchases. Hosting providers may process technical request data necessary to deliver the website.</p><p>A complete, accurate privacy policy will be published before analytics, email signups, personalization, or affiliate tracking are activated.</p><p className="notice">This is a temporary prelaunch notice, not a finalized privacy policy.</p></main>}

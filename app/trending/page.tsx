@@ -1,5 +1,6 @@
+import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
 import EditorialCategory from "../../src/components/EditorialCategory";
-export const metadata={title:"Tech & Trends",description:"Clever technology, creative setups and modern discoveries to inspire your next find."};
+export const metadata=pageMetadata("/trending");
 export default function Trending(){return <EditorialCategory data={{
  eyebrow:"01 / FOR THE ALWAYS-CURIOUS",title:"THE NEXT",accent:"GOOD THING.",
  intro:"Smart ideas, great design, and little upgrades with a big personality. Explore the tech and trends that make everyday life more interesting.",

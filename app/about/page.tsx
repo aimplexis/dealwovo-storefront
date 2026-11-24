@@ -1,1 +1,3 @@
+import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
+export const metadata=pageMetadata("/about");
 export default function About(){return <main className="shell content-page info-page"><span className="eyebrow">ABOUT DEALWOVO</span><h1>Discover more. <em>Save smarter.</em></h1><p>Dealwovo is building an online shopping discovery destination focused on gift ideas, useful products, and carefully researched value.</p><p>Our initial shopping concept is affiliate-first. When approved merchant offers are published, purchases will take place with the relevant retailer, not on Dealwovo.</p><p className="notice">This site is a prelaunch preview. Product listings and merchant integrations are not live yet.</p></main>}

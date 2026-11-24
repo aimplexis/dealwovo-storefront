@@ -1,3 +1,4 @@
+import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import Image from "next/image";
 import {getPublicOffers} from "../../src/lib/catalog/public";
@@ -5,7 +6,7 @@ import {catalogConfigured} from "../../src/lib/supabase/config";
 import ShopCatalog from "./ShopCatalog";
 import "./shop.css";
 export const dynamic="force-dynamic";
-export const metadata={title:"Explore the Good Stuff",description:"A thoughtfully curated world of gifts, gadgets and everyday inspiration. Verified retailer finds appear after approval."};
+export const metadata=pageMetadata("/shop");
 const categories=[
  {name:"Tech & gadgets",label:"01 / THE CURIOUS EDIT",href:"/trending",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1100&q=84",alt:"Headphones styled for an editorial technology collection"},
  {name:"Thoughtful gifts",label:"02 / THE GIFT EDIT",href:"/gifts",image:"https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1100&q=84",alt:"Beautifully wrapped gifts"},
