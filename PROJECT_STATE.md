@@ -6,9 +6,9 @@ Affiliate-first shopping discovery: year-round holiday deals, gift discovery, tr
 
 ## Infrastructure and evidence
 - Production: https://dealwovo.com. Vercel project dealwovo-storefront, team frhairshop. Last observed production deployment dpl_Fffzhh8DdveL96b2vk7X62EVZtW3; previous verified main commit 40b3c442689fa004e7d12e8a1e652a7edc8d5adf.
-- Cumulative branch: feature/dealwovo-release-readiness. Latest verified preview commit 44a5306f620d909c7afe894ee2e907e7beb089a0, READY, https://dealwovo-storefront-9hg0p09ok-frhairshop.vercel.app. Includes feed stale-action correction and pinned dependencies. TypeScript and test-gated build passed; eight targeted HTTP checks passed, including absent temporary recovery exports.
+- Cumulative branch: feature/dealwovo-release-readiness. Latest verified preview commit c14453c18f0c560d99b42f290ebb5af4915e0a66, READY, https://dealwovo-storefront-qby6gm7hk-frhairshop.vercel.app. Visual Studio build logs confirm 35 catalog checks, 11 Content Lab checks and all 48 creative combinations; Next.js build completed. Homepage and health returned HTTP 200; marketing and visual studio routes redirected unauthenticated sessions to login. Download request returned 401 through the Vercel fetch layer; application-level signed-in download remains unverified.
 - Dependency recovery: isolated build 7f85d99 generated 71 cross-platform lock entries, installed with npm ci --include=dev, reported zero vulnerabilities from npm audit, and built successfully. Release branch contains exact direct versions and the validated lockfile. The audit is a point-in-time result, not a security certification; explicit full dev-dependency audit still to confirm.
-- Supabase project pqjoujxjbyinmtsvqtxs: 18 migrations confirmed applied. All 12 public application tables have RLS enabled. One catalog admin; zero categories, merchants, products, offers, authorized feed sources, candidates, marketing runs and drafts at latest inspection. One active weekly planning job. No real affiliate authorization or revenue confirmed.
+- Supabase project pqjoujxjbyinmtsvqtxs: 19 migrations applied (migration 019 applied and rollback-tested). Two new visual asset/review tables have RLS, in addition to the 12 previously verified public application tables. One catalog admin; zero categories, merchants, products, offers, authorized feed sources, candidates, marketing runs and drafts at latest inspection. One active weekly planning job. No real affiliate authorization or revenue confirmed.
 - Preview variables NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY previously confirmed; verify target and production scope separately. Never expose values or secrets.
 - Security advisor: leaked password protection disabled (WARN); private marketing_ai_attempts RLS with no policies (intentional deny-by-default, INFO). Check plan support and authorization before changes.
 
@@ -20,6 +20,7 @@ Affiliate-first shopping discovery: year-round holiday deals, gift discovery, tr
 - Product Discovery (016): authorized staged candidates ranked by four metadata fields, 50-row pagination; 52-row rollback fixture passed. No demand scoring.
 - Deal Evaluation (017): catalog-wide promotion triage and cross-retailer recorded USD price comparison, excludes expired/expiring/ineligible alternatives. Rollback tests passed; no verified savings or profit claims.
 - Marketing Review (018): exact totals, 25-row filters and status audit history. Draft-to-reviewed-to-archived rollback test passed. No automatic publication.
+- Visual Marketing Studio (019): owner-only private asset library, versioned original SVG templates, 48 theme/format/palette combinations, review/archival history, pagination and reviewed-only download endpoint. SQL rollback tests passed for creation, review, archive, immutable template fields, invalid transition and nonowner/anonymous denial. No image uploads, external media, AI image requests, or social posting. Authenticated browser acceptance and actual reviewed download remain open; SVG is not a universally supported social-upload format.
 - Nonadmin reporting RPC access denied in simulated JWT/database role tests. Browser sign-in remains unverified.
 - Public HTTP acceptance: 24 route checks on commit 7d03df43c579c9045c1e9a9c19f05b2b6e35efbc, including public pages, health, robots, seven protected admin paths, login and invalid product/offer routes. Invalid redirect parameters rejected. Preview noindex confirmed. Temporary authenticated Vercel fetch links used, never shared.
 - Subsequent source-level accessibility fixes: wrapping navigation, long text, active filters, focus, skip target and natural mobile keyboard navigation. Actual mobile browser layout/accessibility compliance remains unverified.
@@ -36,8 +37,8 @@ Affiliate-first shopping discovery: year-round holiday deals, gift discovery, tr
 - docs/PHASE3_SETUP.md, docs/PHASE3B_VERIFICATION.md
 - docs/PHASE4A_VERIFIED_NAVIGATION.md, docs/PHASE4B_FEED_IMPORT.md, docs/PHASE4C_AWIN_READINESS.md, docs/PHASE4D_OFFER_QUALITY.md
 - docs/DEALWOVO_2_DESIGN_SYSTEM.md, docs/MARKETING_AGENT_OS.md
-- supabase/migrations/20261124_001_catalog_foundation.sql through 20261124_018_marketing_review_report.sql
-- tests/catalog-regression.cjs and tests/content-lab-regression.cjs
+- supabase/migrations/20261124_001_catalog_foundation.sql through 20261124_019_visual_marketing_studio.sql
+- tests/catalog-regression.cjs, tests/content-lab-regression.cjs and tests/visual-template-regression.cjs
 
 ## Next action
-Dependency recovery completed. Build private Visual Marketing Studio V1.7 while authenticated browser, mobile and commercial launch gates remain open. Then social integrations, SEO and revenue analytics as separately gated milestones. Owner requests consecutive execution within active sessions and actual preview links at verified milestones.
+Visual Marketing Studio V1.7 implemented; regression-gated preview READY. Complete owner browser acceptance and consider PNG export for practical social asset use; continue V1.8 social integration preparation without connecting accounts or enabling posting until explicitly authorized. SEO and revenue analytics follow as separately gated milestones. All commercial launch gates remain open. Owner requests consecutive execution within active sessions and actual preview links at verified milestones.
