@@ -23,8 +23,10 @@
 .dw-rotate__visual{position:relative;min-height:570px;min-width:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
 .dw-rotate__orb{position:absolute;width:94%;aspect-ratio:1;border:1px dashed #d2a9ff7f;border-radius:50%;box-shadow:0 0 90px 8px #a780ff2a;pointer-events:none;animation:dw-rotate-orbit 42s linear infinite}
 .dw-rotate__feature{position:relative;display:block;width:min(82%,430px);height:475px;z-index:1;cursor:pointer;color:inherit}
-.dw-rotate__poster{height:100%;width:100%;overflow:hidden;border:8px solid #ddc6ff;border-radius:45% 45% 20px 20px;transform:rotate(6deg);box-shadow:0 30px 80px #060311a8;transition:box-shadow .3s ease,transform .3s ease;position:relative}
-.dw-rotate__poster img{width:100%;height:100%;object-fit:cover;display:block;animation:dw-rotate-image-in .8s ease-out both}
+.dw-rotate__poster{height:100%;width:100%;overflow:hidden;border:8px solid #ddc6ff;border-radius:45% 45% 20px 20px;transform:rotate(4deg);box-shadow:0 30px 80px #060311a8;transition:box-shadow .3s ease,transform .3s ease;position:relative}
+.dw-rotate__poster-image{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;opacity:0;filter:none!important;transform:none!important;animation:none!important;transition:opacity .28s ease-in-out;backface-visibility:hidden;-webkit-backface-visibility:hidden;image-rendering:auto;pointer-events:none}
+.dw-rotate__poster-image.is-current{opacity:1;z-index:2}
+.dw-rotate__poster-caption{z-index:3}
 .dw-rotate__poster-caption{position:absolute;bottom:16px;left:16px;right:16px;background:#151022db;color:#fff;padding:.7rem}
 .dw-rotate__poster-caption small{display:block;letter-spacing:.11em;color:#cec0ed;font-size:.6rem;font-weight:900}
 .dw-rotate__poster-caption strong{display:block;margin-top:.35rem;font-size:.82rem}
@@ -35,13 +37,13 @@
 .dw-rotate__sticker strong{font-size:1.4rem}
 .dw-rotate__link-label{position:absolute;bottom:0;right:-8%;background:var(--lime);color:#131923;padding:.8rem 1rem;border-radius:8px;font-size:.7rem;letter-spacing:.06em;font-weight:950;z-index:4;box-shadow:0 10px 30px #0009}
 .dw-rotate__link-label b{font-size:1.2rem;margin-left:.45rem}
-.dw-rotate__feature:hover .dw-rotate__poster{transform:rotate(3deg) translateY(-7px);box-shadow:0 38px 90px #bf8fff77}
+.dw-rotate__feature:hover .dw-rotate__poster{transform:rotate(2deg) translateY(-5px);box-shadow:0 38px 90px #bf8fff77}
 .dw-rotate__caption{text-align:center;margin-top:1.5rem;display:grid;gap:.3rem}
 .dw-rotate__caption strong{font-size:1.05rem}
 .dw-rotate__caption span{font-size:.8rem;color:#b8afcb}
 .dw-rotate__legal{position:absolute;bottom:15px;left:24px;right:24px;text-align:center;color:#9b91aa;font-size:.58rem;letter-spacing:.13em;font-weight:800}
 .dw-rotate button:focus-visible,.dw-rotate a:focus-visible{outline:3px solid var(--lime);outline-offset:4px}
-@keyframes dw-rotate-image-in{from{opacity:.4;filter:blur(7px);transform:scale(1.08)}to{opacity:1;filter:blur(0);transform:scale(1)}}
+/* Hero image changes use opacity only: no blur or zoom. */
 @keyframes dw-rotate-glint{0%,100%{background-position:100% 50%}50%{background-position:0 50%}}
 @keyframes dw-rotate-orbit{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 @keyframes dw-rotate-float{0%,100%{transform:translateY(0) rotate(-15deg)}50%{transform:translateY(-12px) rotate(-12deg)}}
