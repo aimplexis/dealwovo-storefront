@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import "./RotatingDiscoveryHero.css";
 
@@ -21,7 +22,7 @@ const features: Feature[] = [
     subheading: "Clever finds worth discovering",
     cta: "Explore tech & trending",
     destination: "/trending",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1280&q=85",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=2200&q=90",
     alt: "Headphones against a vivid yellow background",
   },
   {
@@ -30,8 +31,8 @@ const features: Feature[] = [
     subheading: "The feel-good finds for someone special",
     cta: "Explore thoughtful gifts",
     destination: "/gifts",
-    image: "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1280&q=85",
-    alt: "Decorative gift boxes wrapped for a celebration",
+    image: "https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=2200&q=90",
+    alt: "Clearly photographed wrapped holiday gift boxes with colorful ribbon",
   },
   {
     id: "essentials",
@@ -39,8 +40,8 @@ const features: Feature[] = [
     subheading: "Make the ordinary a little better",
     cta: "Discover everyday essentials",
     destination: "/essentials",
-    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1280&q=85",
-    alt: "Warm coffee and home lifestyle setting",
+    image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=2200&q=90",
+    alt: "Bright, organized modern kitchen interior with home essentials",
   },
 ];
 
@@ -122,7 +123,20 @@ export default function RotatingDiscoveryHero() {
         <div className="dw-rotate__orb" aria-hidden="true" />
         <Link href={current.destination} className="dw-rotate__feature" aria-label={current.cta + " — " + current.subheading}>
           <div className="dw-rotate__poster">
-            <img key={current.id} src={current.image} alt={current.alt} fetchPriority={active === 0 ? "high" : undefined} />
+            {features.map((feature,index) => (
+              <Image
+                key={feature.id}
+                src={feature.image}
+                alt={index === active ? feature.alt : ""}
+                fill
+                priority={index === 0}
+                loading={index === 0 ? undefined : "lazy"}
+                quality={90}
+                sizes="(max-width: 540px) 75vw, (max-width: 950px) 390px, 430px"
+                className={"dw-rotate__poster-image" + (index === active ? " is-current" : "")}
+                aria-hidden={index !== active}
+              />
+            ))}
             <div className="dw-rotate__poster-caption"><small>THE DISCOVERY EDIT</small><strong>{current.subheading}</strong></div>
           </div>
           <div className="dw-rotate__bubble" aria-hidden="true">✦<small>THERE'S MORE<br />TO DISCOVER</small></div>
