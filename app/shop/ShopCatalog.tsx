@@ -30,9 +30,9 @@ export default function ShopCatalog({offers,configured}:Props){
          <span className="dw-wow-verified"><span aria-hidden="true">✓</span> VERIFIED OFFER</span></div>
        <div className="dw-wow-product-content">
          <span className="dw-wow-product-tag">{offer.product.category.name} / {offer.merchant.name}</span>
-         <h3>{offer.product.title}</h3><p>{offer.product.description}</p>
+         <h3><Link href={"/product/"+offer.product.slug}>{offer.product.title}</Link></h3><p>{offer.product.description}</p>
          <strong>{offer.price_cents===null?"See retailer price":new Intl.NumberFormat("en-US",{style:"currency",currency:offer.currency}).format(offer.price_cents/100)}</strong>
-         <a href={offer.affiliate_url} target="_blank" rel="sponsored nofollow noopener noreferrer">View at retailer <span aria-hidden="true">↗</span></a>
+         <Link href={"/out/"+offer.id} rel="sponsored nofollow noreferrer">View verified retailer <span aria-hidden="true">↗</span></Link><Link className="dw-wow-product-details-link" href={"/product/"+offer.product.slug}>Product details →</Link>
        </div></article>)}</div>:<div className="dw-wow-no-match" role="status">No matching verified offers. <button type="button" onClick={()=>{setQuery("");setCategory("all")}}>Clear filters ↗</button></div>}
    </>:<div className="dw-wow-coming">
        <div className="dw-wow-coming-main">
