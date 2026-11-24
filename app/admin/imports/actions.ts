@@ -45,15 +45,8 @@ export async function stageFeedCSVAction(data:FormData){
  let rows:ReturnType<typeof parseFeedCSV>=[];
  try{const sourceCsv=await attachment.text();rows=source.provider==="awin"?parseAwinCSV(sourceCsv):parseFeedCSV(sourceCsv);}
  catch(e){return fail(e instanceof Error?e.message:"Invalid CSV")}
- const {data:batch,error:batchError}=await db.from("catalog_feed_batches").insert({source_id,created_by:user.id,row_count:rows.length,status:"staged"}).select("id").single();
- if(batchError||!batch){console.error("Batch insert failed",batchError?.code);return fail("Unable to create import batch")}
- const batchId=batch.id;
- const {error}=await db.from("catalog_feed_candidates").insert(rows.map(x=>({...x,batch_id:batchId,status:"staged"})));
- if(error){
-  await db.from("catalog_feed_batches").delete().eq("id",batchId);
-  console.error("Candidate batch insert failed",error.code);
-  return fail("CSV staging rejected; no candidate rows saved");
- }
+ const {data:count,error}=await db.rpc("stage_catalog_feed",{p_source_id:source_id,p_rows:rows});
+ if(error||count!==rows.length){console.error("Atomic feed staging failed",error?.code);return fail("CSV staging rejected; no partial batch saved");}
  return success(rows.length+" feed candidates staged privately");
 }
 export async function rejectFeedCandidateAction(data:FormData){
