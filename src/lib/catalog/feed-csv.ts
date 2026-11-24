@@ -10,7 +10,8 @@ const HEADERS=["external_product_id","title","description","category_hint","imag
 const MAX_ROWS=100, MAX_BYTES=102400;
 export function validExternalHttps(value:string):boolean{
  try{
-  const u=new URL(value),h=u.hostname.toLowerCase();
+  if(/[\s\\]/.test(value))return false;
+  const u=new URL(value),h=u.hostname.toLowerCase().replace(/\.+$/,"");
   if(u.protocol!=="https:"||u.username||u.password||u.port||!h.includes(".")||h.includes("%"))return false;
   if(h==="localhost"||h.endsWith(".localhost")||h.endsWith(".local")||h.endsWith(".internal")||h.endsWith(".test")||h.endsWith(".example")||h.endsWith(".invalid"))return false;
   if(/^\d+(?:\.\d+){3}$/.test(h)||h.startsWith("[")||h.endsWith(".onion"))return false;
