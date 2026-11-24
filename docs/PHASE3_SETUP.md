@@ -5,7 +5,7 @@ This branch is safe to preview with **no Supabase credentials**. The public `/sh
 
 ## Connect a dedicated Supabase project
 1. Connect the Supabase integration in ChatGPT (or create a dedicated project at https://supabase.com/dashboard). Do not point to Frhairshop's existing database.
-2. In Supabase SQL Editor, run `supabase/migrations/20261124_001_catalog_foundation.sql` **before** setting application credentials. Inspect the created RLS policies.
+2. In Supabase SQL Editor, run the three SQL migration files in `supabase/migrations/` (001 foundation → 002 audit triggers → 003 privileged-function lockdown) **before** setting application credentials. Inspect the created RLS policies.
 3. Create one account through **Supabase → Authentication → Users**. Record only its user UUID, never its password.
 4. Grant the account owner access using Supabase SQL Editor:
    `insert into public.catalog_admins (user_id,role) values ('REAL-USER-UUID','owner');`
@@ -47,3 +47,6 @@ This branch is safe to preview with **no Supabase credentials**. The public `/sh
 
 ## Remaining work before launch
 Supabase project connection, database migration execution, first admin bootstrap, authorized affiliate feed import, actual image/media usage rights, product verification and legal review, browser-based UX and security QA, monitoring, and production approval.
+
+## Privileged function hardening
+The third migration moves membership and audit-trigger helper functions to a non-exposed `dealwovo_private` schema. Confirm your Data API exposes `public` only and does not expose `dealwovo_private`. Run Supabase Security and Performance Advisors before production activation.
