@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "npm test && next build",
     "start": "next start",
-    "test": "node tests/catalog-regression.cjs"
+    "test": "node tests/catalog-regression.cjs && node tests/content-lab-regression.cjs"
   },
   "dependencies": {
     "next": "^16.0.0",
