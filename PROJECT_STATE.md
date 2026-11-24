@@ -56,3 +56,6 @@ Inspect the cumulative candidate configuration and migration 008; complete read-
 ## V1.3 seasonal intelligence
 - Migration 011 applied; US editorial calendar and preparation windows drive manual and weekly draft inserts. Calendar access admin-only; anonymous access denied. Rollback tests passed for holiday dates and both generation paths. No live demand, prices or AI claims. UI commit 05b1ef4.
 - Owner requests continuous execution across safe development phases, with preview and verification at each milestone; production promotion, paid services and external publishing still require approval. Work proceeds during active chat/tool execution only.
+
+## V1.4 product discovery
+- Added read-only admin /admin/discovery and catalog navigation. Reuses authorized sources and staged candidates; ranks latest 100 authorized staged records by four supplied metadata fields, then recency. No external acquisition, demand scoring, verification, or automatic publication. Live DB inspection: zero authorized sources, staged candidates, products, and offers. Nonempty browser integration test pending real permitted feed. No database schema change.
