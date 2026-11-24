@@ -161,3 +161,39 @@ body{background:var(--dw2-night);-webkit-font-smoothing:antialiased}
 .dw2-shop .dw-wow-legal a{color:#694398}
 .dw2-shop .dw-wow-filterbar label{color:#e9ddf8}
 .dw2-shop .dw-wow-catalog a:focus-visible{outline:3px solid #8d55cf;outline-offset:3px}
+
+
+/* Mobile/zoom robustness: preserve the exact WOW wordmark without clipping. */
+.dw2-sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.dw2-home .dw-wow-copy h1{max-width:100%;overflow:visible}
+.dw2-home .dw-wow-headline-pop{max-width:100%}
+@media(min-width:961px) and (max-width:1160px){
+ .dw2-home .dw-wow-copy h1{font-size:clamp(44px,5vw,58px)}
+}
+@media(max-width:720px){
+ .dw2-home .dw-wow-copy h1{font-size:clamp(40px,8.5vw,60px)}
+ .dw2-home .dw-wow-headline-pop{font-size:clamp(29px,7.2vw,53px);letter-spacing:-.09em}
+ .dw2-home .dw-wow-hero-main{padding-left:20px;padding-right:20px}
+ .dw2-home .dw-wow-hero-main .dw-wow-copy{max-width:100%;min-width:0}
+ .dw2-home .dw-wow-overline{white-space:normal;line-height:1.5}
+ .dw2-home .dw-wow-actions{display:grid;grid-template-columns:minmax(0,1fr);align-items:stretch}
+ .dw2-home .dw-wow-actions a{width:100%}
+ .dw2-home .dw-wow-hero .dw-wow-controls{max-width:100%;padding-left:18px;padding-right:18px}
+ .dw2-home .dw-wow-scene{max-width:calc(100% - 16px)}
+ .dw2-home .dw-wow-floating-note{right:0}
+ .dw2-home .dw-wow-social-proof{margin-top:24px}
+ .dw2-announcement{min-height:39px;line-height:1.4}
+ .dw2-gifts-hero-inner{min-width:0}
+ .dw2-footer-bottom{line-height:1.6}
+}
+@media(max-width:380px){
+ .dw2-home .dw-wow-copy h1{font-size:clamp(34px,9vw,40px)}
+ .dw2-home .dw-wow-headline-pop{font-size:clamp(25px,7.4vw,30px)}
+ .dw2-home .dw-wow-scene{min-height:355px}
+ .dw2-home .dw-wow-scene-card{height:278px}
+ .dw2-logo{font-size:28px}
+ .dw2-home .dw-wow-controls{gap:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ .dw2-home .dw-wow-scene-card{transition:none!important}
+}
