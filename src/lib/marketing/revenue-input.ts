@@ -10,4 +10,4 @@ export function parseCommission(input:Record<string,unknown>,today:string){
  if(commission_cents>100000000||(status==="reversed"&&commission_cents!==0))return null;
  return {source_id,transaction_ref,statement_ref,transaction_on,statement_on,status,commission_cents};
 }
-export function formatCents(value:string){if(!/^\d+$/.test(value))return "Unavailable";const n=BigInt(value),whole=(n/100n).toLocaleString("en-US");return "$"+whole+"."+(n%100n).toString().padStart(2,"0");}
+export function formatCents(value:string){if(!/^\d+$/.test(value))return "Unavailable";const digits=value.replace(/^0+(?=\d)/,"").padStart(3,"0");const whole=digits.slice(0,-2).replace(/\B(?=(\d{3})+(?!\d))/g,",");return "$"+whole+"."+digits.slice(-2);}
