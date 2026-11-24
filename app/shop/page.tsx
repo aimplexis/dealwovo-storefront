@@ -1,44 +1,44 @@
 import Link from "next/link";
-import {catalogConfigured} from "../../src/lib/supabase/config";
+import Image from "next/image";
 import {getPublicOffers} from "../../src/lib/catalog/public";
-import ShopSpotlight from "./ShopSpotlight";
+import {catalogConfigured} from "../../src/lib/supabase/config";
 import ShopCatalog from "./ShopCatalog";
 import "./shop.css";
 export const dynamic="force-dynamic";
-export const metadata={title:"Discover great finds | Dealwovo",description:"Discover gift ideas, tech, and everyday inspiration with Dealwovo. Approved retailer offers will appear as they become available.",robots:{index:false,follow:false}};
-const paths=[
- {number:"01",tag:"CLEVER LITTLE THINGS",title:"Tech & gadgets",description:"For the curious, the connected, and the always-upgrading.",href:"/trending",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1400&q=86",theme:"lime"},
- {number:"02",tag:"THE THOUGHTFUL EDIT",title:"Gifts that get it",description:"For the people who matter—and the moments worth remembering.",href:"/gifts",image:"https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=1400&q=86",theme:"coral"},
- {number:"03",tag:"THE DAILY GLOW-UP",title:"Everyday living",description:"Useful ideas that make the ordinary a little extraordinary.",href:"/essentials",image:"https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=86",theme:"violet"},
- {number:"04",tag:"SEASONAL INSPIRATION",title:"A little holiday magic",description:"Fresh inspiration for this season's thoughtful moments.",href:"/deals",image:"https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1400&q=86",theme:"blue"}
+export const metadata={title:"Explore the Good Stuff",description:"A thoughtfully curated world of gifts, gadgets and everyday inspiration. Verified retailer finds appear after approval."};
+const categories=[
+ {name:"Tech & gadgets",label:"01 / THE CURIOUS EDIT",href:"/trending",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1100&q=84",alt:"Headphones styled for an editorial technology collection"},
+ {name:"Thoughtful gifts",label:"02 / THE GIFT EDIT",href:"/gifts",image:"https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1100&q=84",alt:"Beautifully wrapped gifts"},
+ {name:"Everyday living",label:"03 / THE DAILY EDIT",href:"/essentials",image:"https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1100&q=84",alt:"Bright modern home interior"}
 ];
 export default async function ShopPage(){
  const offers=await getPublicOffers();
- return <main className="dw-wow-shop">
-   <ShopSpotlight/>
-   <section id="discover" className="dw-wow-discover wrap">
-     <div className="dw-wow-section-heading">
-       <div><span className="dw-wow-kicker">CHOOSE YOUR KIND OF WOW</span><h2>Find your <em>thing.</em></h2></div>
-       <p>Consider this your invitation to explore a little further. Every category leads somewhere.</p>
-     </div>
-     <div className="dw-wow-collection-grid">
-       {paths.map((item,index)=><Link href={item.href} className={"dw-wow-collection dw-wow-collection-"+item.theme} key={item.number}>
-         <img src={item.image} alt={item.title+" lifestyle inspiration"} loading="lazy"/>
-         <span className="dw-wow-collection-shade"/>
-         <span className="dw-wow-collection-index">{item.number} / DISCOVER</span>
-         <span className="dw-wow-collection-arrow" aria-hidden="true">↗</span>
-         <span className="dw-wow-collection-bottom"><small>{item.tag}</small><strong>{item.title}</strong><span>{item.description}</span></span>
-       </Link>)}
-     </div>
-     <p className="dw-wow-image-note">These are editorial category images, not advertised products.</p>
-   </section>
-   <section className="dw-wow-vibe">
-     <div className="wrap dw-wow-vibe-layout">
-       <div><span className="dw-wow-kicker">YOUR KIND OF DISCOVERY</span><h2>LESS SCROLLING.<br/><em>MORE WOW.</em></h2><p>Shopping should feel like finding something special—not getting lost in a thousand tabs. Start with a little inspiration and see where it takes you.</p><Link href="/gifts" className="dw-wow-vibe-link">Explore the Gift Finder <span aria-hidden="true">↗</span></Link></div>
-       <div className="dw-wow-vibe-art" aria-hidden="true"><div className="dw-wow-vibe-ring"/><div className="dw-wow-vibe-card-one"><span>YOU FOUND</span><strong>THE<br/>GOOD<br/>STUFF.</strong><b>↗</b></div><div className="dw-wow-vibe-card-two">✳<small>SMALL FINDS<br/>BIG FEELINGS</small></div><div className="dw-wow-vibe-spark">✦</div></div>
-     </div>
-   </section>
-   <ShopCatalog offers={offers} configured={catalogConfigured()}/>
-   <section className="dw-wow-bottom-cta wrap"><div aria-hidden="true" className="dw-wow-bottom-star">✳</div><span className="dw-wow-kicker">GOOD FINDS START SOMEWHERE</span><h2>LET CURIOSITY<br/><em>LEAD THE WAY.</em></h2><p>Thoughtful finds are worth discovering. Your next favorite idea might be one click away.</p><Link href="/trending">Keep exploring <span aria-hidden="true">↗</span></Link></section>
+ return <main className="dw-wow-shop dw2-shop">
+  <section className="wrap dw2-shop-hero">
+   <div className="dw2-shop-hero-copy">
+    <span className="dw2-eyebrow">THE DEALWOVO DISCOVERY EDIT / VOL. 01</span>
+    <h1>Good taste.<br/><em>Great finds.</em></h1>
+    <p>Welcome to a more thoughtful way to explore. Follow what inspires you, discover something unexpected, and find verified retailer offers as they become available.</p>
+    <div className="dw2-shop-hero-actions"><Link href="#verified-offers" className="dw2-button-dark">Browse verified finds <span aria-hidden="true">↓</span></Link><Link className="dw2-shop-textlink" href="/gifts">Need a gift instead? ↗</Link></div>
+    <div className="dw2-shop-hero-rule"><span aria-hidden="true">✳</span> CURATED IDEAS / REAL RETAILER OFFERS / NO INVENTED DISCOUNTS</div>
+   </div>
+   <div className="dw2-shop-hero-visual">
+    <div className="dw2-shop-hero-photo"><Image src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=1400&q=88" alt="Premium beauty and self-care editorial imagery" fill priority sizes="(max-width: 850px) 90vw, 45vw" quality={80}/></div>
+    <div className="dw2-shop-orb">THE FINDS<br/><b>FEEL GOOD.</b><span>✳</span></div>
+    <span className="dw2-shop-photo-label">CURIOUSLY GOOD / 2026</span>
+   </div>
+  </section>
+  <section className="dw2-shop-edits"><div className="wrap">
+   <div className="dw2-shop-edits-head"><div><span className="dw2-eyebrow">PICK YOUR PATH</span><h2>Explore the <em>edits.</em></h2></div><p>Different interests, one place to start. Discover editorial categories while we build the verified product catalog.</p></div>
+   <div className="dw2-shop-edits-grid">{categories.map(c=><Link key={c.name} href={c.href} className="dw2-shop-edit">
+    <Image src={c.image} alt={c.alt} fill sizes="(max-width: 650px) 100vw, 33vw" quality={75}/>
+    <div className="dw2-shop-edit-mask" aria-hidden="true"/>
+    <span className="dw2-shop-edit-label">{c.label}</span>
+    <span className="dw2-shop-edit-name">{c.name}<b aria-hidden="true">↗</b></span>
+   </Link>)}</div>
+   <p className="dw2-shop-illustration">The images above are editorial illustrations of shopping interests, not live product listings.</p>
+  </div></section>
+  <ShopCatalog offers={offers} configured={catalogConfigured()}/>
+  <section className="wrap dw2-shop-commitment"><div><span className="dw2-eyebrow">WHAT MAKES A GOOD FIND?</span><h2>Discovery with<br/><em>a little more intention.</em></h2></div><div><p>Our product listings are built around approved retailers, reviewable sources, and time-limited offer verification. We don't claim a discount unless we can substantiate it.</p><Link href="/affiliate-disclosure">How our affiliate links work ↗</Link></div></section>
  </main>;
 }
