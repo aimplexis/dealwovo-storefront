@@ -2,6 +2,7 @@
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 import {createSupabaseServer} from "../../src/lib/supabase/server";
+import {validExternalHttps as isHttps} from "../../src/lib/catalog/feed-csv";
 
 const knownTables={category:"catalog_categories",merchant:"catalog_merchants",product:"catalog_products",offer:"catalog_offers"} as const;
 const states={category:["draft","published"],merchant:["draft","approved","disabled"],product:["draft","published","archived"],offer:["draft","approved","paused"]} as const;
@@ -9,7 +10,6 @@ const uid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const input=(f:FormData,key:string)=>String(f.get(key)??"").trim();
 const err=()=>redirect("/admin?message=failed");
 const ok=()=>{revalidatePath("/admin");revalidatePath("/shop");redirect("/admin?message=saved");};
-const isHttps=(raw:string)=>{try{const p=new URL(raw);return p.protocol==="https:"&&!!p.hostname&&p.username===""&&p.password==="";}catch{return false}};
 const slugOK=(s:string)=>/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(s);
 async function requireOwnerOrEditor(){
  const db=await createSupabaseServer();if(!db)redirect("/admin/login?status=setup");
@@ -22,7 +22,7 @@ async function requireOwnerOrEditor(){
 export async function signInAction(form:FormData){
  const db=await createSupabaseServer();
  if(!db)redirect("/admin/login?status=setup");
- const email=input(form,"email"),password=input(form,"password");
+ const email=input(form,"email"),password=String(form.get("password")??"");
  if(!email||!password)redirect("/admin/login?status=invalid");
  const {error}=await db.auth.signInWithPassword({email,password});
  if(error)redirect("/admin/login?status=invalid");
@@ -89,7 +89,7 @@ export async function updateOfferAction(form:FormData){
 export async function changeStatusAction(form:FormData){
  const {db}=await requireOwnerOrEditor();
  const kind=input(form,"kind") as keyof typeof knownTables,id=input(form,"id"),status=input(form,"status");
- if(!uid.test(id)||!(kind in knownTables)||!(states[kind] as readonly string[]).includes(status))err();
+ if(!uid.test(id)||!Object.hasOwn(knownTables,kind)||!(states[kind] as readonly string[]).includes(status))err();
  const table=knownTables[kind];
  if(kind==="offer"&&status==="approved"){
    // Force a fresh human verification checkpoint before publishing.
