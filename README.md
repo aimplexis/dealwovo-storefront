@@ -1,5 +1,12 @@
-# Dealwovo storefront
+# Dealwovo
 
-Official source repository for Dealwovo (Next.js / TypeScript). The retail storefront is in prelaunch; no live products or verified prices are offered.
+Source-controlled Next.js shopping-discovery storefront and Phase 3 affiliate catalog foundation.
 
-Design and interactive shopping features are developed in review branches before release.
+- Website: https://dealwovo.com
+- Local development: `npm install && npm run dev`
+- Phase 3 setup: [docs/PHASE3_SETUP.md](docs/PHASE3_SETUP.md)
+- Catalog schema: `supabase/migrations/`
+- Public catalog: `/shop`
+- Protected staff administration: `/admin/login`
+
+This project is affiliate-first. Product offers are suppressed until retailer, product, category, and offer approval plus time-limited verification. No in-house checkout is active. Admin access is granted explicitly via Supabase SQL Editor. Never commit `.env` credentials.
