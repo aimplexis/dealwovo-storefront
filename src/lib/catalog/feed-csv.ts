@@ -20,25 +20,26 @@ export function validExternalHttps(value:string):boolean{
 export function readCsvRows(input:string):string[][]{
  if(new TextEncoder().encode(input).length>MAX_BYTES)throw new Error("File exceeds 100 KB");
  const csv=input.replace(/^\uFEFF/,"");
- const rows:string[][]=[];let row:string[]=[],cell="",quoted=false;
+ const rows:string[][]=[];let row:string[]=[],cell="",quoted=false,closed=false;
  for(let i=0;i<csv.length;i++){
   const c=csv[i];
   if(c==='"'){
    if(quoted&&csv[i+1]==='"'){cell+='"';i++;}
-   else if(quoted){quoted=false;}
-   else if(!cell){quoted=true;}
+   else if(quoted){quoted=false;closed=true;}
+   else if(!cell&&!closed){quoted=true;}
    else throw new Error("Unexpected quote in CSV");
-  }else if(c===","&&!quoted){row.push(cell);cell="";}
+  }else if(c===","&&!quoted){row.push(cell);cell="";closed=false;}
   else if((c==="\n"||c==="\r")&&!quoted){
    if(c==="\r"&&csv[i+1]==="\n")i++;
-   row.push(cell);cell="";
+   row.push(cell);cell="";closed=false;
    if(row.some(s=>s.trim().length>0))rows.push(row);
    if(rows.length>MAX_ROWS+1)throw new Error("Maximum 100 rows per file");
    row=[];
-  }else{cell+=c;}
+  }else{if(closed)throw new Error("Unexpected character after closing quote");cell+=c;}
  }
  if(quoted)throw new Error("Unclosed quoted field in CSV");
  row.push(cell);if(row.some(s=>s.trim().length>0))rows.push(row);
+ if(rows.length>MAX_ROWS+1)throw new Error("Maximum 100 rows per file");
  if(rows.length<2)throw new Error("CSV needs a header and at least one product");
 
  return rows;
