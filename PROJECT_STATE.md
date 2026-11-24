@@ -42,3 +42,8 @@ Inspect the cumulative candidate configuration and migration 008; complete read-
 - Release branch Supabase URL and publishable key configured for preview only; deployment dpl_BoLUDC7PcG76Jn81yNsjhnSX1uVY READY: https://dealwovo-storefront-3f41pkg3f-frhairshop.vercel.app.
 - Applied existing migration 008 (dealwovo_marketing_agent_os) after confirming all three marketing tables absent and owner guard present. All three tables now have RLS; six policies total; anonymous SELECT and INSERT denied on each. Security advisor reports only existing leaked-password protection warning.
 - Weekly planner function installed, but no cron schedule activated. Authenticated browser smoke test, atomic manual generation and database-enforced cooldown remain pending. Production deployment unchanged; shared Dealwovo database schema updated.
+
+## Marketing Agent OS V1.1 — atomic generation
+- Migration 009 applied; owner-only private definer with public invoker wrapper, fixed search path, transaction advisory lock, 30-minute cooldown, no direct authenticated inserts. Application invokes RPC and accurately labels weekly scheduling inactive.
+- Transactional SQL test with simulated JWT claims passed: non-owner denied, owner produced one run and four drafts, immediate repeat returned zero; rolled back. Anonymous RPC and direct authenticated inserts denied. Existing leaked-password warning only. Actual browser session test and concurrent-request stress test remain pending.
+- Old marketing previews using direct insert are superseded; use new release branch preview. No external publication, scheduling, paid AI, production deployment or catalog activation.
