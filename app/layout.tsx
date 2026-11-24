@@ -17,7 +17,7 @@ export default function RootLayout({children}:{children:React.ReactNode}){
  return <html lang="en"><body>
   <a className="dw2-skip" href="#main-content">Skip to content</a>
   <SiteHeader/>
-  <div id="main-content">{children}</div>
+  <div id="main-content" tabIndex={-1}>{children}</div>
   <SiteFooter/>
   <ExperienceMotion/>
  </body></html>;
