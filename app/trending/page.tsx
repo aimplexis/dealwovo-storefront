@@ -1,2 +1,14 @@
-import Link from "next/link";const cards=[{"title":"Tech & gadgets","href":"/gifts","image":"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=950&q=82"},{"title":"Home & living","href":"/essentials","image":"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=950&q=82"},{"title":"Self-care inspiration","href":"/essentials","image":"https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=950&q=82"}];
-export default function Page(){return <main><section className="inner-hero"><div className="wrap"><p className="kicker">✳ FRESH IDEAS. NEW ENERGY.</p><h1>WHAT'S NEXT LOOKS GOOD.</h1><p>Explore modern product-discovery categories, from clever technology to beautiful everyday upgrades.</p><Link href="/gifts" className="action">Explore Gift Finder ↗</Link></div></section><section className="wrap inner-section"><p className="kicker">EXPLORE THE EDIT</p><h2 className="section-title">GOOD FINDS. <em>GREAT IDEAS.</em></h2><div className="inner-cards">{cards.map(item=><Link className="inner-card" href={item.href} key={item.title}><img src={item.image} alt={item.title+" lifestyle inspiration"} loading="lazy"/><span>{item.title} ↗</span></Link>)}</div><p className="disclaimer">Editorial category inspiration only. Live merchant products and discounts are not available yet.</p></section></main>}
+import EditorialCategory from "../../src/components/EditorialCategory";
+export const metadata={title:"Tech & Trends",description:"Clever technology, creative setups and modern discoveries to inspire your next find."};
+export default function Trending(){return <EditorialCategory data={{
+ eyebrow:"01 / FOR THE ALWAYS-CURIOUS",title:"THE NEXT",accent:"GOOD THING.",
+ intro:"Smart ideas, great design, and little upgrades with a big personality. Explore the tech and trends that make everyday life more interesting.",
+ heroImage:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1400&q=88",heroAlt:"Premium modern headphones against a vibrant golden background",
+ stamp:"OH, THAT'S\nCLEVER.",sectionEyebrow:"THE CURIOUS EDIT",sectionTitle:"GOOD IDEAS.",sectionAccent:"BETTER MOMENTS.",
+ sectionIntro:"Three ways to explore what's next—from sound and screens to smarter everyday moments.",
+ cards:[
+ {label:"SOUND & STYLE",name:"Sound worth noticing",description:"An invitation to better listening experiences.",href:"/gifts",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=950&q=84",alt:"Headphones on a vibrant background"},
+ {label:"WORK & PLAY",name:"The creative setup",description:"Ideas for an inspiring desk and daily routine.",href:"/essentials",image:"https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=950&q=84",alt:"Bright modern workspace and screen"},
+ {label:"GIFT-WORTHY TECH",name:"For the curious one",description:"Gift inspiration for the person who loves what's next.",href:"/gifts",image:"https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=950&q=84",alt:"Contemporary technology workspace"}
+ ],closingTitle:"Find your next wow.",closingCopy:"Our verified retailer catalog is in preparation. Explore today's ideas without pretending unverified items are ready to buy."
+ }}/>}

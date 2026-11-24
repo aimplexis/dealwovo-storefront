@@ -1,0 +1,17 @@
+.dw-product-page{background:#f7f4ef!important;color:#1d1529!important}
+.dw-product-breadcrumb{color:#7a6987!important}.dw-product-breadcrumb a{color:#7442ab!important}
+.dw-product-content{gap:65px;padding-bottom:70px}
+.dw-product-visual{background:#e0d5e9!important;border:1px solid #d3c6e0!important;border-radius:23px!important}
+.dw-product-kicker{color:#7549aa!important}
+.dw-product-information h1{color:#22162e!important;font-size:clamp(44px,5vw,77px)!important;letter-spacing:-.065em!important}
+.dw-product-information>p{color:#675b6c!important}
+.dw-product-offers h2{color:#1f162c!important}
+.dw-product-note{color:#796b80!important}
+.dw-product-offer{background:#fffdf9!important;border:1px solid #dcd3e2!important;border-radius:14px!important}
+.dw-product-offer strong{color:#22162e!important}
+.dw-product-offer span,.dw-product-offer small{color:#796e82!important}
+.dw-product-disclosure{color:#6d5e77!important;line-height:1.75!important}
+.dw-product-disclosure a{color:#7545ab!important}
+.dw-product-offer-action a{background:#e6ff78!important;color:#191a24!important}
+.dw-product-page a:focus-visible{outline:3px solid #8755b9!important}
+@media(max-width:900px){.dw-product-content{gap:36px}}
