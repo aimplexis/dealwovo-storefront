@@ -1,16 +1,11 @@
 import "server-only";
 
-export const channels=["instagram","facebook","pinterest","blog"] as const;
-export const themes=["holiday deals","gift discovery","everyday essentials","shopping research"] as const;
-export type Channel=typeof channels[number];
-export type Theme=typeof themes[number];
-export type Brief={channel:Channel;theme:Theme;occasion:string};
+import {buildBrief,type Brief} from "./content-brief";
+export {channels,themes,buildBrief} from "./content-brief";
+export type {Channel,Theme,Brief} from "./content-brief";
 export const approvedModel="google/gemini-2.5-flash-lite";
 export function contentEnabled(){
  return process.env.DEALWOVO_AI_CONTENT_ENABLED==="true"&&process.env.AI_GATEWAY_MODEL===approvedModel&&Boolean(process.env.AI_GATEWAY_API_KEY||process.env.VERCEL_OIDC_TOKEN);
-}
-export function buildBrief(b:Brief){
- return "Create one private Dealwovo editorial draft in English for "+b.channel+". Theme: "+b.theme+". Calendar context: "+b.occasion+". Use a warm, concise shopping-discovery tone. Include hook, short body, and CTA to dealwovo.com. No specific products, prices, discounts, stock, shipping, rankings, testimonials, urgency, or revenue claims. Do not imply independent research or publish anything. Output plain text only. Human review required.";
 }
 export async function generateContent(b:Brief):Promise<string>{
  if(!contentEnabled())throw new Error("disabled");
