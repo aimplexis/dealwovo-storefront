@@ -59,3 +59,8 @@ Inspect the cumulative candidate configuration and migration 008; complete read-
 
 ## V1.4 product discovery
 - Added read-only admin /admin/discovery and catalog navigation. Reuses authorized sources and staged candidates; ranks latest 100 authorized staged records by four supplied metadata fields, then recency. No external acquisition, demand scoring, verification, or automatic publication. Live DB inspection: zero authorized sources, staged candidates, products, and offers. Nonempty browser integration test pending real permitted feed. No database schema change.
+
+## V1.5 deal evaluation
+- Core evaluation module committed (3301233); admin integration and tests unfinished, explicitly deferred.
+## V1.6 supervised Content Lab
+- Owner-only /admin/marketing/lab, free brief preview, server-only gateway adapter, live generation disabled by default. Migration 012 applied; global 30-minute cooldown and five attempts per rolling 24 hours. Rollback test passed owner allowance, duplicate rejection and non-owner denial; anon RPC denied. No project gateway budget found. No paid calls, external publication or production promotion. Actual provider response and browser testing pending.
