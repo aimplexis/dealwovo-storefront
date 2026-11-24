@@ -52,9 +52,10 @@ export default async function ImportDashboard({searchParams}:{searchParams:Promi
        </form>:<small>{source.status==="authorized"?"Authorization confirmed in admin records":"Source disabled"}</small>}
       </div>)}
     </section>
-    <section className="dw-admin-panel"><h2>3. Stage a CSV (private)</h2><p>Maximum 100 rows / 100 KB. CSV fields must match this header exactly:</p>
+    <section className="dw-admin-panel"><h2>3. Stage a CSV (private)</h2><p>Maximum 100 rows / 100 KB. Manual sources use this Dealwovo header:</p>
       <code className="dw-import-code">external_product_id,title,description,category_hint,image_url,affiliate_url,price_usd</code>
-      <p>Images and prices remain unverified until individually reviewed. No direct retailer scraping.</p>
+      <p><strong>Awin publisher exports:</strong> Choose a source registered as Awin and upload a Create-a-Feed CSV containing <code>product_id</code>, <code>product_name</code>, and <code>aw_deep_link</code>. Optional fields include <code>description</code>, <code>merchant_category</code>, <code>image_url</code>, <code>price</code>, and <code>currency</code>. A price is imported only if the feed explicitly declares USD.</p>
+      <p>Uploaded products and images remain private and unverified until individually reviewed. Never upload data without publisher and advertiser authorization. No direct retailer scraping.</p>
       <form action={stageFeedCSVAction} className="dw-admin-form"><label>Authorized source<select name="source_id" required defaultValue=""><option disabled value="">Choose authorized source</option>{sources.filter(x=>x.status==="authorized").map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
        <label>CSV file<input name="file" type="file" accept=".csv,text/csv" required/></label>
        <button type="submit" disabled={!sources.some(x=>x.status==="authorized")}>Stage file for review</button>

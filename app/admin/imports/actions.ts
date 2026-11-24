@@ -3,6 +3,7 @@ import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 import {createSupabaseServer} from "../../../src/lib/supabase/server";
 import {parseFeedCSV} from "../../../src/lib/catalog/feed-csv";
+import {parseAwinCSV} from "../../../src/lib/catalog/awin-feed";
 
 const uid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const input=(f:FormData,n:string)=>String(f.get(n)??"").trim();
@@ -39,10 +40,10 @@ export async function stageFeedCSVAction(data:FormData){
  if(!uid.test(source_id))return fail("Invalid source ID");
  if(!(attachment instanceof File))return fail("Select a valid CSV file");
  if(attachment.size<1||attachment.size>102400)return fail("Select a CSV file smaller than 100 KB");
- const {data:source,error:sourceError}=await db.from("catalog_feed_sources").select("id,status").eq("id",source_id).maybeSingle();
+ const {data:source,error:sourceError}=await db.from("catalog_feed_sources").select("id,status,provider").eq("id",source_id).maybeSingle();
  if(sourceError||!source||source.status!=="authorized")return fail("Source is not authorized");
  let rows:ReturnType<typeof parseFeedCSV>=[];
- try{rows=parseFeedCSV(await attachment.text());}
+ try{const sourceCsv=await attachment.text();rows=source.provider==="awin"?parseAwinCSV(sourceCsv):parseFeedCSV(sourceCsv);}
  catch(e){return fail(e instanceof Error?e.message:"Invalid CSV")}
  const {data:batch,error:batchError}=await db.from("catalog_feed_batches").insert({source_id,created_by:user.id,row_count:rows.length,status:"staged"}).select("id").single();
  if(batchError||!batch){console.error("Batch insert failed",batchError?.code);return fail("Unable to create import batch")}

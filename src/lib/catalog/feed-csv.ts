@@ -17,7 +17,7 @@ export function validExternalHttps(value:string):boolean{
   return true;
  }catch{return false}
 }
-export function parseFeedCSV(input:string):FeedCandidateInput[]{
+export function readCsvRows(input:string):string[][]{
  if(new TextEncoder().encode(input).length>MAX_BYTES)throw new Error("File exceeds 100 KB");
  const csv=input.replace(/^\uFEFF/,"");
  const rows:string[][]=[];let row:string[]=[],cell="",quoted=false;
@@ -40,6 +40,13 @@ export function parseFeedCSV(input:string):FeedCandidateInput[]{
  if(quoted)throw new Error("Unclosed quoted field in CSV");
  row.push(cell);if(row.some(s=>s.trim().length>0))rows.push(row);
  if(rows.length<2)throw new Error("CSV needs a header and at least one product");
+
+ return rows;
+}
+
+export function parseFeedCSV(input:string):FeedCandidateInput[]{
+ if(new TextEncoder().encode(input).length>MAX_BYTES)throw new Error("File exceeds 100 KB");
+ const rows=readCsvRows(input);
  const header=rows.shift()!.map(c=>c.trim().toLowerCase());
  if(header.length!==HEADERS.length||HEADERS.some((h,i)=>header[i]!==h))
   throw new Error("CSV header must be: "+HEADERS.join(","));
