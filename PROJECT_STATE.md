@@ -52,3 +52,7 @@ Inspect the cumulative candidate configuration and migration 008; complete read-
 - Migration 010 applied. One active pg_cron job dealwovo-weekly-marketing-drafts, Monday 14:00 UTC (GMT scheduler), invokes private planner as postgres. No external actions. To stop only this job: select cron.unschedule('dealwovo-weekly-marketing-drafts');
 - Rollback test: four private drafts, duplicate weekly run suppressed. Status RPC tested with simulated owner/non-admin claims: owner active, non-admin denied; anon execute denied. Actual scheduled execution history and authenticated browser smoke test pending. Existing password protection warning remains.
 - UI reads actual scheduler status, fails to unknown if unavailable. Seasonal intelligence and generative AI are not yet implemented; fixed editorial templates only. Production website unchanged, shared database scheduler active.
+
+## V1.3 seasonal intelligence
+- Migration 011 applied; US editorial calendar and preparation windows drive manual and weekly draft inserts. Calendar access admin-only; anonymous access denied. Rollback tests passed for holiday dates and both generation paths. No live demand, prices or AI claims. UI commit 05b1ef4.
+- Owner requests continuous execution across safe development phases, with preview and verification at each milestone; production promotion, paid services and external publishing still require approval. Work proceeds during active chat/tool execution only.
