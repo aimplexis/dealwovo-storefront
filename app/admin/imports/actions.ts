@@ -22,6 +22,7 @@ export async function createFeedSourceAction(data:FormData){
  const {db,user}=await authorized();
  const name=input(data,"name"),provider=input(data,"provider"),partner_ref=input(data,"partner_ref");
  if(name.length<3||name.length>120||partner_ref.length>120||!["manual_csv","awin","impact","cj","amazon","other"].includes(provider))fail("Invalid feed source information");
+ if(provider==="awin")redirect("/admin/imports/awin");
  const {error}=await db.from("catalog_feed_sources").insert({name,provider,partner_ref:partner_ref||null,status:"draft",created_by:user.id});
  if(error){console.error("Feed source creation failed",error.code);fail("Unable to create source")}
  success("Draft feed source created");
@@ -41,10 +42,10 @@ export async function stageFeedCSVAction(data:FormData){
  if(!uid.test(source_id))return fail("Invalid source ID");
  if(!(attachment instanceof File))return fail("Select a valid CSV file");
  if(attachment.size<1||attachment.size>102400)return fail("Select a CSV file smaller than 100 KB");
- const {data:source,error:sourceError}=await db.from("catalog_feed_sources").select("id,status,provider").eq("id",source_id).maybeSingle();
+ const {data:source,error:sourceError}=await db.from("catalog_feed_sources").select("id,status,provider,awin_publisher_id,awin_advertiser_id").eq("id",source_id).maybeSingle();
  if(sourceError||!source||source.status!=="authorized")return fail("Source is not authorized");
  let rows:ReturnType<typeof parseFeedCSV>=[];
- try{const sourceCsv=await attachment.text();rows=source.provider==="awin"?parseAwinCSV(sourceCsv):parseFeedCSV(sourceCsv);}
+ try{const sourceCsv=await attachment.text();if(source.provider==="awin"){if(!source.awin_publisher_id||!source.awin_advertiser_id)throw new Error("Complete Awin Quick Setup first");rows=parseAwinCSV(sourceCsv,{publisher:source.awin_publisher_id,advertiser:source.awin_advertiser_id});}else rows=parseFeedCSV(sourceCsv);}
  catch(e){return fail(e instanceof Error?e.message:"Invalid CSV")}
  const {data:count,error}=await db.rpc("stage_catalog_feed",{p_source_id:source_id,p_rows:rows});
  if(error||count!==rows.length){console.error("Atomic feed staging failed",error?.code);return fail("CSV staging rejected; no partial batch saved");}

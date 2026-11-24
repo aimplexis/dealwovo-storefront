@@ -1,0 +1,5 @@
+# Awin Quick Setup
+
+Use `/admin/imports/awin` with an owner session. Register a real publisher/advertiser pair when information is available. A transaction creates a draft source and matching draft retailer. Record documented rights before importing. Export one advertiser in legacy CSV format, comma delimiter, no adult content. Prefer merchant_product_id consistently; product_id is supported. Supported HTTPS tracking formats: awin1.com pclick.php (a,m) and cread.php (awinaffid,awinmid). Other link formats and enhanced/Google feeds are not supported. CSV stays private, up to 100 rows/100 KB. Active duplicate product identifiers are rejected, not updated. Category suggestions remain editable; conversion is bound to the retailer and creates drafts. Disabling an authorized source pauses its linked approved offers. The scope is manual CSV, not API integration, approval verification, permission to publish, conversion tracking or live sync. Never enter a feed API key or private URL in any form. Real feed/browser acceptance is pending.
+
+Official source: https://help.awin.com/developers/docs/downloading-feeds-using-create-a-feed
