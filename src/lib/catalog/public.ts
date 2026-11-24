@@ -1,5 +1,6 @@
 import "server-only";
 import {publicSupabase} from "../supabase/public";
+import {validExternalHttps} from "./feed-csv";
 
 export type PublicOffer={
  id:string;affiliate_url:string;price_cents:number|null;currency:string;verified_at:string;
@@ -49,14 +50,6 @@ export async function getCurrentOfferDestination(offerId:string):Promise<string|
    .eq("id",offerId).eq("status","approved")
    .lte("verified_at",now).gt("expires_at",now).maybeSingle();
  if(error||!data?.affiliate_url)return null;
- try{
-   const url=new URL(data.affiliate_url);
-   const host=url.hostname.toLowerCase();
-   if(url.protocol!=="https:"||url.username||url.password||url.port||!host.includes(".")||
-      host==="localhost"||host.endsWith(".local")||host.endsWith(".internal")||
-      host==="0.0.0.0"||host==="127.0.0.1"||host==="169.254.169.254"||
-      host==="::1"||host.startsWith("127.")||host.startsWith("10.")||
-      host.startsWith("192.168.")||host.startsWith("172.16."))return null;
-   return url.toString();
- }catch{return null;}
+ if(!validExternalHttps(data.affiliate_url))return null;
+ return new URL(data.affiliate_url).toString();
 }
