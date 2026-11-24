@@ -110,7 +110,7 @@ export default function ShopSpotlight() {
             onFocus={()=>setFocused(true)}
             onBlur={()=>setFocused(false)}
           >
-            <Image src={item.image} alt={item.alt} fill quality={90} sizes="(max-width: 640px) 76vw, (max-width: 950px) 360px, 440px" priority={i===0} className="dw-wow-scene-photo"/>
+            <Image src={item.image} alt={item.alt} fill quality={75} sizes="(max-width: 640px) 76vw, (max-width: 950px) 360px, 440px" priority={i===0} loading={i===0?undefined:"lazy"} className="dw-wow-scene-photo"/>
             <span className="dw-wow-photo-gradient" aria-hidden="true"/>
             <span className="dw-wow-scene-card-meta"><small>{item.eyebrow}</small><strong>{item.name}</strong><span>{item.description}</span></span>
             <span className="dw-wow-scene-arrow" aria-hidden="true">↗</span>
@@ -124,6 +124,7 @@ export default function ShopSpotlight() {
     </div>
     <div className="wrap dw-wow-controls">
       <div className="dw-wow-tabs" role="group" aria-label="Choose a discovery category">
+        <span className="dw2-sr-only" role="status" aria-live="polite">Featured category: {worlds[active].short}</span>
         {worlds.map((item,i)=><button type="button" key={item.name} aria-pressed={i===active} onClick={()=>pick(i)} className={"dw-wow-tab"+(i===active?" is-active":"")}>
           <span className="dw-wow-tab-num">0{i+1}</span> {item.short}<span className="dw-wow-tab-icon" aria-hidden="true">{i===active?"↗":"+"}</span>
         </button>)}
