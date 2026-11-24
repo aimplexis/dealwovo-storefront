@@ -82,3 +82,14 @@ export async function quickStageProductAction(form:FormData){
  if(stageError||count!==1)return fail("Product staging rejected");
  return success("Product staged privately. Review and convert it to a draft below.");
 }
+
+export async function prepareBulkDrafts(form:FormData){
+ const {db}=await authorized();
+ const raw=input(form,"rows");
+ if(input(form,"confirm")!=="yes"||raw.length>25000)return fail("Review and confirm your selection");
+ let rows:unknown;try{rows=JSON.parse(raw)}catch{return fail("Invalid batch selection")}
+ if(!Array.isArray(rows)||rows.length<1||rows.length>25||rows.some(r=>!r||typeof r!=="object"||typeof r.candidate_id!=="string"||!uid.test(r.candidate_id)||typeof r.category_id!=="string"||!uid.test(r.category_id)||typeof r.merchant_id!=="string"||!uid.test(r.merchant_id)||typeof r.slug!=="string"||r.slug.length>130||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(r.slug))||new Set(rows.map(r=>r.candidate_id)).size!==rows.length)return fail("Select 1 to 25 distinct candidates with valid assignments");
+ const {data,error}=await db.rpc("prepare_feed_drafts",{p_rows:rows});
+ if(error||data!==rows.length)return fail("Batch rejected. No drafts saved; check source, category, retailer and slug.");
+ revalidatePath("/admin");return success(rows.length+" draft products and offers prepared — not published");
+}
