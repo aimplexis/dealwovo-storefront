@@ -13,8 +13,8 @@ async function authorized(){
  const db=await createSupabaseServer();if(!db)redirect("/admin/login?status=setup");
  const {data:{user},error}=await db.auth.getUser();
  if(error||!user)redirect("/admin/login");
- const {data:member}=await db.from("catalog_admins").select("role").eq("user_id",user.id).maybeSingle();
- if(!member||!["owner","editor"].includes(member.role))redirect("/admin/login?status=denied");
+ const {data:member,error:memberError}=await db.from("catalog_admins").select("role").eq("user_id",user.id).maybeSingle();
+ if(memberError||!member||!["owner","editor"].includes(member.role))redirect("/admin/login?status=denied");
  return {db,user,role:member.role as "owner"|"editor"};
 }
 export async function createFeedSourceAction(data:FormData){
@@ -30,12 +30,12 @@ export async function authorizeFeedSourceAction(data:FormData){
  if(role!=="owner")fail("Only an owner can authorize affiliate feed rights");
  const id=input(data,"source_id"),note=input(data,"authorization_note"),confirmed=input(data,"evidence_confirmed")==="yes";
  if(!uid.test(id)||note.length<25||note.length>1500||!confirmed)fail("A documented rights confirmation is required");
- const {error}=await db.from("catalog_feed_sources").update({authorization_note:note,status:"authorized",authorized_by:user.id,authorized_at:new Date().toISOString()}).eq("id",id).eq("status","draft");
- if(error){console.error("Source authorization failed",error.code);fail("Unable to authorize source")}
+ const {data:updated,error}=await db.from("catalog_feed_sources").update({authorization_note:note,status:"authorized",authorized_by:user.id,authorized_at:new Date().toISOString()}).eq("id",id).eq("status","draft").select("id").maybeSingle();
+ if(error||!updated){console.error("Source authorization failed",error?.code);fail("Source unavailable or no longer a draft")}
  success("Feed source rights marked reviewed");
 }
 export async function stageFeedCSVAction(data:FormData){
- const {db,user}=await authorized();
+ const {db}=await authorized();
  const source_id=input(data,"source_id"),attachment=data.get("file");
  if(!uid.test(source_id))return fail("Invalid source ID");
  if(!(attachment instanceof File))return fail("Select a valid CSV file");
@@ -52,15 +52,15 @@ export async function stageFeedCSVAction(data:FormData){
 export async function rejectFeedCandidateAction(data:FormData){
  const {db}=await authorized();const id=input(data,"candidate_id");
  if(!uid.test(id))fail("Invalid candidate");
- const {error}=await db.from("catalog_feed_candidates").update({status:"rejected"}).eq("id",id).eq("status","staged");
- if(error){console.error("Candidate rejection failed",error.code);fail("Unable to reject candidate")}
+ const {data:updated,error}=await db.from("catalog_feed_candidates").update({status:"rejected"}).eq("id",id).eq("status","staged").select("id").maybeSingle();
+ if(error||!updated){console.error("Candidate rejection failed",error?.code);fail("Candidate unavailable or no longer staged")}
  success("Candidate rejected");
 }
 export async function convertFeedCandidateAction(data:FormData){
  const {db}=await authorized();
  const candidate_id=input(data,"candidate_id"),category_id=input(data,"category_id"),merchant_id=input(data,"merchant_id"),slug=input(data,"slug");
  if(!uid.test(candidate_id)||!uid.test(category_id)||!uid.test(merchant_id)||!(/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug))||slug.length>130)fail("Select category, merchant and a valid unique slug");
- // SECURITY INVOKER Postgres function enforces RLS and runs all writes atomically.
+ // Public invoker wrapper calls a restricted private function with explicit admin authorization and atomic writes.
  const {error}=await db.rpc("dealwovo_convert_feed_candidate",{p_candidate_id:candidate_id,p_category_id:category_id,p_merchant_id:merchant_id,p_slug:slug});
  if(error){console.error("Candidate conversion failed",error.code);fail("Conversion failed. Check source authorization, selections, and slug uniqueness")}
  revalidatePath("/admin");
