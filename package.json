@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm test && next build",
+    "build": "npm install --package-lock-only --ignore-scripts --no-audit --registry=https://registry.npmjs.org && node -e \"const fs=require('node:fs'); const l=JSON.parse(fs.readFileSync('package-lock.json','utf8')); if(l.lockfileVersion!==3||!l.packages||!l.packages[''])throw Error('Invalid lock'); for(const [k,v] of Object.entries(l.packages)){if(k&&(!v.resolved||new URL(v.resolved).origin!=='https://registry.npmjs.org'||!v.integrity||!/^sha(512|384|256|1)-[A-Za-z0-9+/=]+$/.test(v.integrity)))throw Error('Nonstandard registry entry: '+k);} fs.mkdirSync('public/release-check',{recursive:true}); fs.writeFileSync('public/release-check/dependency-lock.json',JSON.stringify(l)); console.log('Validated npm lockfile package count: '+Object.keys(l.packages).length);\" && npm test && next build",
     "start": "next start",
     "test": "node tests/catalog-regression.cjs && node tests/content-lab-regression.cjs"
   },
