@@ -1,66 +1,43 @@
 # Dealwovo — Project state and release checkpoint
-
-Last verified: 2026-11-24. Maintain this document after every development phase. A new ChatGPT conversation must read this and the linked implementation docs before making changes.
+Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
 ## Business baseline
-Affiliate-first shopping discovery; no owned inventory, internal checkout or unauthorized offers at launch. Four discovery pillars: Holiday Deals, Gift Finder, Trending Now, Everyday Essentials. Seasonal campaigns year-round; selective dropshipping is a later decision. Human approval, verified offers and transparent affiliate disclosures are mandatory.
+Affiliate-first shopping discovery: year-round holiday deals, gift discovery, trending products and everyday essentials. No owned inventory or internal checkout at launch. Selective dropshipping is later. Human approval, documented affiliate rights, current offers and transparent disclosures are mandatory.
 
-## Verified infrastructure
-- Production: https://dealwovo.com; Vercel project dealwovo-storefront; production commit 40b3c442689fa004e7d12e8a1e652a7edc8d5adf was READY. Domain and www redirect verified in Vercel.
-- Supabase project dealwovo: ACTIVE_HEALTHY, nine public catalog tables, RLS enabled on all nine, seven migrations applied; one catalog administrator, zero categories, merchants, products, offers or feed records at inspection.
-- Security advisor warning: leaked password protection disabled. Check plan support before enabling; no plan upgrade without approval.
-- Latest cumulative preview commit 88ce851325855a47d7b8c23e2d4766e9c49ac188 (Marketing Agent OS) was READY in Vercel; it is 18 commits ahead and zero behind the observed production commit. Build success is not end-to-end acceptance.
-- Release-readiness branch starts from this cumulative preview, not from an obsolete storefront-only branch. Main and production are unchanged.
+## Infrastructure and evidence
+- Production: https://dealwovo.com. Vercel project dealwovo-storefront, team frhairshop. Last observed production deployment dpl_Fffzhh8DdveL96b2vk7X62EVZtW3; previous verified main commit 40b3c442689fa004e7d12e8a1e652a7edc8d5adf.
+- Cumulative branch: feature/dealwovo-release-readiness. Latest verified preview commit 8b46f65185b4317b99addb55ba0efa07ee39ac45, READY, https://dealwovo-storefront-5j35l3mxg-frhairshop.vercel.app. Build logs confirm Next.js 16.4.6, TypeScript completion and successful test-gated build; only 27 individual PASS lines visible. Do not claim full individual test log verification.
+- Feed stale-action correction 5608cfcc65c10fd926b7156fbcfa6d6bbb160b9f committed after that preview; fresh deployment verification required.
+- Supabase project pqjoujxjbyinmtsvqtxs: 18 migrations confirmed applied. All 12 public application tables have RLS enabled. One catalog admin; zero categories, merchants, products, offers, authorized feed sources, candidates, marketing runs and drafts at latest inspection. One active weekly planning job. No real affiliate authorization or revenue confirmed.
+- Preview variables NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY previously confirmed; verify target and production scope separately. Never expose values or secrets.
+- Security advisor: leaked password protection disabled (WARN); private marketing_ai_attempts RLS with no policies (intentional deny-by-default, INFO). Check plan support and authorization before changes.
 
-## Existing stacked work
-PRs #3 (catalog foundation), #4 (WOW experience), #5 (verified product navigation), #6 (feed staging), #7 (Awin CSV adapter), #8 (offer quality), #9 (premium hybrid), #10 (mobile accessibility). Marketing Agent OS branch adds one commit on top of #10. Do not merge each stacked PR independently without reviewing dependencies. The cumulative release candidate requires a fresh diff and preview review.
+## Implemented scope
+- Catalog, public offer eligibility, safe HTTPS outbound redirect, admin review and audit foundation (001–005).
+- Atomic affiliate CSV staging, Awin mapping, owner rights approval, private candidate conversion and direct write lockdown (006–007, 013–014). Synthetic rollback tests passed. Actual merchant rights and real authorized feed still needed.
+- Marketing Agent OS (008–012): atomic owner planner, 30-minute manual cooldown, Monday 14:00 UTC weekly private drafts, US seasonal calendar, supervised Content Lab. Five attempts per rolling 24h plus 30-minute model cooldown tested. Model calls disabled pending approved budget; no external publishing. Free brief and mocked provider regression suite included in test-gated build.
+- Offer Quality (015): catalog-wide totals, status filters, 50-row pagination. Rollback fixture 54 offers passed.
+- Product Discovery (016): authorized staged candidates ranked by four metadata fields, 50-row pagination; 52-row rollback fixture passed. No demand scoring.
+- Deal Evaluation (017): catalog-wide promotion triage and cross-retailer recorded USD price comparison, excludes expired/expiring/ineligible alternatives. Rollback tests passed; no verified savings or profit claims.
+- Marketing Review (018): exact totals, 25-row filters and status audit history. Draft-to-reviewed-to-archived rollback test passed. No automatic publication.
+- Nonadmin reporting RPC access denied in simulated JWT/database role tests. Browser sign-in remains unverified.
+- Public HTTP acceptance: 24 route checks on commit 7d03df43c579c9045c1e9a9c19f05b2b6e35efbc, including public pages, health, robots, seven protected admin paths, login and invalid product/offer routes. Invalid redirect parameters rejected. Preview noindex confirmed. Temporary authenticated Vercel fetch links used, never shared.
+- Subsequent source-level accessibility fixes: wrapping navigation, long text, active filters, focus, skip target and natural mobile keyboard navigation. Actual mobile browser layout/accessibility compliance remains unverified.
+
+## Release gates — HOLD
+1. Reproducible dependencies: no package-lock.json observed; manifest uses ranges. Local npm registry DNS fails (EAI_AGAIN); do not fabricate lockfile or downgrade to unrelated versions. In a trusted network-enabled checkout use Node 22, generate real lockfile, review resolved dependency changes, npm ci, npm audit, npm test, npm run build. Commit reviewed lockfile and pin direct dependency versions; audit high/critical findings before release. Vercel Security Review API currently intermittently 403.
+2. Latest candidate build and HTTP smoke checks; authenticated owner/editor/nonadmin browser flows, mobile viewport and keyboard/screen reader/contrast testing. Protected preview HTTP access is not equivalent to signed-in browser acceptance. Keep deployment protection enabled. No credential sharing in chat.
+3. Verify production environment configuration, security advisor warning resolution, source image rights, legal/disclosure review and dependency audit. Compare cumulative release against current main; do not merge stacked draft PRs #3–10 independently.
+4. Initialize approved taxonomy and documented authorized merchant/feed records using admin workflow; verify real product rights, variants, availability, retailer destination, first eligible outbound redirect and affiliate attribution. No fake commercial data.
+5. Confirm natural weekly execution, paid model budget/authorization and live test only if approved; no external publishing without explicit authorization.
+6. Obtain owner approval for production release. Test exact staged production build before assigning domain. Post-release monitoring and rollback plan required.
 
 ## Implementation references
-- docs/PHASE3_SETUP.md and docs/PHASE3B_VERIFICATION.md
-- docs/PHASE4A_VERIFIED_NAVIGATION.md
-- docs/PHASE4B_FEED_IMPORT.md
-- docs/PHASE4C_AWIN_READINESS.md
-- docs/PHASE4D_OFFER_QUALITY.md
-- docs/DEALWOVO_2_DESIGN_SYSTEM.md
-- docs/MARKETING_AGENT_OS.md
-
-## Release gates — HOLD until verified
-1. Confirm current main SHA and compare cumulative candidate against it; reconcile conflicts if any.
-2. Validate required Vercel variable names and scopes without exposing values; confirm correct Supabase target.
-3. Review migration 008 marketing agent OS separately; not observed applied. Check scheduling, privileges and rollback before applying; do not activate cron without explicit review.
-4. Run fresh candidate build, lint/typecheck and available tests; check public pages, protected admin routes and invalid outbound URLs. Verify mobile rendering and keyboard navigation.
-5. Confirm administrator login and unauthorized access denial with appropriate test identities. Review RLS policies, not merely enabled flags.
-6. Initialize agreed taxonomy via existing authorized admin workflow. No fake merchant/product/offer records or unauthorized affiliate feeds.
-7. Validate real merchant approvals, permitted assets, current offers, affiliate attribution and disclosures before live commercial launch.
-8. Marketing drafts stay private and supervised. No autonomous external posting, messaging, paid AI or spending without separate approval.
-9. Obtain owner approval for production merge/deploy. Verify production afterward and update this document.
+- docs/PHASE3_SETUP.md, docs/PHASE3B_VERIFICATION.md
+- docs/PHASE4A_VERIFIED_NAVIGATION.md, docs/PHASE4B_FEED_IMPORT.md, docs/PHASE4C_AWIN_READINESS.md, docs/PHASE4D_OFFER_QUALITY.md
+- docs/DEALWOVO_2_DESIGN_SYSTEM.md, docs/MARKETING_AGENT_OS.md
+- supabase/migrations/20261124_001_catalog_foundation.sql through 20261124_018_marketing_review_report.sql
+- tests/catalog-regression.cjs and tests/content-lab-regression.cjs
 
 ## Next action
-Inspect the cumulative candidate configuration and migration 008; complete read-only release review and identify the smallest safe corrections. Do not publish offers or merge to main as part of this checkpoint.
-
-## Follow-up: Marketing Studio database activation
-- Release branch Supabase URL and publishable key configured for preview only; deployment dpl_BoLUDC7PcG76Jn81yNsjhnSX1uVY READY: https://dealwovo-storefront-3f41pkg3f-frhairshop.vercel.app.
-- Applied existing migration 008 (dealwovo_marketing_agent_os) after confirming all three marketing tables absent and owner guard present. All three tables now have RLS; six policies total; anonymous SELECT and INSERT denied on each. Security advisor reports only existing leaked-password protection warning.
-- Weekly planner function installed, but no cron schedule activated. Authenticated browser smoke test, atomic manual generation and database-enforced cooldown remain pending. Production deployment unchanged; shared Dealwovo database schema updated.
-
-## Marketing Agent OS V1.1 — atomic generation
-- Migration 009 applied; owner-only private definer with public invoker wrapper, fixed search path, transaction advisory lock, 30-minute cooldown, no direct authenticated inserts. Application invokes RPC and accurately labels weekly scheduling inactive.
-- Transactional SQL test with simulated JWT claims passed: non-owner denied, owner produced one run and four drafts, immediate repeat returned zero; rolled back. Anonymous RPC and direct authenticated inserts denied. Existing leaked-password warning only. Actual browser session test and concurrent-request stress test remain pending.
-- Old marketing previews using direct insert are superseded; use new release branch preview. No external publication, scheduling, paid AI, production deployment or catalog activation.
-
-## Marketing Agent OS V1.2 — weekly scheduling
-- Migration 010 applied. One active pg_cron job dealwovo-weekly-marketing-drafts, Monday 14:00 UTC (GMT scheduler), invokes private planner as postgres. No external actions. To stop only this job: select cron.unschedule('dealwovo-weekly-marketing-drafts');
-- Rollback test: four private drafts, duplicate weekly run suppressed. Status RPC tested with simulated owner/non-admin claims: owner active, non-admin denied; anon execute denied. Actual scheduled execution history and authenticated browser smoke test pending. Existing password protection warning remains.
-- UI reads actual scheduler status, fails to unknown if unavailable. Seasonal intelligence and generative AI are not yet implemented; fixed editorial templates only. Production website unchanged, shared database scheduler active.
-
-## V1.3 seasonal intelligence
-- Migration 011 applied; US editorial calendar and preparation windows drive manual and weekly draft inserts. Calendar access admin-only; anonymous access denied. Rollback tests passed for holiday dates and both generation paths. No live demand, prices or AI claims. UI commit 05b1ef4.
-- Owner requests continuous execution across safe development phases, with preview and verification at each milestone; production promotion, paid services and external publishing still require approval. Work proceeds during active chat/tool execution only.
-
-## V1.4 product discovery
-- Added read-only admin /admin/discovery and catalog navigation. Reuses authorized sources and staged candidates; ranks latest 100 authorized staged records by four supplied metadata fields, then recency. No external acquisition, demand scoring, verification, or automatic publication. Live DB inspection: zero authorized sources, staged candidates, products, and offers. Nonempty browser integration test pending real permitted feed. No database schema change.
-
-## V1.5 deal evaluation
-- Core evaluation module committed (3301233); admin integration and tests unfinished, explicitly deferred.
-## V1.6 supervised Content Lab
-- Owner-only /admin/marketing/lab, free brief preview, server-only gateway adapter, live generation disabled by default. Migration 012 applied; global 30-minute cooldown and five attempts per rolling 24 hours. Rollback test passed owner allowance, duplicate rejection and non-owner denial; anon RPC denied. No project gateway budget found. No paid calls, external publication or production promotion. Actual provider response and browser testing pending.
+Verify latest feed correction preview; resolve dependency lockfile and audit with trusted registry access. Continue remaining acceptance gates, then proceed to visual marketing, social integrations, SEO and revenue analytics as separately gated milestones. Owner requests consecutive execution within active sessions and actual preview links at verified milestones.
