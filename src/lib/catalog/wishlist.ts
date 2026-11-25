@@ -1,6 +1,6 @@
 export const MAX_SAVED=40;
 export const WISHLIST_KEY="dealwovo.saved-products.v1";
-export type SavedProduct={id:string;title:string};
+export type SavedProduct={id:string;title:string;targetCents?:number};
 export type WishlistOffer={id:string;price_cents:number|null;currency:string;verified_at:string;expires_at:string;merchant:{name:string}};
 export type WishlistProduct={id:string;slug:string;title:string;image_url:string|null;category:{name:string};offers:WishlistOffer[]};
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -10,7 +10,8 @@ export function savedEntry(input:unknown):SavedProduct|null{
  const v=input as Record<string,unknown>;
  if(typeof v.id!=="string"||!uuid.test(v.id)||typeof v.title!=="string")return null;
  const title=v.title.replace(/[\u0000-\u001f\u007f]/g," ").trim().slice(0,180);
- return title?{id:v.id.toLowerCase(),title}:null;
+ const target=typeof v.targetCents==="number"&&Number.isSafeInteger(v.targetCents)&&v.targetCents>0&&v.targetCents<=100000000?v.targetCents:undefined;
+ return title?{id:v.id.toLowerCase(),title,...(target!==undefined?{targetCents:target}:{})}:null;
 }
 export function readSaved(raw:string|null):SavedProduct[]{
  if(!raw||raw.length>50000)return [];

@@ -87,3 +87,12 @@ export async function getDailyPromotion():Promise<import("./daily-feature").Dail
  if(error||!data||typeof data!=="object"||!data.offer)return null;
  return data as import("./daily-feature").DailyPromotion;
 }
+
+export async function getReviewedPriceChanges(ids:string[]):Promise<{available:boolean;changes:import("./price-watch").PriceChange[]}>{
+ if(!ids.length)return {available:true,changes:[]};
+ if(ids.length>120||ids.some(id=>!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)))return {available:false,changes:[]};
+ const client=publicSupabase();if(!client)return {available:false,changes:[]};
+ const {data,error}=await client.rpc("reviewed_price_changes",{p_ids:ids});
+ if(error||!Array.isArray(data))return {available:false,changes:[]};
+ return {available:true,changes:data as import("./price-watch").PriceChange[]};
+}

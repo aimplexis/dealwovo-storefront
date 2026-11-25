@@ -1,7 +1,7 @@
 "use client";
 import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from "react";
 import {MAX_SAVED,WISHLIST_KEY,readSaved,toggleSaved,type SavedProduct} from "../lib/catalog/wishlist";
-type State={items:SavedProduct[];ready:boolean;temporary:boolean;toggle:(entry:SavedProduct)=>void;remove:(id:string)=>void;clear:()=>void};
+type State={items:SavedProduct[];ready:boolean;temporary:boolean;toggle:(entry:SavedProduct)=>void;remove:(id:string)=>void;clear:()=>void;setTarget:(id:string,cents:number|undefined)=>void};
 const Context=createContext<State|null>(null);
 export function WishlistProvider({children}:{children:ReactNode}){
  const [items,setItems]=useState<SavedProduct[]>([]),[ready,setReady]=useState(false),[temporary,setTemporary]=useState(false);
@@ -15,7 +15,7 @@ export function WishlistProvider({children}:{children:ReactNode}){
  },[]);
  const save=(next:SavedProduct[])=>{replace(next);try{if(next.length)window.localStorage.setItem(WISHLIST_KEY,JSON.stringify(next));else window.localStorage.removeItem(WISHLIST_KEY);setTemporary(false);}catch{setTemporary(true);}};
  const latest=()=>{try{return temporary?current.current:readSaved(window.localStorage.getItem(WISHLIST_KEY));}catch{return current.current;}};
- return <Context.Provider value={{items,ready,temporary,toggle:e=>save(toggleSaved(latest(),e)),remove:id=>save(latest().filter(x=>x.id!==id)),clear:()=>save([])}}>{children}</Context.Provider>;
+ return <Context.Provider value={{items,ready,temporary,toggle:e=>save(toggleSaved(latest(),e)),remove:id=>save(latest().filter(x=>x.id!==id)),clear:()=>save([]),setTarget:(id,cents)=>save(latest().map(x=>{if(x.id!==id)return x;const {targetCents:_,...rest}=x;return typeof cents==="number"&&Number.isSafeInteger(cents)&&cents>0&&cents<=100000000?{...rest,targetCents:cents}:rest;}))}}>{children}</Context.Provider>;
 }
 export function useWishlist(){const c=useContext(Context);if(!c)throw Error("WishlistProvider required");return c;}
 export function SaveProduct({id,title}:{id:string;title:string}){
