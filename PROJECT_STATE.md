@@ -1,6 +1,9 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Product marketing execution checkpoint
+- Merchandising b318020 preview verified READY; original guides and product rails implemented. Product Campaign Engine migration 037 and owner review workflow added; migration/build/functional verification pending. Eight text assets per eligible source-linked product, bounded daily internal preparation, current-version review; actual partner authorization, product catalog, finished creative, posting, email and attribution remain pending. Next: conversion and attribution foundation, profitability and supervised orchestration.
+
 ## Autonomous commerce and growth mandate
 - Founder requested comprehensive traffic generation, advanced SEO, affiliate and eventual dropshipping, and an automated AI workforce. `docs/AUTONOMOUS_COMMERCE_GROWTH_SYSTEM.md` defines the detailed implementation plan, verified official search policy references, channel strategy, role/tool matrix, unit economics and release/automation boundaries. Prioritize real product sourcing, opportunity research, original content and SEO launch readiness concurrently. Current indexing hold remains intact; no external account connections, subscriptions, publishing, spending or direct-sale activation.
 
