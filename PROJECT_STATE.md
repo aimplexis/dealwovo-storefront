@@ -1,6 +1,9 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Founder vision — year-round discovery
+Dealwovo must not be a holiday-only site. Founder explicitly clarified the goal: a welcoming platform people enjoy returning to for everyday life and all occasions. Everyday essentials, lifestyle, practical solutions, technology, interests and meaningful celebrations are the permanent core. Holiday deals are one seasonal collection, not the brand identity. Keep English-only, affiliate-first, private preview and all commercial holds. Rebalance existing content and navigation without speculative feature expansion.
+
 ## Phase 10 acceptance checkpoint — 2026-11-24
 - Customer-facing phases 1–9 have committed code; this is not production acceptance. Concierge f52d272 preview READY, gift checkpoint 6729294 preview READY with test-gated build completed. Recommendation evidence through 3ca9bb8; trust page through c81e8c5; preferences through 89e18be; optional recent history through b7522a8. Latest cumulative candidate ad4261c377e13d47df8fa565cb1b4ba68b6e2fe0 observed QUEUED on Vercel dpl_85cxbKAndntqap6iJHw9JHHPSrTN.
 - New customer experience regression suite 71b7542, wired into npm test ad4261c (28 suites total). Execution pending. Source checks: root HTML lang=en, global noindex/nofollow response header configuration, robots disallow all, provisional privacy/terms/contact. Full browser, keyboard/mobile, performance, security, environment, and legal acceptance pending. No owner gate marked reviewed. No new database evidence gathered.
