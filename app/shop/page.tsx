@@ -43,6 +43,7 @@ export default async function ShopPage({searchParams}:{searchParams:Promise<Reco
    <p className="dw2-shop-illustration">The images above are editorial illustrations of shopping interests, not live product listings.</p>
   </div></section>
   <AmazonEditorial/>
+  <section className="wrap dw2-shop-commitment"><div><span className="dw2-eyebrow">BUYING WITH INTENTION</span><h2>Make a thoughtful choice.</h2></div><div><p>Explore our practical shopping guides before choosing a product.</p><Link href="/guides">Read buying guides ↗</Link></div></section>
   <section className="wrap dw2-shop-commitment"><div><span className="dw2-eyebrow">WHAT MAKES A GOOD FIND?</span><h2>Discovery with<br/><em>a little more intention.</em></h2></div><div><p>Our product listings are built around approved retailers, reviewable sources, and time-limited offer verification. We don't claim a discount unless we can substantiate it.</p><Link href="/affiliate-disclosure">How our affiliate links work ↗</Link></div></section>
  </main>;
 }
