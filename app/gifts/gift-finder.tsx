@@ -5,6 +5,7 @@ import {useMemo,useState} from "react";
 import {giftFields as fields,giftDefaults,type GiftSelections} from "../../src/lib/catalog/gift-recommendations";
 import type {AssistantOffer} from "../../src/lib/catalog/shopping-assistant";
 import GiftProducts from "./gift-products";
+import {giftGuidance,giftStyles,type GiftStyle} from "../../src/lib/catalog/gift-guidance";
 type GiftEdit={title:string;eyebrow:string;copy:string;recipient:string[];occasion:string[];budget:string[];interest:string[];href:string;image:string;alt:string};
 const ideas:GiftEdit[]=[
  {title:"The curious mind",eyebrow:"01 / TECH & LITTLE WONDERS",copy:"For the one who loves discovering what's next.",recipient:["friend","family","partner"],occasion:["holiday","birthday"],budget:["under25","under50","50to150","over150"],interest:["tech"],href:"/trending",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80",alt:"Headphones in an editorial photograph"},
@@ -14,11 +15,13 @@ const ideas:GiftEdit[]=[
 ];
 export default function GiftsPage({offers,available}:{offers:AssistantOffer[];available:boolean}){
  const [selections,setSelections]=useState<GiftSelections>({...giftDefaults});
+ const [style,setStyle]=useState<GiftStyle>("any");
+ const guidance=useMemo(()=>giftGuidance(selections,style),[selections,style]);
  const results=useMemo(()=>ideas.filter(x=>fields.every(field=>{
    const value=selections[field.id];
    return value==="all"||x[field.id].includes(value);
  })),[selections]);
- const reset=()=>setSelections({...giftDefaults});
+ const reset=()=>{setSelections({...giftDefaults});setStyle("any");};
  return <main className="dw2-gifts">
   <section className="dw2-gifts-hero"><div className="wrap dw2-gifts-hero-inner">
    <div><span className="dw2-eyebrow">THE DEALWOVO GIFT FINDER ✳</span>
@@ -31,11 +34,12 @@ export default function GiftsPage({offers,available}:{offers:AssistantOffer[];av
     <span>THE ART OF<br/><b>GIVING WELL.</b> ✳</span>
    </div>
   </div></section>
-  <section className="wrap dw2-finder" id="gift-finder"><div className="dw2-finder-head"><div><span className="dw2-eyebrow">01 / START WITH SOMEONE SPECIAL</span><h2>A few details.<br/><em>A world of ideas.</em></h2></div><p>Choose a recipient, occasion, budget and interest. Product matches update as you explore.</p></div>
+  <section className="wrap dw2-finder" id="gift-finder"><div className="dw2-finder-head"><div><span className="dw2-eyebrow">01 / START WITH SOMEONE SPECIAL</span><h2>A few details.<br/><em>A world of ideas.</em></h2></div><p>Choose a recipient, occasion, budget, interest and gift style. Product matches use the first four choices; gift style personalizes editorial guidance.</p></div>
    <div className="dw2-finder-controls">{fields.map((f,i)=><label key={f.id} htmlFor={"dw2-field-"+f.id}><span>0{i+1} / {f.label}</span>
     <select id={"dw2-field-"+f.id} value={selections[f.id]} onChange={e=>setSelections(s=>({...s,[f.id]:e.target.value}))}>
      {f.opts.map(([val,title])=><option key={val} value={val}>{title}</option>)}
-    </select></label>)}</div>
+    </select></label>)}<label htmlFor="dw-gift-style"><span>05 / GIFT STYLE</span><select id="dw-gift-style" value={style} onChange={e=>setStyle(e.target.value as GiftStyle)}>{giftStyles.map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label></div>
+   {guidance&&<section className="dw-gift-guidance" aria-label="Your personalized gift inspiration"><span className="dw2-eyebrow">YOUR THOUGHTFUL GIFT PLAN</span><h2>Ideas with meaning.</h2><p>{guidance.recipient} {guidance.occasion} {guidance.budget}</p><div className="dw-gift-guidance-grid">{guidance.ideas.map(i=><article key={i.kind}><small>{i.kind}</small><h3>{i.title}</h3><p>{i.why}</p></article>)}</div><p>Editorial ideas, not verified offers or price guarantees. Gift style changes this guidance, not the reviewed catalog filters.</p><button type="button" onClick={reset}>Reset all choices</button></section>}
    <GiftProducts offers={offers} available={available} selections={selections}/>
    <div className="dw2-finder-result-head"><div><span className="dw2-eyebrow">03 / EDITORIAL INSPIRATION</span><h2>Ideas for <em>their kind of wow.</em></h2><p aria-live="polite">{results.length} {results.length===1?"inspiration path":"inspiration paths"} available</p></div><button type="button" onClick={reset}>Reset selections ↺</button></div>
    {results.length?<div className="dw2-gifts-grid">{results.map((x,i)=><Link href={x.href} className="dw2-gifts-card" key={x.title}>
