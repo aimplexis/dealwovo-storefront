@@ -1,6 +1,11 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Phase 10 acceptance checkpoint — 2026-11-24
+- Customer-facing phases 1–9 have committed code; this is not production acceptance. Concierge f52d272 preview READY, gift checkpoint 6729294 preview READY with test-gated build completed. Recommendation evidence through 3ca9bb8; trust page through c81e8c5; preferences through 89e18be; optional recent history through b7522a8. Latest cumulative candidate ad4261c377e13d47df8fa565cb1b4ba68b6e2fe0 observed QUEUED on Vercel dpl_85cxbKAndntqap6iJHw9JHHPSrTN.
+- New customer experience regression suite 71b7542, wired into npm test ad4261c (28 suites total). Execution pending. Source checks: root HTML lang=en, global noindex/nofollow response header configuration, robots disallow all, provisional privacy/terms/contact. Full browser, keyboard/mobile, performance, security, environment, and legal acceptance pending. No owner gate marked reviewed. No new database evidence gathered.
+- Release HOLD. Amazon setup remains paused per founder; no source authorization, indexing, production promotion, external tracking or marketing activation. Final verified support contact and legal policies needed. Do not infer current catalog counts from older inspection. Named shopping lists and saved gift ideas remain deferred. Next priority: obtain successful exact-candidate build logs and protected browser acceptance, correct observed defects, then commercial verification when owner resumes Amazon.
+ 
 ## Customer experience transformation checkpoint
 - Founder directed Amazon setup to remain held and approved purpose-first lifestyle shopping improvements. English-only initial launch is mandatory across public UI, admin, content, workforce, legal and documentation; no language switching added.
 - Homepage shopper-intent navigation, honest catalog-empty messaging and customer-controlled hero motion committed through 4b5d8b1. Lifestyle page /lifestyle and six editorial collections through 6ea92f1; problem discovery /solutions with six goals, no-spend steps and practical buying criteria through 7662dc3.
