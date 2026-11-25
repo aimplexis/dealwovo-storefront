@@ -19,10 +19,11 @@ import SiteFooter from "../src/components/SiteFooter";
 export const metadata:Metadata={
  title:{default:"Dealwovo — Discover More. Save Smarter.",template:"%s | Dealwovo"},
  description:"Meet your next favorite find. Explore thoughtful gifts, clever tech and everyday inspiration with Dealwovo.",
+ other:{"google":"notranslate"},
  robots:indexingHold
 };
 export default function RootLayout({children}:{children:React.ReactNode}){
- return <html lang="en"><body><WishlistProvider>
+ return <html lang="en-US" translate="no"><body><WishlistProvider>
   <a className="dw2-skip" href="#main-content">Skip to content</a>
   <SiteHeader/>
   <div id="main-content" tabIndex={-1}>{children}</div>
