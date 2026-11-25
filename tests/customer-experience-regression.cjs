@@ -17,6 +17,14 @@ assert.equal(prefs.discoveryPaths({interests:["travel"],budget:"50"})[0].href,"/
 assert.equal(guide.conciergeGoal("invalid"),null);
 assert.equal(new Set(guide.conciergeGoals.map(g=>g.id)).size,6);
 for(const g of guide.conciergeGoals){assert.equal(guide.conciergeGoal(g.id),g);assert.equal(g.ideas.length,2);assert.ok(g.first&&g.ideas.every(i=>i.keyword&&i.check));}
+const request={need:"Headphones under $50",category:"electronics",maxBudget:"60",purpose:"self"};
+const next=guide.applyConciergeKeyword(request,"cable organizer");
+assert.equal(next.ok,true);assert.deepEqual(next.request,{need:"cable organizer",category:"electronics",maxBudget:"49.99",purpose:"self"});
+assert.equal(guide.applyConciergeKeyword({...request,need:"",maxBudget:"invalid"},"cable organizer").ok,false);
+assert.equal(guide.applyConciergeKeyword({...request,need:"under $0.01"},"cable organizer").ok,false);
+assert.equal(guide.applyConciergeKeyword(request,"unsupported").ok,false);
+assert.equal(guide.applyConciergeKeyword({...request,need:"not wireless"},"cable organizer").ok,false);
+assert.equal(guide.applyConciergeKeyword({...request,need:"Headphones",maxBudget:"50"},"cable organizer").request.maxBudget,"50.00");
 const offer={price_cents:3999,currency:"USD",verified_at:"2026-11-24T00:00:00Z",product:{category:{slug:"electronics"}}};
 assert.equal(evidence.recommendationEvidence(offer,["Matches keywords"]).priceKnown,true);
 for(const price_cents of [null,-1,1.5,NaN])assert.equal(evidence.recommendationEvidence({...offer,price_cents},[]).priceKnown,false);
