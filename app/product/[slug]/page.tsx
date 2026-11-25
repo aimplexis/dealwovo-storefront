@@ -1,3 +1,4 @@
+import MerchandisingServer from "../../../src/components/MerchandisingServer";
 import {cache} from "react";
 import {comparisonHref} from "../../../src/lib/catalog/comparison";
 import {productMetadata} from "../../../src/lib/marketing/seo-readiness";
@@ -36,5 +37,6 @@ export default async function ProductDetail({params}:{params:Promise<{slug:strin
      <p className="dw-product-disclosure">Affiliate disclosure: We may earn a commission from eligible retailer purchases, at no additional cost to you. Dealwovo does not process the purchase. <Link href="/affiliate-disclosure">Read details</Link>.</p>
     </div>
    </section>
+   <MerchandisingServer kind="recent" related={product} title="More to explore." description="Other products in the same department. Compare exact features and retailer terms before choosing." limit={4}/>
   </main>;
 }

@@ -1,6 +1,7 @@
 import {pageMetadata} from "../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import Image from "next/image";
+import MerchandisingServer from "../src/components/MerchandisingServer";
 import DailyFeatureServer from "../src/components/DailyFeatureServer";
 import NewsletterTeaser from "../src/components/NewsletterTeaser";
 import ShoppingShortcuts from "../src/components/ShoppingShortcuts";
@@ -23,6 +24,7 @@ export default async function Home(){
   <ShopSpotlight/>
   <ShoppingShortcuts/>
   <DailyFeatureServer/>
+  <MerchandisingServer kind="recent" title="Recently reviewed finds." description="A fresh selection from current eligible retailer offers, ordered by review date." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/>
   <section className="dw2-intro-band" aria-label="Our approach">
    <div className="wrap dw2-intro-inner"><span>THOUGHTFULLY FOUND.</span><span aria-hidden="true">✳</span><span>DESIGNED FOR DISCOVERY.</span><span aria-hidden="true">✳</span><span>ALWAYS YOUR KIND OF WOW.</span></div>
   </section>
