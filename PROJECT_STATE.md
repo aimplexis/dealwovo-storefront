@@ -1,8 +1,11 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Revenue-first founder mandate
+Product merchandising and revenue generation are the primary purpose of Dealwovo. Follow `docs/REVENUE_FIRST_OPERATING_MANDATE.md` before any new development. Stop nonessential feature expansion; use existing onboarding, import, catalog and marketing tools to obtain actual affiliate rights, research high-intent products, prepare the first eligible collection, acquire customers and reconcile genuine commissions. Next action is actual affiliate partner onboarding and product merchandising, not an additional dashboard. All commercial, privacy and production holds remain in force.
+
 ## Department setup checkpoint
-- Migration 034 and owner department review workflow implemented; verification pending. 12 canonical draft departments; no product or offer authorization. Next: actual partner onboarding and first authorized assortment.
+- Migration 034 applied; all 12 canonical draft departments verified in database. Owner publication and invalid/nonowner denial tested with rollback; no categories, products or offers published. Latest deployment unverified. Next: actual partner onboarding and first authorized assortment.
 
 ## Latest commercial checkpoint (2026-11-24)
 - Shopper foundations through Price Watch deployed at ebce9c2, READY; daily deals migration 030 and price history 031 applied. Newsletter ec02df5 committed and migration 032 applied; Vercel deployment inspection returned 403, so latest build unverified. Subscriber collection and delivery held.
