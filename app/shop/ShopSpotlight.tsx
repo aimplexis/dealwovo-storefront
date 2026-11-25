@@ -18,8 +18,8 @@ const worlds: Discovery[] = [
   {
     name: "THE GIFT EDIT", short: "Gifts", eyebrow: "02 / MORE THOUGHTFUL",
     description: "Something they'll actually remember.", href: "/gifts",
-    image: "https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=1800&q=90",
-    alt: "Holiday gift inspiration in a vibrant decorated scene", theme: "pink"
+    image: "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1800&q=90",
+    alt: "Thoughtfully wrapped presents for special occasions", theme: "pink"
   },
   {
     name: "THE EVERYDAY EDIT", short: "Living", eyebrow: "03 / A LITTLE BETTER",
@@ -87,10 +87,10 @@ export default function ShopSpotlight() {
       <div className="dw-wow-copy">
         <div className="dw-wow-overline"><span className="dw-wow-ping"/> THOUGHTFUL SHOPPING STARTS HERE <span className="dw-wow-rule"/></div>
         <h1>GOOD FINDS.<br/><span className="dw-wow-headline-pop">GREAT FEELINGS<span className="dw-wow-period">.</span></span></h1>
-        <p className="dw-wow-lead">Discover thoughtful gifts, clever gadgets and everyday essentials. Explore ideas by interest or budget, with reviewed retailer offers when available.</p>
+        <p className="dw-wow-lead">For everyday life and every special moment. Discover useful essentials, clever upgrades, thoughtful gifts and ideas that fit your lifestyle. Explore reviewed retailer offers when available.</p>
         <div className="dw-wow-actions">
           <Link className="dw-wow-primary" href="/#shopping-start">Discover your next find <span aria-hidden="true">↗</span></Link>
-          <Link className="dw-wow-secondary" href="/gifts">Find a thoughtful gift <span aria-hidden="true">→</span></Link>
+          <Link className="dw-wow-secondary" href="/lifestyle">Explore your lifestyle <span aria-hidden="true">→</span></Link>
         </div>
         <div className="dw-wow-social-proof"><span className="dw-wow-spark" aria-hidden="true">✳</span><div><strong>SHOP WITH CONFIDENCE.</strong><small>A fresh approach to thoughtful shopping.</small></div></div>
       </div>
