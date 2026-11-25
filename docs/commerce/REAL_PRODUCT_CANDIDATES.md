@@ -1,0 +1,26 @@
+# Task 53 — Real product candidate research
+2026-11-24 US. Internal candidate research only; public repository contains no confidential Amazon dashboard materials. Sources establish product identity, not demand, current stock, price, affiliate eligibility or rights. ASINs below are observed in indexed Amazon results, not live verification. All other ASINs intentionally blank. No affiliate links generated. Amazon account created per owner screenshot; tax/payment held pending state documents; final program approval unverified. All candidates held. Power banks deferred pending exact model and serial recall checks (https://www.cpsc.gov/Recalls/2025/More-than-One-Million-Anker-Power-Banks-Recalled-Due-to-Fire-and-Burn-Hazards-Manufactured-by-Anker-Innovations). No product images copied. Prioritize first ten after exact variant and rights review.
+| Product | Department | Public reference | Observed ASIN | Original draft copy |
+|---|---|---|---|---|
+| Soundcore P20i | Electronics | https://www.soundcore.com/products/p20i |  | Compact earbuds for everyday listening; compare fit and device compatibility. |
+| Soundcore Q20i | Electronics | https://www.soundcore.com/products/q20i-a3004z31 |  | Over-ear listening for travel and work; check comfort and noise-control features. |
+| Anker Nano 30W A2147 | Electronics | https://www.anker.com/products/a2147 |  | Compact wall charging option; check device power requirements. |
+| Zulay handheld milk frother | Kitchen | https://www.zulaykitchen.com/products/zulay-milk-frother-handheld |  | Explore coffeehouse-inspired drinks at home; check included accessories. |
+| Rubbermaid Brilliance 10-piece set | Kitchen | https://www.rubbermaid.com/food-storage/everyday-use-containers/brilliance/rubbermaid-brilliance-10-piece-set-leak-proof-and-clear-food-storage-containers/SAP_2199772.html |  | Organize leftovers and meal prep; confirm sizes and care instructions. |
+| Bedsure Sherpa throw gray 50x60 | Home | https://www.amazon.com/dp/B0158EQJSY | B0158EQJSY | A cozy layer for quiet evenings; compare fabric and washing instructions. |
+| Mattel UNO classic | Games | https://creations.mattel.com/products/uno-42003 |  | Bring a familiar card game to gatherings; check age and player guidance. |
+| Kitsch satin heatless curling set | Beauty | https://www.mykitsch.com/collections/satin-heatless-curling-set |  | Explore styling without heated curling tools; confirm selected kit and hair suitability. |
+| OXO expandable utensil organizer | Home | https://www.oxo.com/expandable-utensil-organizer.html |  | Make room for everyday utensils; measure drawer dimensions before choosing. |
+| BAGSMART Space Saver hanging toiletry bag | Travel | https://www.bagsmart.com/products/the-space-saver-hanging-toiletry-bag |  | Keep travel essentials together; check packed dimensions. |
+| Logitech M185 wireless mouse | Electronics | https://www.logitech.com/en-us/shop/p/m185-wireless-mouse.910-003922 |  | A compact accessory for a laptop workspace; check receiver and system compatibility. |
+| Anker 643 USB-C cable A8552 | Electronics | https://www.anker.com/products/a8552 |  | A charging cable option; confirm length, supported wattage and connectors. |
+| TIMEMORE Basic 3.0 espresso scale | Kitchen | https://www.timemore.com/products/timemore-basic-3-0-electronic-espresso-scale-with-timer |  | Measure coffee ingredients for a more consistent routine; check capacity. |
+| Ravensburger Art Studio 500-piece puzzle | Games | https://www.ravensburger.us/en-US/products/jigsaw-puzzles/puzzles-for-adults/art-studio-12001845 |  | An art-themed activity for a relaxed evening; check finished dimensions. |
+| Mattel Phase 10 W4729 | Games | https://shop.mattel.com/products/phase-10-card-game-w4729 |  | A card-game option for group gatherings; check rules and age guidance. |
+| Burt's Bees Tips and Toes Kit | Beauty | https://www.burtsbees.com/product/tips-and-toes-kit/ |  | A personal-care gift idea; review ingredients and contents. |
+| BAGSMART Faro hanging toiletry bag | Travel | https://www.bagsmart.com/products/faro-hanging-toiletry-bag?variant=42527322406994 |  | A hanging travel organizer; verify exact size and compartments. |
+| Rubbermaid Brilliance pantry 22-piece set | Kitchen | https://www.rubbermaid.com/food-storage/everyday-use-containers/brilliance/brilliance-pantry-food-storage-container-set-assorted-sizes/SAP_2179274.html |  | An option for organizing pantry ingredients; check container capacities. |
+| Soundcore Space 2 over-ear headphones | Electronics | https://www.amazon.com/dp/B0GR4GR5QH | B0GR4GR5QH | Consider for travel listening; compare fit, features and device compatibility. |
+| Bedsure prewashed queen duvet cover white | Home | https://www.amazon.com/dp/B07PCQKTCN | B07PCQKTCN | Refresh a bedroom with a duvet cover; confirm dimensions and included pieces. |
+
+Next: owner verifies account permissions and actual SiteStripe link, exact Amazon variant, recall status, channel rights and disclosures. Use private Amazon Quick Setup only after source authorization. No actual catalog records or publication. Amazon editorial links do not qualify for general product campaign packs. Do not represent any candidate as discounted or bestselling without verified evidence.
