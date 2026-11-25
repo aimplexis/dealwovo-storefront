@@ -1,6 +1,9 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Commercial toolset expansion
+- Founder reaffirmed the need for all commercially useful revenue tools. `docs/COMMERCIAL_TOOLSET_ROADMAP.md` defines current foundations, missing capabilities, priority, metrics, provider references and activation gates. Next: real partner approval and evidence-grounded product opportunity research in parallel, then an authorized 10–20 product pilot and measurable conversion. No new live integrations, spending or publication authorized by the roadmap.
+
 ## Revenue-first founder mandate
 Product merchandising and revenue generation are the primary purpose of Dealwovo. Follow `docs/REVENUE_FIRST_OPERATING_MANDATE.md` before any new development. Stop nonessential feature expansion; use existing onboarding, import, catalog and marketing tools to obtain actual affiliate rights, research high-intent products, prepare the first eligible collection, acquire customers and reconcile genuine commissions. Next action is actual affiliate partner onboarding and product merchandising, not an additional dashboard. All commercial, privacy and production holds remain in force.
 
