@@ -1,0 +1,20 @@
+const assert=require("node:assert/strict"),fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=require("node:child_process");
+const dir=fs.mkdtempSync(path.join(os.tmpdir(),"dw-assistant-"));
+try{cp.execFileSync(process.execPath,[require.resolve("typescript/bin/tsc"),"--target","ES2022","--module","commonjs","--strict","--skipLibCheck","--outDir",dir,"src/lib/catalog/shopping-assistant.ts"],{stdio:"inherit"});
+const {planShopping:p,recommendOffers:r}=require(path.join(dir,"shopping-assistant.js"));
+const req={need:"",category:"all",maxBudget:"",purpose:"self"},now=Date.parse("2026-11-24T12:00:00Z");
+const offer=(id,price,title,patch={})=>({id,price_cents:price,currency:"USD",verified_at:"2026-11-24T01:00:00Z",expires_at:"2026-11-25T00:00:00Z",product:{id,slug:id,title,description:"Portable audio",image_url:null,category:{name:"Electronics",slug:"electronics"}},merchant:{name:"Fixture"},...patch});
+const a=offer("a",4999,"Wireless Headphones"),b=offer("b",5000,"Headphones"),c=offer("c",null,"Headphones"),d=offer("d",4000,"Wireless Speaker"),e=offer("e",2000,"Headphones",{expires_at:"2026-11-24T11:59:59Z"}),f=offer("f",2000,"Headphones",{currency:"EUR"}),g=offer("g",2000,"Headphones",{verified_at:"2026-11-25T00:00:00Z"}),h=offer("h",3000,"Headphones",{product:{...a.product,id:"a"}});
+const rows=[a,b,c,d,e,f,g,h];
+const plan=p({...req,need:"I need headphones under $50"});assert.equal(plan.ok,true);assert.equal(plan.maxCents,5000);assert.equal(plan.exclusive,true);assert.deepEqual(plan.words,["headphone"]);assert.deepEqual(r(rows,plan,now).map(x=>x.offer.id),["a"]);
+assert.deepEqual(r(rows,p({...req,need:"headphones",maxBudget:"50"}),now).map(x=>x.offer.id),["a","b"]);
+assert.deepEqual(r(rows,p({...req,need:"wireless speaker",maxBudget:"50"}),now).map(x=>x.offer.id),["d"]);
+assert.equal(p({...req,need:"gift under $25",purpose:"gift"}).maxCents,2500);
+assert.equal(p({...req,need:"headphones up to $80",maxBudget:"40"}).maxCents,4000);
+assert.equal(p({...req,need:"headphones under $50",maxBudget:"50"}).exclusive,true);
+for(const patch of [{need:"not wireless"},{need:"under $50.999"},{need:"between $20 and $50"},{need:"over $40"},{need:"£50"},{maxBudget:"0"},{maxBudget:"1e3"},{maxBudget:"-10"},{need:"headphones $50"},{category:"../bad"},{}])assert.equal(p({...req,...patch}).ok,false,JSON.stringify(patch));
+assert.deepEqual(r(rows,p({...req,need:"notebook",maxBudget:"50"}),now),[]);
+assert.deepEqual(r(rows,p({...req,category:"kitchen",maxBudget:"50"}),now),[]);
+assert.ok(r(rows,plan,now)[0].reasons.includes("Within your recorded USD budget"));
+console.log("PASS shopping assistant: natural-language upper bounds, exact keyword matches, no budget widening, expiry, deduplication and no-match handling");
+}finally{fs.rmSync(dir,{recursive:true,force:true});}

@@ -22,7 +22,7 @@ export default async function ShopPage({searchParams}:{searchParams:Promise<Reco
     <span className="dw2-eyebrow">THE DEALWOVO DISCOVERY EDIT / VOL. 01</span>
     <h1>Good taste.<br/><em>Great finds.</em></h1>
     <p>Find thoughtful gifts, useful gadgets and everyday upgrades. Search by product, browse by budget, and explore recently verified offers.</p>
-    <div className="dw2-shop-hero-actions"><Link href="#verified-offers" className="dw2-button-dark">Shop by product or budget <span aria-hidden="true">↓</span></Link><Link className="dw2-shop-textlink" href="/gifts">Need a gift instead? ↗</Link></div>
+    <div className="dw2-shop-hero-actions"><Link href="#verified-offers" className="dw2-button-dark">Shop by product or budget <span aria-hidden="true">↓</span></Link><Link className="dw2-shop-textlink" href="/gifts">Need a gift instead? ↗</Link><Link className="dw2-shop-textlink" href="/assistant">Help me choose ↗</Link></div>
     <div className="dw2-shop-hero-rule"><span aria-hidden="true">✳</span> CURATED IDEAS / REAL RETAILER OFFERS / NO INVENTED DISCOUNTS</div>
    </div>
    <div className="dw2-shop-hero-visual">

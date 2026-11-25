@@ -4,6 +4,7 @@ import {usePathname} from "next/navigation";
 import {useEffect,useRef,useState} from "react";
 const links=[
  {href:"/shop",label:"Shop"},
+ {href:"/assistant",label:"Shopping Assistant"},
  {href:"/gifts",label:"Gift Finder"},
  {href:"/trending",label:"Tech & trends"},
  {href:"/essentials",label:"Everyday"},
@@ -31,7 +32,7 @@ export default function SiteHeader(){
      {links.map(link=><Link key={link.href} href={link.href} aria-current={pathname===link.href?"page":undefined}>{link.label}</Link>)}
     </nav>
     <div className="dw2-header-right">
-     <Link className="dw2-header-cta" href="/shop?budget=50#verified-offers">Shop by budget <span aria-hidden="true">↗</span></Link>
+     <Link className="dw2-header-cta" href="/assistant">Find my match <span aria-hidden="true">↗</span></Link>
      <button ref={buttonRef} className="dw2-menu-toggle" type="button" aria-expanded={open} aria-controls="dw2-mobile-nav" aria-label={open?"Close navigation":"Open navigation"} onClick={()=>setOpen(v=>!v)}>
       <span className={open?"dw2-menu-bars is-open":"dw2-menu-bars"} aria-hidden="true"><i/><i/></span><span>{open?"Close":"Menu"}</span>
      </button>

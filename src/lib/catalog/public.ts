@@ -53,3 +53,11 @@ export async function getCurrentOfferDestination(offerId:string):Promise<string|
  if(!validExternalHttps(data.affiliate_url))return null;
  return new URL(data.affiliate_url).toString();
 }
+
+/** Safe client projection: no raw affiliate destinations or private source data. */
+export async function getAssistantOffers():Promise<{available:boolean;offers:import("./shopping-assistant").AssistantOffer[]}>{
+ const client=publicSupabase();if(!client)return {available:false,offers:[]};
+ const now=new Date().toISOString();
+ const {data,error}=await client.from("catalog_offers").select("id,price_cents,currency,verified_at,expires_at,product:catalog_products!inner(id,slug,title,description,image_url,category:catalog_categories!inner(slug,name)),merchant:catalog_merchants!inner(name)").eq("status","approved").lte("verified_at",now).gt("expires_at",now).order("verified_at",{ascending:false}).order("id").limit(100);
+ if(error)return {available:false,offers:[]};return {available:true,offers:(data??[]) as unknown as import("./shopping-assistant").AssistantOffer[]};
+}
