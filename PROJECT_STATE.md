@@ -1,6 +1,10 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Latest commercial checkpoint (2026-11-24)
+- Shopper foundations through Price Watch deployed at ebce9c2, READY; daily deals migration 030 and price history 031 applied. Newsletter ec02df5 committed and migration 032 applied; Vercel deployment inspection returned 403, so latest build unverified. Subscriber collection and delivery held.
+- Revenue Launch Center: migration 033 and owner-only dashboard using existing release evidence ledger; commit/migration/build verification still required. Next: draft taxonomy initialization, actual affiliate authorization and real catalog. No production promotion or real commercial activation.
+
 ## Business baseline
 Affiliate-first shopping discovery: year-round holiday deals, gift discovery, trending products and everyday essentials. No owned inventory or internal checkout at launch. Selective dropshipping is later. Human approval, documented affiliate rights, current offers and transparent disclosures are mandatory.
 

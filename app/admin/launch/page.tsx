@@ -1,0 +1,33 @@
+import Link from "next/link";
+import {redirect} from "next/navigation";
+import {visualAccess} from "../marketing/visual/access";
+import {launchGates,validCandidate,launchSummary,centsLabel,type Metrics,type Review} from "../../../src/lib/marketing/launch-readiness";
+import {recordLaunchReview} from "./actions";
+import "../admin.css";
+import "./launch.css";
+export const dynamic="force-dynamic";
+export const metadata={title:"Revenue Launch Center | Dealwovo",robots:{index:false,follow:false}};
+export default async function Page({searchParams}:{searchParams:Promise<{notice?:string}>}){
+ const a=await visualAccess();if(!a.ok)redirect("/admin/login");const params=await searchParams,sha=process.env.VERCEL_GIT_COMMIT_SHA??"",candidate=validCandidate(sha);
+ const [metrics,report]=await Promise.all([a.db.rpc("revenue_launch_metrics"),candidate?a.db.rpc("release_readiness_report",{p_candidate:sha}):Promise.resolve({data:null,error:null})]);
+ const m=metrics.data as Metrics|null,reviews=(report.data?.reviews??[]) as Review[],summary=m?launchSummary(m,reviews):null;
+ const error=!!metrics.error||!m||!!report.error;
+ return <main className="dw-admin dw-launch"><div className="dw-admin-shell"><Link href="/admin">← Catalog Command Center</Link><div className="dw-launch-hero"><span>DEALWOVO / REVENUE LAUNCH V1</span><h1>From good finds to real revenue.</h1><p>One place to track the commercial milestones, review evidence and prepare your first authorized shopping collection.</p><strong>PRODUCTION RELEASE NOT AUTHORIZED</strong></div>
+ {params.notice&&<p role="status">{params.notice==="saved"?"Evidence recorded for this deployment commit.":"No evidence saved. Check candidate, confirmation and evidence."}</p>}
+ {error||!m||!summary?<p role="alert">Readiness data unavailable. No release conclusion can be made.</p>:<>
+ <section className="dw-launch-metrics" aria-label="Commercial milestones">{[["Published categories",m.categories],["Authorized affiliate sources",m.authorizedSources],["Eligible products",m.eligibleProducts],["Current eligible offers",m.eligibleOffers],["Positive approved/paid transactions",m.positiveApprovedTransactions],["Network-reported paid transactions",m.networkPaidTransactions]].map(([label,count])=><div key={label}><small>{label}</small><strong>{count}</strong></div>)}</section>
+ <section className="dw-admin-panel"><h2>First 100 products</h2><p>{m.eligibleProducts} eligible general catalog products of 100 proposed initial target. {m.draftProducts} draft products. Amazon editorial links are counted separately and are not assumed published.</p><progress max={100} value={summary.catalogProgress} aria-label="Initial 100 product target"/><p>100 is a merchandising goal, not a launch certification. Start with a smaller authorized selection if necessary.</p><p>{m.amazonReviewed} currently reviewed Amazon editorial links; publication remains subject to separate controls.</p><Link href="/admin/imports">Open Affiliate Import Studio ↗</Link></section>
+ <section className="dw-admin-panel"><h2>Commercial execution sequence</h2><div className="dw-launch-steps">{[
+ ["1. Build departments",m.categories?"Catalog categories present":"Action required","/admin"],
+ ["2. Connect affiliate partners",m.authorizedSources?"Authorization records present; verify evidence":"Action required","/admin/imports/connect"],
+ ["3. Prepare authorized products",m.eligibleProducts?"Eligible records present":"Action required","/admin/imports"],
+ ["4. Review offers and daily deals",m.eligibleOffers?"Current eligible offers present":"Action required","/admin/quality"],
+ ["5. Prepare acquisition campaigns",m.reviewedCampaigns+" internally reviewed drafts; not posted","/admin/marketing"],
+ ["6. Review launch and attribution evidence",summary.reviewed+" of 10 gate reviews recorded","#release-evidence"],
+ ["7. Confirm first qualifying commission",m.positiveApprovedTransactions?"Positive network-reported entries; verify attribution":"No positive approved/paid entry recorded","/admin/marketing/revenue"]
+ ].map(([label,detail,url])=><article key={label}><div><strong>{label}</strong><p>{detail}</p></div><Link href={url}>Open ↗</Link></article>)}</div></section>
+ <section className="dw-admin-panel"><h2>Revenue evidence</h2><p>Latest ledger revisions only. {m.transactions} distinct recorded transactions.</p><div className="dw-launch-metrics"><div><small>Network-reported approved, unpaid</small><strong>{centsLabel(m.approvedCents)}</strong></div><div><small>Network-reported paid</small><strong>{centsLabel(m.paidCents)}</strong></div></div><p>These are ledger reports, not verified cash deposits or net profit. No bank settlement or real purchase attribution is inferred.</p><Link href="/admin/marketing/revenue/reconcile">Reconcile Awin statements ↗</Link></section>
+ <section className="dw-admin-panel" id="release-evidence"><h2>Candidate-specific release evidence</h2><p>{candidate?"Current deployment commit: "+sha:"Deployment commit identity unavailable. Evidence recording is disabled."}</p><p>{summary.reviewed} of 10 gates internally reviewed. {summary.readyForOwnerDecision&&candidate?"Recorded minimums met; independent owner release decision still required.":"Release remains held."}</p>{summary.missing.length>0&&<ul>{summary.missing.map(x=><li key={x}>{x}</li>)}</ul>}
+ {launchGates.map(([key,label,description])=>{const r=reviews.find(x=>x.gate_key===key);return <details className="dw-admin-detail" key={key}><summary>{label} — {r?.status==="reviewed"?"Reviewed":r?.status==="hold"?"Hold":"Not reviewed"}</summary><p>{description}</p>{r&&<p>Latest evidence ({r.created_at}): {r.evidence}</p>}{candidate&&<form action={recordLaunchReview} className="dw-admin-form"><input type="hidden" name="candidate" value={sha}/><input type="hidden" name="gate" value={key}/><label>Review status<select name="status" defaultValue="hold"><option value="hold">Hold / unresolved</option><option value="reviewed">Evidence reviewed</option></select></label><label>Evidence or blocker (12–1200 characters)<textarea name="evidence" minLength={12} maxLength={1200} rows={3} required placeholder="Evidence reference and actual result. Never include credentials or private customer data."/></label><label><span><input type="checkbox" name="confirm" value="yes" required/> This accurately records my review; it does not authorize deployment or commercial activation.</span></label><button>Record review</button></form>}</details>;})}
+ </section><p>Database inspected {m.inspectedAt}. This dashboard never enables publication, production promotion, affiliate links, email sending, paid AI or ad spending.</p></>}</div></main>;
+}
