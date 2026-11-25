@@ -2,6 +2,7 @@ import {cache} from "react";
 import {comparisonHref} from "../../../src/lib/catalog/comparison";
 import {productMetadata} from "../../../src/lib/marketing/seo-readiness";
 import Link from "next/link";
+import {SaveProduct} from "../../../src/components/WishlistProvider";
 import {notFound} from "next/navigation";
 import {getVerifiedProductBySlug} from "../../../src/lib/catalog/public";
 import "./product.css";
@@ -21,6 +22,7 @@ export default async function ProductDetail({params}:{params:Promise<{slug:strin
     <div className="dw-product-information">
      <span className="dw-product-kicker">✳ VERIFIED RETAILER DISCOVERY</span>
      <h1>{product.title}</h1><p>{product.description||"Explore this product through approved retail partners."}</p>
+     <SaveProduct id={product.id} title={product.title}/>
      <div className="dw-product-offers">
       <h2>Where to explore</h2>{offers.length>1&&<p><Link href={comparisonHref(offers.slice(0,4).map(o=>o.id))}>Compare {Math.min(4,offers.length)} retailer offers ↗</Link></p>}
       <p className="dw-product-note">Each offer is checked for validity and expiry. Final price, shipping and stock are confirmed on the retailer site.</p>
