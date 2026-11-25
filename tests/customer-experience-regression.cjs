@@ -1,0 +1,32 @@
+const assert=require("node:assert/strict"),fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=require("node:child_process");
+const dir=fs.mkdtempSync(path.join(os.tmpdir(),"dw-cx-"));
+try{
+const modules=["recent-discovery","discovery-preferences","concierge-guidance","recommendation-evidence"];
+cp.execFileSync(process.execPath,[require.resolve("typescript/bin/tsc"),"--target","ES2022","--module","commonjs","--strict","--skipLibCheck","--outDir",dir,...modules.map(m=>"src/lib/catalog/"+m+".ts")],{stdio:"inherit"});
+const recent=require(path.join(dir,"recent-discovery.js")),prefs=require(path.join(dir,"discovery-preferences.js")),guide=require(path.join(dir,"concierge-guidance.js")),evidence=require(path.join(dir,"recommendation-evidence.js"));
+const now=Date.parse("2026-11-24T12:00:00Z"),entry=(slug,seenAt=now)=>({slug,title:"Fixture "+slug,seenAt});
+const read=items=>recent.readRecent(JSON.stringify({enabled:true,items}),now);
+assert.deepEqual(recent.readRecent(null,now),{enabled:false,items:[]});
+assert.deepEqual(recent.recordRecent({enabled:false,items:[]},"fixture","Fixture",now),{enabled:false,items:[]});
+assert.deepEqual(read([entry("valid"),entry("valid"),entry("../bad"),entry("expired",now-recent.RECENT_TTL),entry("future",now+1)]).items.map(x=>x.slug),["valid"]);
+assert.equal(read(Array.from({length:20},(_,i)=>entry("item-"+i))).items.length,12);
+assert.equal(recent.recordRecent(read([entry("a"),entry("b")]),"b","Updated",now).items[0].title,"Updated");
+assert.deepEqual(prefs.readPreferences("{",),prefs.emptyPreferences());
+assert.deepEqual(prefs.readPreferences(JSON.stringify({interests:["tech","tech","unknown","home"],budget:"invalid"})),{interests:["tech","home"],budget:"all"});
+assert.equal(prefs.discoveryPaths({interests:["travel"],budget:"50"})[0].href,"/lifestyle#travel");
+assert.equal(guide.conciergeGoal("invalid"),null);
+assert.equal(new Set(guide.conciergeGoals.map(g=>g.id)).size,6);
+for(const g of guide.conciergeGoals){assert.equal(guide.conciergeGoal(g.id),g);assert.equal(g.ideas.length,2);assert.ok(g.first&&g.ideas.every(i=>i.keyword&&i.check));}
+const offer={price_cents:3999,currency:"USD",verified_at:"2026-11-24T00:00:00Z",product:{category:{slug:"electronics"}}};
+assert.equal(evidence.recommendationEvidence(offer,["Matches keywords"]).priceKnown,true);
+for(const price_cents of [null,-1,1.5,NaN])assert.equal(evidence.recommendationEvidence({...offer,price_cents},[]).priceKnown,false);
+assert.equal(evidence.recommendationEvidence({...offer,currency:"EUR"},[]).priceKnown,false);
+assert.ok(evidence.buyingChecks("electronics").some(x=>x.includes("compatibility")));
+assert.ok(evidence.buyingChecks("__proto__").some(x=>x.includes("exact variant")));
+const layout=fs.readFileSync("app/layout.tsx","utf8");assert.ok(layout.includes('<html lang="en">'));
+const lifestyle=fs.readFileSync("app/lifestyle/page.tsx","utf8"),solutions=fs.readFileSync("app/solutions/page.tsx","utf8");
+for(const i of prefs.interests)assert.ok(lifestyle.includes('id:"'+i.href.split("#")[1]+'"'));
+for(const g of guide.conciergeGoals)assert.ok(solutions.includes('id:"'+g.href.split("#")[1]+'"'));
+for(const route of ["lifestyle","solutions","trust","assistant","gifts","wishlist","guides","privacy"])assert.ok(fs.existsSync("app/"+route+"/page.tsx"));
+console.log("PASS customer experience: opt-in history, expiry, bounds, safe slugs, preference validation, guidance, price evidence, English declaration and route anchors");
+}finally{fs.rmSync(dir,{recursive:true,force:true});}
