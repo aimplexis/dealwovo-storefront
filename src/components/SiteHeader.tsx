@@ -5,12 +5,12 @@ import {usePathname} from "next/navigation";
 import {useEffect,useRef,useState} from "react";
 const links=[
  {href:"/shop",label:"Shop"},
- {href:"/assistant",label:"Shopping Assistant"},
- {href:"/gifts",label:"Gift Finder"},
+ {href:"/essentials",label:"Everyday"},
  {href:"/lifestyle",label:"Lifestyle"},
  {href:"/trending",label:"Tech & trends"},
- {href:"/essentials",label:"Everyday"},
- {href:"/deals",label:"Holidays"}
+ {href:"/gifts",label:"Gifts & occasions"},
+ {href:"/assistant",label:"Shopping Assistant"},
+ {href:"/deals",label:"Seasonal deals"}
 ];
 export default function SiteHeader(){
  const pathname=usePathname();const wishlist=useWishlist();
@@ -26,7 +26,7 @@ export default function SiteHeader(){
   return ()=>window.removeEventListener("keydown",onKey);
  },[open]);
  return <>
-  <div className="dw2-announcement"><span className="dw2-announcement-star" aria-hidden="true">✳</span> A BETTER KIND OF DISCOVERY <span className="dw2-announcement-sep">/</span> <strong>GIFTS, GADGETS & EVERYDAY FINDS</strong> <span className="dw2-announcement-star" aria-hidden="true">✳</span></div>
+  <div className="dw2-announcement"><span className="dw2-announcement-star" aria-hidden="true">✳</span> A BETTER KIND OF DISCOVERY <span className="dw2-announcement-sep">/</span> <strong>EVERYDAY FINDS & SPECIAL MOMENTS</strong> <span className="dw2-announcement-star" aria-hidden="true">✳</span></div>
   <header className="dw2-header" onBlur={event=>{if(open&&!event.currentTarget.contains(event.relatedTarget as Node|null))setOpen(false);}}>
    <div className="dw2-header-inner wrap">
     <Link href="/" className="dw2-logo" aria-label="Dealwovo home">deal<span>wovo</span><b>.</b></Link>
