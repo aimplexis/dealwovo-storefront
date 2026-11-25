@@ -1,6 +1,8 @@
 import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
+import DailyFeatureServer from "../../src/components/DailyFeatureServer";
 import SeasonalShopping from "../../src/components/SeasonalShopping";
 import EditorialCategory from "../../src/components/EditorialCategory";
+export const dynamic="force-dynamic";
 export const metadata=pageMetadata("/deals");
 export default function Deals(){return <EditorialCategory data={{
  eyebrow:"03 / CELEBRATE THE MOMENT",title:"MAKE IT",accent:"MEMORABLE.",
@@ -13,4 +15,4 @@ export default function Deals(){return <EditorialCategory data={{
  {label:"HOME & HOSTING",name:"Make a moment",description:"Bring a little more warmth to the gathering.",href:"/essentials",image:"https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=950&q=84",alt:"Welcoming home with warm details"},
  {label:"SEASONAL JOY",name:"The festive feeling",description:"Find the inspiration behind memorable celebrations.",href:"/gifts",image:"https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=950&q=84",alt:"Decorated Christmas tree with ornaments"}
  ],closingTitle:"Thoughtful beats ordinary.",closingCopy:"This is our seasonal inspiration edit, not a collection of unverified discounts. Approved offers will appear in the Shop when ready."
- }}><SeasonalShopping/></EditorialCategory>}
+ }}><DailyFeatureServer/><SeasonalShopping/></EditorialCategory>}

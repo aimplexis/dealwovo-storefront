@@ -80,3 +80,10 @@ export async function getWishlistProducts(ids:string[]):Promise<{available:boole
  const {data,error}=await client.from("catalog_products").select("id,slug,title,image_url,category:catalog_categories!inner(name),offers:catalog_offers!inner(id,price_cents,currency,verified_at,expires_at,merchant:catalog_merchants!inner(name))").in("id",ids).eq("status","published").eq("offers.status","approved").lte("offers.verified_at",now).gt("offers.expires_at",now).order("verified_at",{referencedTable:"offers",ascending:false}).order("id",{referencedTable:"offers"}).limit(3,{referencedTable:"offers"}).limit(40);
  if(error)return {available:false,products:[]};return {available:true,products:(data??[]) as unknown as import("./wishlist").WishlistProduct[]};
 }
+
+export async function getDailyPromotion():Promise<import("./daily-feature").DailyPromotion|null>{
+ const client=publicSupabase();if(!client)return null;
+ const {data,error}=await client.rpc("current_daily_deal");
+ if(error||!data||typeof data!=="object"||!data.offer)return null;
+ return data as import("./daily-feature").DailyPromotion;
+}

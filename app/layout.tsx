@@ -9,6 +9,7 @@ import "./dealwovo-v2-product.css";
 import "./shop/discovery.css";
 import "./compare/compare.css";
 import "./wishlist/wishlist.css";
+import "./daily-feature.css";
 import {WishlistProvider} from "../src/components/WishlistProvider";
 import ExperienceMotion from "./ExperienceMotion";
 import SiteHeader from "../src/components/SiteHeader";

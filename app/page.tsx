@@ -1,6 +1,7 @@
 import {pageMetadata} from "../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import Image from "next/image";
+import DailyFeatureServer from "../src/components/DailyFeatureServer";
 import ShoppingShortcuts from "../src/components/ShoppingShortcuts";
 import ShopSpotlight from "./shop/ShopSpotlight";
 import ShopCatalog from "./shop/ShopCatalog";
@@ -20,6 +21,7 @@ export default async function Home(){
  return <main className="dw-wow-shop dw2-home">
   <ShopSpotlight/>
   <ShoppingShortcuts/>
+  <DailyFeatureServer/>
   <section className="dw2-intro-band" aria-label="Our approach">
    <div className="wrap dw2-intro-inner"><span>THOUGHTFULLY FOUND.</span><span aria-hidden="true">✳</span><span>DESIGNED FOR DISCOVERY.</span><span aria-hidden="true">✳</span><span>ALWAYS YOUR KIND OF WOW.</span></div>
   </section>
@@ -37,7 +39,7 @@ export default async function Home(){
    <p className="dw2-imagery-note">Editorial lifestyle imagery illustrates categories, not currently available products.</p>
   </section>
   <section className="dw2-home-feature"><div className="wrap dw2-feature-inner">
-   <div className="dw2-feature-copy"><span className="dw2-eyebrow">02 / BETTER GIFTING BEGINS HERE</span><h2>Gift the feeling.<br/><em>Not the guesswork.</em></h2><p>Someone special on your mind? A few thoughtful answers can point you toward categories they'll actually love. No endless tabs required.</p><Link href="/gifts" className="dw2-button-dark">Find their kind of wow <span aria-hidden="true">↗</span></Link><small>Inspiration first. Live product recommendations are coming with verified retailer offers.</small></div>
+   <div className="dw2-feature-copy"><span className="dw2-eyebrow">02 / BETTER GIFTING BEGINS HERE</span><h2>Gift the feeling.<br/><em>Not the guesswork.</em></h2><p>Someone special on your mind? A few thoughtful answers can point you toward categories they'll actually love. No endless tabs required.</p><Link href="/gifts" className="dw2-button-dark">Find their kind of wow <span aria-hidden="true">↗</span></Link><small>Explore editorial ideas and matching reviewed retailer products when available.</small></div>
    <div className="dw2-feature-art" aria-label="Editorial gift inspiration"><div className="dw2-feature-picture"><Image src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1600&q=88" alt="Colorful carefully wrapped presents" fill sizes="(max-width: 820px) 90vw, 45vw" quality={80}/></div><div className="dw2-feature-sticker">THE ART<br/>OF GETTING<br/><b>IT RIGHT.</b><span>✳</span></div></div>
   </div></section>
   <section className="wrap dw2-home-catalog">
