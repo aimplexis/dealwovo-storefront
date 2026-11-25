@@ -1,3 +1,4 @@
+import {planShopping,type Request} from "./shopping-assistant";
 // Editorial guidance only. Explicit shopper choices never override catalog budget or category constraints.
 export const conciergeGoals=[
  {id:"home",label:"Organize my home",first:"Sort and measure one storage area before buying.",ideas:[{label:"Drawer organizers",keyword:"drawer organizer",check:"Measure internal dimensions and clearance."},{label:"Storage containers",keyword:"storage container",check:"Check dimensions, material and cleaning instructions."}],href:"/solutions#organize-home"},
@@ -8,3 +9,15 @@ export const conciergeGoals=[
  {id:"comfort",label:"Make my home more comfortable",first:"Try rearranging existing items and identify what is missing.",ideas:[{label:"Throws",keyword:"throw blanket",check:"Check fabric, size and care instructions."},{label:"Cushion covers",keyword:"cushion cover",check:"Measure existing cushions and check closures."}],href:"/solutions#comfort"}
 ] as const;
 export function conciergeGoal(id:string){return conciergeGoals.find(g=>g.id===id)??null;}
+
+export function applyConciergeKeyword(request:Request,keyword:string):{ok:true;request:Request}|{ok:false;message:string}{
+ if(!conciergeGoals.some(g=>g.ideas.some(i=>i.keyword===keyword)))return {ok:false,message:"Choose a supported shopping idea."};
+ if(!request.need.trim()){
+  const next={...request,need:keyword};const plan=planShopping(next);return plan.ok?{ok:true,request:next}:plan;
+ }
+ const old=planShopping(request);if(!old.ok)return old;
+ const cents=old.maxCents===null?null:old.maxCents-(old.exclusive?1:0);
+ if(cents!==null&&cents<=0)return {ok:false,message:"Your strict budget leaves no positive maximum for this shortcut. Refine your search manually."};
+ const next={...request,need:keyword,maxBudget:cents===null?"":(cents/100).toFixed(2)};
+ const plan=planShopping(next);return plan.ok?{ok:true,request:next}:plan;
+}
