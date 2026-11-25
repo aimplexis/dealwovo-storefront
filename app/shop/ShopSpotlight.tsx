@@ -31,7 +31,7 @@ const worlds: Discovery[] = [
 
 export default function ShopSpotlight() {
   const [active,setActive]=useState(0);
-  const [paused,setPaused]=useState(false);
+  const [paused,setPaused]=useState(true);
   const [hovered,setHovered]=useState(false);
   const [focused,setFocused]=useState(false);
   const [reduced,setReduced]=useState(false);
@@ -85,14 +85,14 @@ export default function ShopSpotlight() {
     <div className="dw-wow-orb dw-wow-orb-two" aria-hidden="true"/>
     <div className="wrap dw-wow-hero-main">
       <div className="dw-wow-copy">
-        <div className="dw-wow-overline"><span className="dw-wow-ping"/> THE NEXT GENERATION OF DISCOVERY <span className="dw-wow-rule"/></div>
-        <h1>OH, THE<br/><span className="dw-wow-headline-pop">POSSIBILITIES<span className="dw-wow-period">.</span></span></h1>
-        <p className="dw-wow-lead">Discover thoughtful gifts, clever gadgets and everyday essentials. Explore shopping ideas by interest or budget, and find reviewed retailer offers.</p>
+        <div className="dw-wow-overline"><span className="dw-wow-ping"/> THOUGHTFUL SHOPPING STARTS HERE <span className="dw-wow-rule"/></div>
+        <h1>GOOD FINDS.<br/><span className="dw-wow-headline-pop">GREAT FEELINGS<span className="dw-wow-period">.</span></span></h1>
+        <p className="dw-wow-lead">Discover thoughtful gifts, clever gadgets and everyday essentials. Explore ideas by interest or budget, with reviewed retailer offers when available.</p>
         <div className="dw-wow-actions">
-          <Link className="dw-wow-primary" href="/shop#verified-offers">Shop curated finds <span aria-hidden="true">↗</span></Link>
-          <Link className="dw-wow-secondary" href="/gifts">Find the perfect gift <span aria-hidden="true">→</span></Link>
+          <Link className="dw-wow-primary" href="/#shopping-start">Discover your next find <span aria-hidden="true">↗</span></Link>
+          <Link className="dw-wow-secondary" href="/gifts">Find a thoughtful gift <span aria-hidden="true">→</span></Link>
         </div>
-        <div className="dw-wow-social-proof"><span className="dw-wow-spark" aria-hidden="true">✳</span><div><strong>DISCOVER MORE. SAVE SMARTER.</strong><small>A fresh approach to thoughtful shopping.</small></div></div>
+        <div className="dw-wow-social-proof"><span className="dw-wow-spark" aria-hidden="true">✳</span><div><strong>SHOP WITH CONFIDENCE.</strong><small>A fresh approach to thoughtful shopping.</small></div></div>
       </div>
       <div className="dw-wow-scene" ref={scene} onPointerMove={move} onPointerLeave={reset} aria-label="Animated, clickable shopping inspiration">
         <div className="dw-wow-ring dw-wow-ring-one" aria-hidden="true"/><div className="dw-wow-ring dw-wow-ring-two" aria-hidden="true"/>
