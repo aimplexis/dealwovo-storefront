@@ -18,7 +18,7 @@ const collections=[
  {number:"01",type:"THE CURIOUS EDIT",title:"Clever tech.",subtitle:"For the ‘wait, that's brilliant’ moments.",href:"/trending",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1400&q=86",tone:"lime",alt:"Modern headphones on a golden yellow background"},
  {number:"02",type:"THE THOUGHTFUL EDIT",title:"Gifts with feeling.",subtitle:"Less guessing. More ‘you really get me.’",href:"/gifts",image:"https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1400&q=86",tone:"pink",alt:"Beautifully wrapped gifts and ribbons"},
  {number:"03",type:"THE LIVING EDIT",title:"Everyday, better.",subtitle:"Useful little upgrades for real life.",href:"/essentials",image:"https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=86",tone:"lavender",alt:"Welcoming modern kitchen with thoughtful home details"},
- {number:"04",type:"THE SEASONAL EDIT",title:"Moments to make.",subtitle:"Inspiration for every celebration.",href:"/deals",image:"https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=1400&q=86",tone:"peach",alt:"Festive holiday decorations and gifts"}
+ {number:"04",type:"THE SEASONAL EDIT",title:"Seasonal discoveries.",subtitle:"Explore timely ideas throughout the year.",href:"/deals",image:"https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=1400&q=86",tone:"peach",alt:"Festive holiday decorations and gifts"}
 ];
 export default async function Home(){
  const offers=await getPublicOffers(100);
@@ -32,7 +32,7 @@ export default async function Home(){
    <div className="wrap dw2-intro-inner"><span>THOUGHTFULLY FOUND.</span><span aria-hidden="true">✳</span><span>DESIGNED FOR DISCOVERY.</span><span aria-hidden="true">✳</span><span>ALWAYS YOUR KIND OF WOW.</span></div>
   </section>
   <section className="wrap dw2-home-collections" id="discover">
-   <div className="dw2-section-heading"><div><span className="dw2-eyebrow">01 / A WORLD OF GOOD FINDS</span><h2>Different things.<br/><em>Same great feeling.</em></h2></div><p>Whatever you&apos;re into, start somewhere wonderful. Explore four edits made for discovering more of what you love.</p></div>
+   <div className="dw2-section-heading"><div><span className="dw2-eyebrow">01 / A WORLD OF GOOD FINDS</span><h2>Different things.<br/><em>Same great feeling.</em></h2></div><p>Whatever you&apos;re into, start somewhere wonderful. Discover everyday essentials, clever upgrades, meaningful gifts and seasonal inspiration all year long.</p></div>
    <div className="dw2-collection-grid">
     {collections.map(item=><Link key={item.number} className={"dw2-collection-card dw2-collection-"+item.tone} href={item.href}>
      <Image src={item.image} alt={item.alt} fill sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 40vw" quality={75} className="dw2-collection-image"/>
@@ -50,7 +50,7 @@ export default async function Home(){
   </div></section>
   <section className="wrap dw2-home-catalog">
    <div className="dw2-small-bar"><span className="dw2-eyebrow">03 / MADE FOR REAL DISCOVERIES</span><Link href="/shop">Enter the shop <span aria-hidden="true">↗</span></Link></div>
-   {offers.length>0?<ShopCatalog offers={offers} configured={catalogConfigured()}/>:<div className="dw-intent-empty"><h2>Good finds are taking shape.</h2><p>Our reviewed product collection is in preparation. In the meantime, explore thoughtful gift ideas and practical shopping guides.</p><Link href="/guides" className="dw2-button-lime">Explore buying guides ↗</Link></div>}
+   {offers.length>0?<ShopCatalog offers={offers} configured={catalogConfigured()}/>:<div className="dw-intent-empty"><h2>Good finds are taking shape.</h2><p>Our reviewed product collection is in preparation. In the meantime, explore everyday solutions, lifestyle ideas and practical shopping guides.</p><Link href="/guides" className="dw2-button-lime">Explore buying guides ↗</Link></div>}
   </section>
   <section className="dw2-home-principles"><div className="wrap dw2-principles-wrap"><div><span className="dw2-eyebrow">THE DEALWOVO WAY</span><h2>A little more wonder.<br/><em>A lot more intention.</em></h2></div><div className="dw2-principles"><article><span>01</span><strong>Discover differently.</strong><p>Start with interests and ideas—not a wall of anonymous listings.</p></article><article><span>02</span><strong>Know what&apos;s real.</strong><p>We distinguish editorial inspiration from reviewed retailer offers.</p></article><article><span>03</span><strong>Shop with clarity.</strong><p>When an offer is available, complete your purchase on the retailer&apos;s site.</p></article></div></div></section>
   <NewsletterTeaser/>
