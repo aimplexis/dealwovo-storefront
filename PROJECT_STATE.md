@@ -50,5 +50,9 @@ Affiliate-first shopping discovery: year-round holiday deals, gift discovery, tr
 - Migration 028 applied, preview eef7b4d READY at https://dealwovo-storefront-6wyxdmsy2-frhairshop.vercel.app; one recorded freshness run, one active hourly schedule; zero sources and commission entries at inspection.
 - Approved full roadmap: docs/AFFILIATE_AUTOMATION_ROADMAP.md. New connection hub, Awin read-only probe with server-only env configuration and default-off gate, normalized owner-attested statement reconciliation (029); deployment and SQL regression verification pending. No live requests, credentials or paid features enabled.
  
+## Native Awin transaction adapter checkpoint
+- Migration 029 applied; owner rollback tests verified new, duplicate, unchanged observations, stale rejection, revisions, conflicts, scope and nonowner denial. Preview ee94676 READY at https://dealwovo-storefront-q6oyjze0f-frhairshop.vercel.app.
+- Native legacy JSON adapter and owner import integrated with existing reconciliation; synthetic regression suite included in build. See docs/AWIN_NATIVE_TRANSACTIONS.md. Build verification pending. No live API requests or actual commissions.
+ 
 ## Next action
-Apply and test migration 029 and verify latest preview. Then implement native Awin transaction ingestion, payment evidence and authorized enhanced feed adapter, scheduled bounded jobs and attribution/expense ledger. Keep external activation and production release held.
+Verify native adapter build and authenticated upload. Then integrate separately gated direct transaction retrieval, bounded scheduled jobs, payment evidence, authorized enhanced feed adapter, attribution and expenses. Preserve external activation and release gates.
