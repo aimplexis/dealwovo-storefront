@@ -61,3 +61,12 @@ export async function getAssistantOffers():Promise<{available:boolean;offers:imp
  const {data,error}=await client.from("catalog_offers").select("id,price_cents,currency,verified_at,expires_at,product:catalog_products!inner(id,slug,title,description,image_url,category:catalog_categories!inner(slug,name)),merchant:catalog_merchants!inner(name)").eq("status","approved").lte("verified_at",now).gt("expires_at",now).order("verified_at",{ascending:false}).order("id").limit(100);
  if(error)return {available:false,offers:[]};return {available:true,offers:(data??[]) as unknown as import("./shopping-assistant").AssistantOffer[]};
 }
+
+/** Fresh anonymous RLS read for explicitly selected offer IDs, independent of latest-100 window. */
+export async function getComparisonOffers(ids:string[]):Promise<{available:boolean;offers:import("./shopping-assistant").AssistantOffer[]}>{
+ if(!ids.length||ids.length>4||new Set(ids).size!==ids.length||ids.some(id=>!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)))return {available:false,offers:[]};
+ const client=publicSupabase();if(!client)return {available:false,offers:[]};
+ const now=new Date().toISOString();
+ const {data,error}=await client.from("catalog_offers").select("id,price_cents,currency,verified_at,expires_at,product:catalog_products!inner(id,slug,title,description,image_url,category:catalog_categories!inner(slug,name)),merchant:catalog_merchants!inner(name)").in("id",ids).eq("status","approved").lte("verified_at",now).gt("expires_at",now).limit(4);
+ if(error)return {available:false,offers:[]};return {available:true,offers:(data??[]) as unknown as import("./shopping-assistant").AssistantOffer[]};
+}

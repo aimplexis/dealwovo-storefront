@@ -1,0 +1,26 @@
+"use client";
+import Link from "next/link";
+import {useEffect,useMemo,useState} from "react";
+import {currentComparison,comparePrices,comparisonHref} from "../../src/lib/catalog/comparison";
+import type {AssistantOffer} from "../../src/lib/catalog/shopping-assistant";
+const price=(n:number|null,currency:string)=>{if(n===null||!Number.isSafeInteger(n)||n<0)return "See retailer price";try{return new Intl.NumberFormat("en-US",{style:"currency",currency}).format(n/100);}catch{return "See retailer price";}};
+export default function ComparisonView({ids,invalid,offers,available}:{ids:string[];invalid:boolean;offers:AssistantOffer[];available:boolean}){
+ const [now,setNow]=useState(()=>Date.now());
+ useEffect(()=>{const update=()=>setNow(Date.now());const i=window.setInterval(update,30000);window.addEventListener("focus",update);return()=>{window.clearInterval(i);window.removeEventListener("focus",update);};},[]);
+ const current=useMemo(()=>currentComparison(offers,ids,now),[offers,ids,now]),summary=comparePrices(current);
+ return <main className="dw-compare-page"><section className="dw-compare-hero"><div className="wrap"><span className="dw-compare-kicker">✳ DEALWOVO / CHOOSE WITH CONFIDENCE</span><h1>Good finds.<br/><em>Better decisions.</em></h1><p>Compare up to four reviewed offers, side by side. See what matters before visiting the retailer.</p><Link className="dw-compare-action" href="/shop#verified-offers">Browse products ↗</Link></div></section><section className="wrap dw-compare-body"><span className="dw2-eyebrow">YOUR COMPARISON</span><h2>Make the choice yours.</h2>
+ {invalid?<p role="alert" className="dw-compare-notice">This comparison link is invalid. Select up to four distinct offers from the Shop or Shopping Assistant.</p>:!available?<p role="alert" className="dw-compare-notice">The catalog is unavailable. Reload later; no stale comparison is displayed.</p>:!ids.length?<div className="dw-compare-notice"><h3>Start with two finds.</h3><p>Choose the Compare offer checkbox on product cards in the Shop or Shopping Assistant. You can compare two to four offers in one view.</p><Link href="/assistant">Find products with the Shopping Assistant ↗</Link></div>:<>
+ <p role="status">{current.length} of {ids.length} selected offers are currently eligible. {current.length<ids.length?"Some selected offers are no longer available or have expired; they are omitted.":""}</p>
+ {current.length===1&&<p className="dw-compare-notice">Only one offer is eligible. Choose another offer to compare.</p>}
+ {summary&&<div className="dw-compare-summary"><strong>Recorded USD price range: {price(summary.min,"USD")} – {price(summary.max,"USD")}</strong><span>Difference between the selected recorded prices: {price(summary.difference,"USD")}. These share a catalog product record; verify variant, condition, shipping and final price independently. This is not a discount or guaranteed saving.</span></div>}
+ {current.length>0&&<div className="dw-compare-scroll" tabIndex={0} role="region" aria-label="Offer comparison table, scroll horizontally on narrow screens"><table className="dw-compare-table"><caption>Selected retailer offers — recorded information, not live inventory</caption><thead><tr><th scope="col">Compare</th>{current.map(o=><th scope="col" key={o.id}><Link href={"/product/"+o.product.slug}><div className="dw-compare-image">{o.product.image_url?<img src={o.product.image_url} alt={o.product.title} loading="lazy" referrerPolicy="no-referrer"/>:<span aria-hidden="true">✳</span>}</div><span>{o.product.title}</span></Link></th>)}</tr></thead><tbody>
+ <tr><th scope="row">Recorded price</th>{current.map(o=><td key={o.id}><strong>{price(o.price_cents,o.currency)}</strong></td>)}</tr>
+ <tr><th scope="row">Retailer</th>{current.map(o=><td key={o.id}>{o.merchant.name}</td>)}</tr>
+ <tr><th scope="row">Category</th>{current.map(o=><td key={o.id}>{o.product.category.name}</td>)}</tr>
+ <tr><th scope="row">Description</th>{current.map(o=><td key={o.id}>{o.product.description||"No description supplied"}</td>)}</tr>
+ <tr><th scope="row">Reviewed (UTC)</th>{current.map(o=><td key={o.id}>{o.verified_at.slice(0,10)}</td>)}</tr>
+ <tr><th scope="row">Offer review expires (UTC)</th>{current.map(o=><td key={o.id}>{new Date(o.expires_at).toISOString().slice(0,16).replace("T"," ")}</td>)}</tr>
+ <tr><th scope="row">Explore</th>{current.map(o=><td key={o.id}><Link href={"/out/"+o.id} rel="sponsored nofollow noreferrer" className="dw-compare-action">Visit retailer ↗</Link><Link className="dw-compare-remove" href={comparisonHref(ids.filter(id=>id!==o.id))}>Remove offer</Link></td>)}</tr></tbody></table></div>}
+ </>}
+ <div className="dw-compare-footer"><Link href="/shop#verified-offers">Choose other offers ↗</Link><Link href="/assistant">Shopping Assistant ↗</Link></div><p className="dw-compare-legal">We compare recorded catalog information, not independently tested performance, ratings, shipping or live availability. Final prices, terms and stock are at the retailer. Some links may earn Dealwovo a commission. <Link href="/affiliate-disclosure">Affiliate disclosure</Link>. Separate Amazon editorial links are excluded. Comparison selections are in the page URL; no account or saved shopping profile is required.</p></section></main>;
+}

@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "npm test && next build",
     "start": "next start",
-    "test": "node tests/catalog-regression.cjs && node tests/content-lab-regression.cjs && node tests/visual-template-regression.cjs && node tests/seo-readiness-regression.cjs && node tests/revenue-input-regression.cjs && node tests/quick-import-regression.cjs && node tests/amazon-link-regression.cjs && node tests/category-suggestions-regression.cjs && node tests/awin-setup-regression.cjs && node tests/affiliate-automation-regression.cjs && node tests/awin-transactions-regression.cjs && node tests/shop-filters-regression.cjs && node tests/shopping-assistant-regression.cjs"
+    "test": "node tests/catalog-regression.cjs && node tests/content-lab-regression.cjs && node tests/visual-template-regression.cjs && node tests/seo-readiness-regression.cjs && node tests/revenue-input-regression.cjs && node tests/quick-import-regression.cjs && node tests/amazon-link-regression.cjs && node tests/category-suggestions-regression.cjs && node tests/awin-setup-regression.cjs && node tests/affiliate-automation-regression.cjs && node tests/awin-transactions-regression.cjs && node tests/shop-filters-regression.cjs && node tests/shopping-assistant-regression.cjs && node tests/comparison-regression.cjs"
   },
   "dependencies": {
     "next": "16.4.6",
