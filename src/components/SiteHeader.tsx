@@ -7,6 +7,7 @@ const links=[
  {href:"/shop",label:"Shop"},
  {href:"/assistant",label:"Shopping Assistant"},
  {href:"/gifts",label:"Gift Finder"},
+ {href:"/lifestyle",label:"Lifestyle"},
  {href:"/trending",label:"Tech & trends"},
  {href:"/essentials",label:"Everyday"},
  {href:"/deals",label:"Holidays"}
