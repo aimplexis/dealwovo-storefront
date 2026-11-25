@@ -10,5 +10,8 @@ Before committing, review changed human-readable text for English consistency. R
 ## Year-round brand direction
 Dealwovo is a welcoming shopping discovery destination for everyday life and every occasion. Prioritize useful everyday products, lifestyle inspiration, practical solutions, personal interests and meaningful life events. Holiday promotions are a seasonal collection, never the entire platform identity. Maintain a balanced year-round homepage, navigation, editorial calendar and product sourcing strategy. Do not confuse inspiration with verified inventory or claim unverified deals.
 
+## Founder-confirmed discovery experience
+The desired customer behavior is: "I don't know exactly what I'm looking for, but let me see what's new on Dealwovo today." Build a welcoming, curiosity-led, year-round destination that is useful even without a specific purchase intent. Prioritize fresh editorial discovery, genuinely useful everyday finds, meaningful occasions, shopper-controlled interests and a clear path to verified offers. Never imply daily updates or new inventory unless supported by actual content and review timestamps. Measure repeat visits and meaningful discovery only after approved measurement is available; do not use manipulative urgency, addictive engagement patterns or fabricated social proof. Favor sustainable editorial operations over speculative features.
+
 ## Release safeguards
 Read PROJECT_STATE.md before starting. Keep the preview private: do not create shareable access links or change deployment protection. Amazon onboarding, indexing, production promotion, external marketing and new spending remain held until separately authorized. Do not commit credentials or fabricate product or affiliate evidence.
