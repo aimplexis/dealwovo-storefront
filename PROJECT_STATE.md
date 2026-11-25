@@ -46,5 +46,9 @@ Affiliate-first shopping discovery: year-round holiday deals, gift discovery, tr
 - Migration 028 adds expiry hardening, generic linked-source revocation, automatic invalidation on offer edits, hourly bounded safety maintenance and system audit. Application and runtime verification must be recorded separately. No external requests.
 - Existing affiliate workflows: /admin/imports, /admin/imports/amazon, /admin/imports/awin, /admin/imports/awin/sync. Keep account credentials and production activation held pending owner authorization.
  
+## Automation expansion checkpoint
+- Migration 028 applied, preview eef7b4d READY at https://dealwovo-storefront-6wyxdmsy2-frhairshop.vercel.app; one recorded freshness run, one active hourly schedule; zero sources and commission entries at inspection.
+- Approved full roadmap: docs/AFFILIATE_AUTOMATION_ROADMAP.md. New connection hub, Awin read-only probe with server-only env configuration and default-off gate, normalized owner-attested statement reconciliation (029); deployment and SQL regression verification pending. No live requests, credentials or paid features enabled.
+ 
 ## Next action
-Verify migration 028 and the latest preview. Finish authenticated affiliate browser acceptance; then unify partner onboarding and plan credential-managed authorized feed retrieval. Preserve commercial launch gates and no external activation without owner approval.
+Apply and test migration 029 and verify latest preview. Then implement native Awin transaction ingestion, payment evidence and authorized enhanced feed adapter, scheduled bounded jobs and attribution/expense ledger. Keep external activation and production release held.
