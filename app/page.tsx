@@ -22,9 +22,8 @@ export default async function Home(){
  const offers=await getPublicOffers(100);
  return <main className="dw-wow-shop dw2-home">
   <ShopSpotlight/>
-  <ShoppingShortcuts/>
-  <DailyFeatureServer/>
-  <MerchandisingServer kind="recent" title="Recently reviewed finds." description="A fresh selection from current eligible retailer offers, ordered by review date." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/>
+  <ShoppingShortcuts hasOffers={offers.length>0}/>
+  {offers.length>0&&<><DailyFeatureServer/><MerchandisingServer kind="recent" title="Recently reviewed finds." description="A fresh selection from current eligible retailer offers, ordered by review date." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/></>}
   <section className="dw2-intro-band" aria-label="Our approach">
    <div className="wrap dw2-intro-inner"><span>THOUGHTFULLY FOUND.</span><span aria-hidden="true">✳</span><span>DESIGNED FOR DISCOVERY.</span><span aria-hidden="true">✳</span><span>ALWAYS YOUR KIND OF WOW.</span></div>
   </section>
@@ -47,7 +46,7 @@ export default async function Home(){
   </div></section>
   <section className="wrap dw2-home-catalog">
    <div className="dw2-small-bar"><span className="dw2-eyebrow">03 / MADE FOR REAL DISCOVERIES</span><Link href="/shop">Enter the shop <span aria-hidden="true">↗</span></Link></div>
-   <ShopCatalog offers={offers} configured={catalogConfigured()}/>
+   {offers.length>0?<ShopCatalog offers={offers} configured={catalogConfigured()}/>:<div className="dw-intent-empty"><h2>Good finds are taking shape.</h2><p>Our reviewed product collection is in preparation. In the meantime, explore thoughtful gift ideas and practical shopping guides.</p><Link href="/guides" className="dw2-button-lime">Explore buying guides ↗</Link></div>}
   </section>
   <section className="dw2-home-principles"><div className="wrap dw2-principles-wrap"><div><span className="dw2-eyebrow">THE DEALWOVO WAY</span><h2>A little more wonder.<br/><em>A lot more intention.</em></h2></div><div className="dw2-principles"><article><span>01</span><strong>Discover differently.</strong><p>Start with interests and ideas—not a wall of anonymous listings.</p></article><article><span>02</span><strong>Know what&apos;s real.</strong><p>We distinguish editorial inspiration from reviewed retailer offers.</p></article><article><span>03</span><strong>Shop with clarity.</strong><p>When an offer is available, complete your purchase on the retailer&apos;s site.</p></article></div></div></section>
   <NewsletterTeaser/>
