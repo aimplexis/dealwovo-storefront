@@ -1,0 +1,18 @@
+"use client";
+import Link from "next/link";
+import {useEffect,useMemo,useState} from "react";
+import {recommendGifts,type GiftSelections} from "../../src/lib/catalog/gift-recommendations";
+import type {AssistantOffer} from "../../src/lib/catalog/shopping-assistant";
+import {CompareBar,CompareToggle,useCompareSelection} from "../../src/components/CompareSelection";
+export default function GiftProducts({offers,available,selections}:{offers:AssistantOffer[];available:boolean;selections:GiftSelections}){
+ const [now,setNow]=useState(()=>Date.now()),compare=useCompareSelection();
+ useEffect(()=>{const update=()=>setNow(Date.now());const id=window.setInterval(update,30000);window.addEventListener("focus",update);return()=>{window.clearInterval(id);window.removeEventListener("focus",update)};},[]);
+ const matches=useMemo(()=>recommendGifts(offers,selections,now),[offers,selections,now]);
+ return <section className="dw-gift-products" aria-label="Personalized gift product recommendations"><span className="dw2-eyebrow">02 / SHOPPABLE GIFT IDEAS</span><h2>Gifts worth <em>giving.</em></h2><p>Explore reviewed retailer products matched to your selected interest and recorded budget. Recipient and occasion language in catalog descriptions helps prioritize ideas, not guarantee suitability.</p>
+ {!available?<p role="alert" className="dw-gift-product-empty">The product catalog is temporarily unavailable. Editorial inspiration is still available below.</p>:<>
+ <p role="status">{matches.length} {matches.length===1?"matching product":"matching products"} in the loaded catalog. {matches.length>12?"Showing the first 12.":""}</p>
+ {(matches.length>0||compare.ids.length>0)&&<CompareBar ids={compare.ids} clear={compare.clear}/>}
+ {matches.length?<div className="dw-gift-product-grid">{matches.slice(0,12).map(({offer:o,reasons})=><article key={o.id} className="dw-gift-product-card"><Link className="dw-gift-product-image" href={"/product/"+o.product.slug} aria-label={"View "+o.product.title}>{o.product.image_url?<img src={o.product.image_url} alt={o.product.title} loading="lazy" referrerPolicy="no-referrer"/>:<span aria-hidden="true">✳</span>}</Link><div className="dw-gift-product-info"><small>{o.product.category.name} · {o.merchant.name}</small><h3><Link href={"/product/"+o.product.slug}>{o.product.title}</Link></h3><p>{reasons.join(" · ")}</p><strong>{o.price_cents===null?"See retailer price":new Intl.NumberFormat("en-US",{style:"currency",currency:o.currency}).format(o.price_cents/100)}</strong><small>Reviewed {o.verified_at.slice(0,10)} UTC · Final price at retailer</small><Link className="dw-gift-product-cta" href={"/out/"+o.id} rel="sponsored nofollow noreferrer">Shop at {o.merchant.name} ↗</Link><CompareToggle id={o.id} title={o.product.title+" at "+o.merchant.name} selected={compare.ids} toggle={compare.toggle}/></div></article>)}</div>:<div className="dw-gift-product-empty"><h3>{offers.length?"No matching gifts in this selection yet.":"Our first shoppable gifts are coming."}</h3><p>{offers.length?"Change an interest or budget yourself to explore more options. We won't silently widen your choices.":"Explore the gift inspiration guides below while our verified catalog is being prepared."}</p><Link href="/assistant?purpose=gift">Try the Shopping Assistant ↗</Link></div>}
+ </>}
+ <p className="dw2-gift-legal">Recommendations use up to 100 eligible general catalog offers; separate Amazon editorial links are excluded. We do not infer age suitability, popularity, discounts, shipping or stock. Prices and terms may change at retailers. Some links may earn Dealwovo a commission. <Link href="/affiliate-disclosure">Affiliate disclosure</Link>. Choices stay in temporary page state, with no saved gift profile.</p></section>;
+}
