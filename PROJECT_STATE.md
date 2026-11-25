@@ -1,6 +1,9 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Commercial pilot intake checkpoint
+- Task 43 private research plan: `docs/HOLIDAY_2026_SOURCING_PILOT.md` (990fe86). Task 44 intake worksheet: `docs/commerce/holiday-pilot-intake.csv` (25c9853); 20 sourcing slots, all awaiting authorization. This worksheet is NOT an import feed. No owner attestation, product IDs, retailer links, prices or images supplied. Amazon direct-link records remain separate from source-linked catalog offers; Awin authorized CSV can stage private candidates. Next: owner confirms actual Amazon access or Awin advertiser rights; verify exact items and enter via existing forms. No public activation. Latest observed migration 040 applied and preview f238934 READY; prior read-only counts zero products/offers/sources/commissions; supervisor generated brief and five newsletter drafts. Do not treat these historical counts as current without rechecking.
+
 ## Growth Overseer checkpoint
 - Profitability corrective commit f8441e1 verified READY. Migration 040 and Growth Overseer implementation prepared; verification pending. Consolidates three internal schedules; fixed allowlist, bounded retries, owner mode controls, no external actions or paid models. Next: external partner access, retention delivery prerequisites, SEO activation evidence and selective dropshipping preparation.
 
