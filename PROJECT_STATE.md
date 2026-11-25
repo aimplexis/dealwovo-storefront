@@ -1,6 +1,9 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Department setup checkpoint
+- Migration 034 and owner department review workflow implemented; verification pending. 12 canonical draft departments; no product or offer authorization. Next: actual partner onboarding and first authorized assortment.
+
 ## Latest commercial checkpoint (2026-11-24)
 - Shopper foundations through Price Watch deployed at ebce9c2, READY; daily deals migration 030 and price history 031 applied. Newsletter ec02df5 committed and migration 032 applied; Vercel deployment inspection returned 403, so latest build unverified. Subscriber collection and delivery held.
 - Revenue Launch Center: migration 033 and owner-only dashboard using existing release evidence ledger; commit/migration/build verification still required. Next: draft taxonomy initialization, actual affiliate authorization and real catalog. No production promotion or real commercial activation.

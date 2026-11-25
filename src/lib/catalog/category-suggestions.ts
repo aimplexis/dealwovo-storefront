@@ -8,9 +8,9 @@ export const departments=[
  {key:"toys",name:"Toys & Games",terms:["toys games","toys","toy","puzzle","board game","building blocks","doll","action figure","remote control car"]},
  {key:"wellness",name:"Health & Wellness",terms:["health wellness","wellness","yoga mat","meditation cushion","foam roller","sleep mask","massage ball"]},
  {key:"sports",name:"Sports & Outdoors",terms:["sports outdoors","sports","outdoors","camping","tent","hiking","dumbbells","resistance bands","basketball","cycling","fishing"]},
- {key:"pets",name:"Pet Essentials",terms:["pet essentials","pet supplies","dog leash","cat litter","pet bed","cat toy","dog toy","pet carrier","bird feeder"]},
+ {key:"pets",name:"Pets & Accessories",terms:["pets accessories","pet essentials","pet supplies","dog leash","cat litter","pet bed","cat toy","dog toy","pet carrier","bird feeder"]},
  {key:"office",name:"Office & Productivity",terms:["office productivity","office supplies","desk organizer","notebook","planner","stapler","printer paper","file folder","desk chair"]},
- {key:"travel",name:"Travel Accessories",terms:["travel accessories","luggage","suitcase","packing cubes","passport holder","travel adapter","luggage tag","neck pillow"]},
+ {key:"travel",name:"Travel & Accessories",terms:["travel accessories","luggage","suitcase","packing cubes","passport holder","travel adapter","luggage tag","neck pillow"]},
  {key:"essentials",name:"Everyday Essentials",terms:["everyday essentials","household supplies","paper towels","trash bags","laundry detergent","dish soap","cleaning cloth","reusable shopping bag"]}
 ] as const;
 export type DepartmentKey=(typeof departments)[number]["key"];
