@@ -6,6 +6,7 @@ import DailyFeatureServer from "../src/components/DailyFeatureServer";
 import NewsletterTeaser from "../src/components/NewsletterTeaser";
 import ShoppingShortcuts from "../src/components/ShoppingShortcuts";
 import PersonalDiscovery from "../src/components/PersonalDiscovery";
+import RecentDiscovery from "../src/components/RecentDiscovery";
 import ShopSpotlight from "./shop/ShopSpotlight";
 import ShopCatalog from "./shop/ShopCatalog";
 import {getPublicOffers} from "../src/lib/catalog/public";
@@ -25,6 +26,7 @@ export default async function Home(){
   <ShopSpotlight/>
   <ShoppingShortcuts hasOffers={offers.length>0}/>
   <PersonalDiscovery/>
+  <RecentDiscovery/>
   {offers.length>0&&<><DailyFeatureServer/><MerchandisingServer kind="recent" title="Recently reviewed finds." description="A fresh selection from current eligible retailer offers, ordered by review date." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/></>}
   <section className="dw2-intro-band" aria-label="Our approach">
    <div className="wrap dw2-intro-inner"><span>THOUGHTFULLY FOUND.</span><span aria-hidden="true">✳</span><span>DESIGNED FOR DISCOVERY.</span><span aria-hidden="true">✳</span><span>ALWAYS YOUR KIND OF WOW.</span></div>
