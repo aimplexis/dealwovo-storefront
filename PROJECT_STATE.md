@@ -1,6 +1,9 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Growth Overseer checkpoint
+- Profitability corrective commit f8441e1 verified READY. Migration 040 and Growth Overseer implementation prepared; verification pending. Consolidates three internal schedules; fixed allowlist, bounded retries, owner mode controls, no external actions or paid models. Next: external partner access, retention delivery prerequisites, SEO activation evidence and selective dropshipping preparation.
+
 ## Product marketing execution checkpoint
 - Merchandising b318020 preview verified READY; original guides and product rails implemented. Product Campaign Engine migration 037 and owner review workflow added; migration/build/functional verification pending. Eight text assets per eligible source-linked product, bounded daily internal preparation, current-version review; actual partner authorization, product catalog, finished creative, posting, email and attribution remain pending. Next: conversion and attribution foundation, profitability and supervised orchestration.
 

@@ -1,0 +1,5 @@
+export const modes=["paused","observe","internal"] as const;
+export const executable=["daily_brief","product_campaign","newsletter"] as const;
+export const statuses={blocked:"Needs evidence or connection",ready:"Ready for review or execution",deferred:"Deferred in observe mode",completed:"Internal tool completed",failed:"Retry pending",exhausted:"Retry limit reached",resolved:"Recorded threshold met"} as const;
+export function canExecute(mode:string,key:string,status:string,attempts:number,retryAt:string|null,now:number,eligibleProducts:number){return mode==="internal"&&executable.some(k=>k===key)&&Number.isInteger(attempts)&&attempts>=0&&attempts<3&&(status==="ready"||(status==="failed"&&retryAt!==null&&Date.parse(retryAt)<=now))&&(key!=="product_campaign"||eligibleProducts>0);}
+export const roleLinks:Record<string,string>={sourcing:"/admin/imports/connect",research:"/admin/discovery/opportunities",seo:"/admin/marketing/seo",conversion:"/admin/marketing/revenue/attribution",finance:"/admin/marketing/revenue/profitability",supervisor:"/admin/launch/brief",creative:"/admin/marketing/products",retention:"/admin/marketing/newsletter"};
