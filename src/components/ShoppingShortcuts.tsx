@@ -5,6 +5,7 @@ const paths=[
  {title:"Find a meaningful gift",copy:"Start with their interests, occasion and budget.",href:"/gifts",symbol:"♡"},
  {title:"Choose the right product",copy:"Get guidance based on what you need.",href:"/assistant",symbol:"✳"},
  {title:"Shop for your lifestyle",copy:"Explore practical ideas for your interests and routines.",href:"/lifestyle",symbol:"⌂"},
+ {title:"Solve an everyday problem",copy:"Start with a need and explore practical solutions.",href:"/solutions",symbol:"✳"},
  {title:"Shop with confidence",copy:"Read practical buying guides before choosing.",href:"/guides",symbol:"✓"}
 ];
 export default function ShoppingShortcuts({hasOffers=false}:{hasOffers?:boolean}){return <section className="wrap dw-revenue-shortcuts dw-intent-discovery" id="shopping-start" aria-label="Find your next favorite">
