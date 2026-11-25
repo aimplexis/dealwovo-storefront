@@ -31,7 +31,7 @@ export default async function ProductDetail({params}:{params:Promise<{slug:strin
        <div><span>Approved retailer</span><strong>{offer.merchant.name}</strong>
         <small>Verified {new Date(offer.verified_at).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</small>
        </div><div className="dw-product-offer-action"><strong>{offer.price_cents===null?"Price at retailer":new Intl.NumberFormat("en-US",{style:"currency",currency:offer.currency}).format(offer.price_cents/100)}</strong>
-       <Link href={"/out/"+offer.id} rel="sponsored nofollow noreferrer">Visit retailer ↗</Link></div>
+       <a href={"/out/"+offer.id+"?placement=product"} rel="sponsored nofollow noreferrer">Visit retailer ↗</a></div>
       </article>)}
      </div>
      <p className="dw-product-disclosure">Affiliate disclosure: We may earn a commission from eligible retailer purchases, at no additional cost to you. Dealwovo does not process the purchase. <Link href="/affiliate-disclosure">Read details</Link>.</p>
