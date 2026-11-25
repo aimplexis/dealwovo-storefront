@@ -93,3 +93,11 @@ export async function prepareBulkDrafts(form:FormData){
  if(error||data!==rows.length)return fail("Batch rejected. No drafts saved; check source, category, retailer and slug.");
  revalidatePath("/admin");return success(rows.length+" draft products and offers prepared — not published");
 }
+
+export async function disableFeedSourceAction(form:FormData){
+ const {db,role}=await authorized();const id=input(form,"source_id");
+ if(role!=="owner"||!uid.test(id)||input(form,"confirm")!=="yes")return fail("Owner confirmation required");
+ const {data,error}=await db.from("catalog_feed_sources").update({status:"disabled"}).eq("id",id).eq("status","authorized").select("id").maybeSingle();
+ if(error||!data)return fail("Source unavailable or already disabled");
+ revalidatePath("/shop");revalidatePath("/admin/quality");return success("Source disabled; linked approved offers paused");
+}

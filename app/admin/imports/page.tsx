@@ -2,7 +2,7 @@ import Link from "next/link";
 import BulkPreparation from "./bulk-preparation";
 import {redirect} from "next/navigation";
 import {createSupabaseServer} from "../../../src/lib/supabase/server";
-import {createFeedSourceAction,authorizeFeedSourceAction,stageFeedCSVAction,quickStageProductAction,convertFeedCandidateAction,rejectFeedCandidateAction} from "./actions";
+import {createFeedSourceAction,authorizeFeedSourceAction,stageFeedCSVAction,quickStageProductAction,convertFeedCandidateAction,rejectFeedCandidateAction,disableFeedSourceAction} from "./actions";
 import {suggestExistingCategory,suggestDepartment} from "../../../src/lib/catalog/category-suggestions";
 import {suggestSlug} from "../../../src/lib/catalog/quick-import";
 import "../admin.css";
@@ -54,7 +54,7 @@ export default async function ImportDashboard({searchParams}:{searchParams:Promi
         <label>Permission evidence and scope<textarea name="authorization_note" rows={3} minLength={25} maxLength={1500} required placeholder="Agreement date, authorized product/link feed and rights to use product images..."/></label>
         <label className="dw-import-check"><input type="checkbox" name="evidence_confirmed" value="yes" required/> I have independently checked the source's partner approval and intended usage permissions.</label>
         <button type="submit" disabled={member.role!=="owner"}>Confirm authorized source</button>
-       </form>:<small>{source.status==="authorized"?"Authorization confirmed in admin records":"Source disabled"}</small>}
+       </form>:<small>{source.status==="authorized"?"Authorization confirmed in admin records":"Source disabled"}</small>}{source.status==="authorized"&&member.role==="owner"&&<form action={disableFeedSourceAction} className="dw-admin-form"><input type="hidden" name="source_id" value={source.id}/><label className="dw-import-check"><input name="confirm" value="yes" type="checkbox" required/> Disable this source and suspend its linked approved offers.</label><button type="submit" className="dw-admin-secondary">Disable partner</button></form>}
       </div>)}
     </section>
     <section id="quick-product" className="dw-admin-panel"><h2>3A. Add one product — no CSV</h2><p>Paste an official affiliate link and enter your own licensed editorial details. Price and image stay empty until a permitted source is available.</p>

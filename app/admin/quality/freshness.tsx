@@ -1,0 +1,6 @@
+import {createSupabaseServer} from "../../../src/lib/supabase/server";
+export default async function FreshnessHistory(){
+ const db=await createSupabaseServer();if(!db)return null;
+ const [scheduler,runs]=await Promise.all([db.rpc("freshness_scheduler_status"),db.from("catalog_freshness_runs").select("id,inspected_at,paused_count,expiring_count,remaining_expired").order("id",{ascending:false}).limit(10)]);
+ return <section className="dw-admin-panel"><h2>Automatic offer maintenance</h2>{scheduler.error||runs.error?<p role="alert">Maintenance status unavailable.</p>:<><p>Hourly database safety check: {scheduler.data===true?"Scheduled":"Not scheduled"}. Expired or invalid approved offers are already excluded from public eligibility; the maintenance job pauses them and records an audit event. It never renews approval or verifies external prices.</p>{!(runs.data??[]).length?<p>No completed runs recorded yet.</p>:(runs.data??[]).map(r=><article key={r.id} className="dw-admin-detail"><strong>{new Date(r.inspected_at).toLocaleString("en-US",{timeZone:"UTC"})} UTC</strong><p>{r.paused_count} paused · {r.expiring_count} approved offers expiring within 72h · {r.remaining_expired} invalid approved offers remaining</p></article>)}</>}</section>;
+}

@@ -41,5 +41,10 @@ Affiliate-first shopping discovery: year-round holiday deals, gift discovery, tr
 - supabase/migrations/20261124_001_catalog_foundation.sql through 20261124_020_social_command_center.sql
 - tests/catalog-regression.cjs, tests/content-lab-regression.cjs and tests/visual-template-regression.cjs
 
+## Affiliate infrastructure checkpoint (2026-11-24)
+- Latest previously verified preview: 6adf2caff1230660ebd9aadf1084c293c74f2e59, READY at https://dealwovo-storefront-34dncul7f-frhairshop.vercel.app. Migrations 021–027 applied; Amazon direct-link, Awin scoped manual imports, bulk draft conversion and incremental sync rollback tests passed. No real sources, offers, Amazon links or sync runs observed. No API credentials or commercial activation.
+- Migration 028 adds expiry hardening, generic linked-source revocation, automatic invalidation on offer edits, hourly bounded safety maintenance and system audit. Application and runtime verification must be recorded separately. No external requests.
+- Existing affiliate workflows: /admin/imports, /admin/imports/amazon, /admin/imports/awin, /admin/imports/awin/sync. Keep account credentials and production activation held pending owner authorization.
+ 
 ## Next action
-V1.8 private planning preview verified. Build V1.9 SEO Intelligence as a private readiness workbench; keep public indexing disabled pending owner launch authorization. V2.0 revenue analytics follows with measured evidence only. Remaining launch gates include authenticated browser acceptance, PNG export, source rights, affiliate attribution and commercial approval. Owner requests consecutive execution within active sessions and actual preview links at verified milestones.
+Verify migration 028 and the latest preview. Finish authenticated affiliate browser acceptance; then unify partner onboarding and plan credential-managed authorized feed retrieval. Preserve commercial launch gates and no external activation without owner approval.
