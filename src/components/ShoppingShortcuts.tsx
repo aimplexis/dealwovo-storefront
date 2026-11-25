@@ -1,0 +1,7 @@
+import Link from "next/link";
+const budgets=[{n:"Under $25",v:"25",copy:"Small surprises"},{n:"Under $50",v:"50",copy:"Thoughtful finds"},{n:"Under $100",v:"100",copy:"Something special"},{n:"$150 & up",v:"150plus",copy:"Bigger ideas"}];
+export default function ShoppingShortcuts(){return <section className="wrap dw-revenue-shortcuts" aria-label="Find your next favorite">
+ <div className="dw-revenue-discover"><div><span className="dw2-eyebrow">FIND WHAT FITS YOUR LIFE</span><h2>Less searching. <em>More discovering.</em></h2><p>Start with a product, a budget, or someone you love.</p></div><form action="/shop#verified-offers" method="get" className="dw-revenue-search"><label htmlFor="dw-discover-search">What are you looking for?</label><div><input id="dw-discover-search" name="q" type="search" maxLength={100} placeholder="Try headphones, coffee maker, gifts…"/><button type="submit">Search <span aria-hidden="true">↗</span></button></div></form></div>
+ <div className="dw-revenue-budgets">{budgets.map((b,i)=><Link className={"dw-revenue-budget tone-"+i} key={b.v} href={"/shop?budget="+b.v+"#verified-offers"}><small>{b.copy}</small><strong>{b.n}</strong><span aria-hidden="true">↗</span></Link>)}</div>
+ <div className="dw-revenue-trust"><span>✓ Reviewed retailer offers</span><span>✓ Shop within your budget</span><span>↗ Purchase directly from retailers</span></div>
+ </section>}

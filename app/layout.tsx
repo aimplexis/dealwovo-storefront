@@ -6,6 +6,7 @@ import "./dealwovo-v2.css";
 import "./dealwovo-v2-shop.css";
 import "./dealwovo-v2-gifts.css";
 import "./dealwovo-v2-product.css";
+import "./shop/discovery.css";
 import ExperienceMotion from "./ExperienceMotion";
 import SiteHeader from "../src/components/SiteHeader";
 import SiteFooter from "../src/components/SiteFooter";

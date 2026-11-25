@@ -1,6 +1,7 @@
 import {pageMetadata} from "../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import Image from "next/image";
+import ShoppingShortcuts from "../src/components/ShoppingShortcuts";
 import ShopSpotlight from "./shop/ShopSpotlight";
 import ShopCatalog from "./shop/ShopCatalog";
 import {getPublicOffers} from "../src/lib/catalog/public";
@@ -15,9 +16,10 @@ const collections=[
  {number:"04",type:"THE SEASONAL EDIT",title:"Moments to make.",subtitle:"Inspiration for every celebration.",href:"/deals",image:"https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=1400&q=86",tone:"peach",alt:"Festive holiday decorations and gifts"}
 ];
 export default async function Home(){
- const offers=await getPublicOffers();
+ const offers=await getPublicOffers(100);
  return <main className="dw-wow-shop dw2-home">
   <ShopSpotlight/>
+  <ShoppingShortcuts/>
   <section className="dw2-intro-band" aria-label="Our approach">
    <div className="wrap dw2-intro-inner"><span>THOUGHTFULLY FOUND.</span><span aria-hidden="true">✳</span><span>DESIGNED FOR DISCOVERY.</span><span aria-hidden="true">✳</span><span>ALWAYS YOUR KIND OF WOW.</span></div>
   </section>

@@ -87,9 +87,9 @@ export default function ShopSpotlight() {
       <div className="dw-wow-copy">
         <div className="dw-wow-overline"><span className="dw-wow-ping"/> THE NEXT GENERATION OF DISCOVERY <span className="dw-wow-rule"/></div>
         <h1>OH, THE<br/><span className="dw-wow-headline-pop">POSSIBILITIES<span className="dw-wow-period">.</span></span></h1>
-        <p className="dw-wow-lead">Good stuff. Great ideas. Unexpected discoveries. Find inspiration for the things you love—and a few things you didn't know you needed.</p>
+        <p className="dw-wow-lead">Discover thoughtful gifts, clever gadgets and everyday essentials. Explore shopping ideas by interest or budget, and find reviewed retailer offers.</p>
         <div className="dw-wow-actions">
-          <a className="dw-wow-primary" href="#discover">Explore the good stuff <span aria-hidden="true">↗</span></a>
+          <Link className="dw-wow-primary" href="/shop#verified-offers">Shop curated finds <span aria-hidden="true">↗</span></Link>
           <Link className="dw-wow-secondary" href="/gifts">Find the perfect gift <span aria-hidden="true">→</span></Link>
         </div>
         <div className="dw-wow-social-proof"><span className="dw-wow-spark" aria-hidden="true">✳</span><div><strong>DISCOVER MORE. SAVE SMARTER.</strong><small>A fresh approach to thoughtful shopping.</small></div></div>

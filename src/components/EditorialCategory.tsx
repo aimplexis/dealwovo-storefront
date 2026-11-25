@@ -8,7 +8,7 @@ export type EditorialCategoryData={
  stamp:string;sectionEyebrow:string;sectionTitle:string;sectionAccent:string;sectionIntro:string;
  cards:EditorialCard[];closingTitle:string;closingCopy:string;
 };
-export default function EditorialCategory({data}:{data:EditorialCategoryData}){
+export default function EditorialCategory({data,children}:{data:EditorialCategoryData;children?:React.ReactNode}){
  return <main className="dw2-editorial">
   <section className="wrap dw2-editorial-hero">
    <div><span className="dw2-eyebrow">{data.eyebrow}</span>
@@ -33,6 +33,7 @@ export default function EditorialCategory({data}:{data:EditorialCategoryData}){
    </Link>)}</div>
    <p className="dw2-editorial-note">Editorial lifestyle inspiration only. Verified merchant products and prices appear in the Shop after independent approval.</p>
   </div></section>
+  {children}
   <section className="wrap dw2-editorial-signoff"><div><span className="dw2-eyebrow">A GOOD FIND IS WORTH SHARING</span><h2>{data.closingTitle}</h2><p>{data.closingCopy}</p></div><Link className="dw2-button-dark" href="/shop">Visit the curated Shop <span aria-hidden="true">↗</span></Link></section>
  </main>;
 }
