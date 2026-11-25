@@ -1,6 +1,10 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## SEO and supervised distribution checkpoint
+- Task 46: d34af77 preview READY; Vercel build logs confirm all 27 regression suites, compilation and TypeScript passed. HTTP X-Robots-Tag configured; runtime header verification still open. Private sitemap route allowlist and deduplication added. No indexing or public sitemap activation.
+- Task 47: 41ad0fb adds distribution readiness and manual handoff guidance inside existing Social Media Command Center, with links to Product Campaign Studio, Growth Overseer and commercial gates. No provider integration, credential handling, external posting, new database records or approval bypass. Latest change build pending. Next: verify new preview, review customer acquisition and measurement prerequisites using existing tools. Real partner access and eligible catalog remain critical path.
+
 ## Organic acquisition preparation checkpoint
 - Task 45: `docs/commerce/ORGANIC_ACQUISITION_LAUNCH_KIT.md` (a441c09), 14 relative-day editorial drafts and channel-specific handoff, measurement and approval requirements. Product campaign packs remain separate from reviewed legacy copy and graphics used in Social Media Command Center; Amazon editorial links are not eligible for product campaign automation. No finished creative, external posts, calendar records, tracking activation or database changes. Affiliate authorization and eligible offers remain critical path. Next: Task 46 candidate-specific SEO and release gate audit; no indexing activation without approval.
 
