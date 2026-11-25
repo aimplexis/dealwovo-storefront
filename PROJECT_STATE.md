@@ -1,6 +1,10 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Tasks 48–50 and commercial critical path
+- Task 48: c062504 catalog disclosure and empty-state discovery links, preview reported READY in preceding inspection. Task 49: 5d096be product detail retailer responsibility, proximate disclosure and image referrer policy; latest build not verified. Existing profitability engine retained; no new optimization logic. Raw affiliate URL client projection correction remains open.
+- Task 50: `docs/commerce/SELECTIVE_DROPSHIPPING_READINESS.md` (3545f6e) records proposed supplier gates, economics and future architecture only. No supplier approval, payment, order, schema or checkout changes. Dropshipping HOLD. Return to actual affiliate account authorization and first eligible assortment, not further speculative expansion. Complete outstanding build, browser, privacy, legal and security gates before owner release decision.
+
 ## SEO and supervised distribution checkpoint
 - Task 46: d34af77 preview READY; Vercel build logs confirm all 27 regression suites, compilation and TypeScript passed. HTTP X-Robots-Tag configured; runtime header verification still open. Private sitemap route allowlist and deduplication added. No indexing or public sitemap activation.
 - Task 47: 41ad0fb adds distribution readiness and manual handoff guidance inside existing Social Media Command Center, with links to Product Campaign Studio, Growth Overseer and commercial gates. No provider integration, credential handling, external posting, new database records or approval bypass. Latest change build pending. Next: verify new preview, review customer acquisition and measurement prerequisites using existing tools. Real partner access and eligible catalog remain critical path.
