@@ -2,6 +2,7 @@ import {pageMetadata} from "../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import Image from "next/image";
 import DailyFeatureServer from "../src/components/DailyFeatureServer";
+import NewsletterTeaser from "../src/components/NewsletterTeaser";
 import ShoppingShortcuts from "../src/components/ShoppingShortcuts";
 import ShopSpotlight from "./shop/ShopSpotlight";
 import ShopCatalog from "./shop/ShopCatalog";
@@ -47,6 +48,7 @@ export default async function Home(){
    <ShopCatalog offers={offers} configured={catalogConfigured()}/>
   </section>
   <section className="dw2-home-principles"><div className="wrap dw2-principles-wrap"><div><span className="dw2-eyebrow">THE DEALWOVO WAY</span><h2>A little more wonder.<br/><em>A lot more intention.</em></h2></div><div className="dw2-principles"><article><span>01</span><strong>Discover differently.</strong><p>Start with interests and ideas—not a wall of anonymous listings.</p></article><article><span>02</span><strong>Know what&apos;s real.</strong><p>We distinguish editorial inspiration from reviewed retailer offers.</p></article><article><span>03</span><strong>Shop with clarity.</strong><p>When an offer is available, complete your purchase on the retailer&apos;s site.</p></article></div></div></section>
+  <NewsletterTeaser/>
   <section className="wrap dw2-home-finale"><span className="dw2-eyebrow">THE GOOD STUFF IS OUT THERE</span><h2>COME CURIOUS.<br/><em>LEAVE INSPIRED.</em></h2><p>There&apos;s always another little thing worth discovering.</p><Link href="/shop" className="dw2-button-lime">Explore the good stuff <span aria-hidden="true">↗</span></Link><span className="dw2-finale-star" aria-hidden="true">✳</span></section>
  </main>;
 }

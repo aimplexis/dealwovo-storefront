@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function NewsletterTeaser(){return <section className="wrap dw-newsletter-teaser" aria-label="Weekly newsletter"><div><span>✳ THE GOOD-FINDS CLUB</span><h2>A little wow.<br/><em>Once a week.</em></h2><p>Thoughtful gifts, clever discoveries and seasonal shopping inspiration. Our weekly email is coming soon.</p><Link href="/newsletter">Explore the weekly edit ↗</Link></div><div className="dw-newsletter-art" aria-hidden="true"><span>✉</span><strong>GOOD FINDS<br/>IN YOUR INBOX.</strong></div></section>;}
