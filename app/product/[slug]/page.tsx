@@ -19,14 +19,15 @@ export default async function ProductDetail({params}:{params:Promise<{slug:strin
   return <main className="dw-product-page">
    <div className="wrap dw-product-breadcrumb"><Link href="/shop">← Shop verified finds</Link><span>/</span><span>{product.category.name}</span></div>
    <section className="wrap dw-product-content">
-    <div className="dw-product-visual">{product.image_url?<img src={product.image_url} alt={product.title}/>:<div className="dw-product-no-image" aria-label="Product image not available">✳</div>}</div>
+    <div className="dw-product-visual">{product.image_url?<img src={product.image_url} alt={product.title} referrerPolicy="no-referrer"/>:<div className="dw-product-no-image" aria-label="Product image not available">✳</div>}</div>
     <div className="dw-product-information">
      <span className="dw-product-kicker">✳ VERIFIED RETAILER DISCOVERY</span>
      <h1>{product.title}</h1><p>{product.description||"Explore this product through approved retail partners."}</p>
      <SaveProduct id={product.id} title={product.title}/>
      <div className="dw-product-offers">
       <h2>Where to explore</h2>{offers.length>1&&<p><Link href={comparisonHref(offers.slice(0,4).map(o=>o.id))}>Compare {Math.min(4,offers.length)} retailer offers ↗</Link></p>}
-      <p className="dw-product-note">Each offer is checked for validity and expiry. Final price, shipping and stock are confirmed on the retailer site.</p>
+      <p className="dw-product-note">Each offer is checked for validity and expiry. The retailer handles checkout, payment, delivery, returns and order support. Confirm final price, stock and retailer terms before buying.</p>
+      <p className="dw-product-disclosure">Dealwovo may earn a commission from qualifying purchases. <Link href="/affiliate-disclosure">How affiliate links work</Link>.</p>
       {offers.map(offer=><article className="dw-product-offer" key={offer.id}>
        <div><span>Approved retailer</span><strong>{offer.merchant.name}</strong>
         <small>Verified {new Date(offer.verified_at).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</small>
