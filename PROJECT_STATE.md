@@ -1,6 +1,9 @@
 # Dealwovo — Project state and release checkpoint
 Last reviewed: 2026-11-24. Read this checkpoint and the implementation references before continuing. This supersedes earlier status entries, not the underlying design decisions.
 
+## Autonomous commerce and growth mandate
+- Founder requested comprehensive traffic generation, advanced SEO, affiliate and eventual dropshipping, and an automated AI workforce. `docs/AUTONOMOUS_COMMERCE_GROWTH_SYSTEM.md` defines the detailed implementation plan, verified official search policy references, channel strategy, role/tool matrix, unit economics and release/automation boundaries. Prioritize real product sourcing, opportunity research, original content and SEO launch readiness concurrently. Current indexing hold remains intact; no external account connections, subscriptions, publishing, spending or direct-sale activation.
+
 ## Commercial toolset expansion
 - Founder reaffirmed the need for all commercially useful revenue tools. `docs/COMMERCIAL_TOOLSET_ROADMAP.md` defines current foundations, missing capabilities, priority, metrics, provider references and activation gates. Next: real partner approval and evidence-grounded product opportunity research in parallel, then an authorized 10–20 product pilot and measurable conversion. No new live integrations, spending or publication authorized by the roadmap.
 
