@@ -4,6 +4,7 @@ import {comparisonHref} from "../../../src/lib/catalog/comparison";
 import {productMetadata} from "../../../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import {buyingChecks} from "../../../src/lib/catalog/recommendation-evidence";
+import {RecordRecentProduct} from "../../../src/components/RecentDiscovery";
 import {SaveProduct} from "../../../src/components/WishlistProvider";
 import {notFound} from "next/navigation";
 import {getVerifiedProductBySlug} from "../../../src/lib/catalog/public";
@@ -17,7 +18,7 @@ export default async function ProductDetail({params}:{params:Promise<{slug:strin
   const info=await readProduct(slug);
   if(!info)notFound();
   const {product,offers}=info;
-  return <main className="dw-product-page">
+  return <main className="dw-product-page"><RecordRecentProduct slug={product.slug} title={product.title}/>
    <div className="wrap dw-product-breadcrumb"><Link href="/shop">← Shop verified finds</Link><span>/</span><span>{product.category.name}</span></div>
    <section className="wrap dw-product-content">
     <div className="dw-product-visual">{product.image_url?<img src={product.image_url} alt={product.title} referrerPolicy="no-referrer"/>:<div className="dw-product-no-image" aria-label="Product image not available">✳</div>}</div>
