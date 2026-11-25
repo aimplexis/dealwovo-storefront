@@ -31,7 +31,7 @@ for(const price_cents of [null,-1,1.5,NaN])assert.equal(evidence.recommendationE
 assert.equal(evidence.recommendationEvidence({...offer,currency:"EUR"},[]).priceKnown,false);
 assert.ok(evidence.buyingChecks("electronics").some(x=>x.includes("compatibility")));
 assert.ok(evidence.buyingChecks("__proto__").some(x=>x.includes("exact variant")));
-const layout=fs.readFileSync("app/layout.tsx","utf8");assert.ok(layout.includes('<html lang="en">'));
+const layout=fs.readFileSync("app/layout.tsx","utf8");assert.ok(layout.includes('<html lang="en-US" translate="no">'));assert.ok(layout.includes('"google":"notranslate"'));assert.ok(fs.readFileSync("AGENTS.md","utf8").includes("English (US) is the only supported language"));
 const lifestyle=fs.readFileSync("app/lifestyle/page.tsx","utf8"),solutions=fs.readFileSync("app/solutions/page.tsx","utf8");
 for(const i of prefs.interests)assert.ok(lifestyle.includes('id:"'+i.href.split("#")[1]+'"'));
 for(const g of guide.conciergeGoals)assert.ok(solutions.includes('id:"'+g.href.split("#")[1]+'"'));
