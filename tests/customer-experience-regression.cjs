@@ -1,9 +1,10 @@
 const assert=require("node:assert/strict"),fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=require("node:child_process");
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),"dw-cx-"));
 try{
-const modules=["recent-discovery","discovery-preferences","concierge-guidance","recommendation-evidence"];
+const modules=["recent-discovery","discovery-preferences","concierge-guidance","recommendation-evidence","discovery-edit"];
 cp.execFileSync(process.execPath,[require.resolve("typescript/bin/tsc"),"--target","ES2022","--module","commonjs","--strict","--skipLibCheck","--outDir",dir,...modules.map(m=>"src/lib/catalog/"+m+".ts")],{stdio:"inherit"});
 const recent=require(path.join(dir,"recent-discovery.js")),prefs=require(path.join(dir,"discovery-preferences.js")),guide=require(path.join(dir,"concierge-guidance.js")),evidence=require(path.join(dir,"recommendation-evidence.js"));
+const discovery=require(path.join(dir,"discovery-edit.js"));
 const now=Date.parse("2026-11-24T12:00:00Z"),entry=(slug,seenAt=now)=>({slug,title:"Fixture "+slug,seenAt});
 const read=items=>recent.readRecent(JSON.stringify({enabled:true,items}),now);
 assert.deepEqual(recent.readRecent(null,now),{enabled:false,items:[]});
@@ -31,6 +32,16 @@ for(const price_cents of [null,-1,1.5,NaN])assert.equal(evidence.recommendationE
 assert.equal(evidence.recommendationEvidence({...offer,currency:"EUR"},[]).priceKnown,false);
 assert.ok(evidence.buyingChecks("electronics").some(x=>x.includes("compatibility")));
 assert.ok(evidence.buyingChecks("__proto__").some(x=>x.includes("exact variant")));
+assert.equal(discovery.weeklyEdits.length,7);
+assert.equal(new Set(discovery.weeklyEdits.map(e=>e.title)).size,7);
+for(let i=0;i<7;i++)assert.equal(discovery.editorialEdit(Date.UTC(2026,10,22+i)),discovery.weeklyEdits[i]);
+const makeOffer=(id,category,verified=now-1000,expires=now+1000,productId=id)=>({id,verified_at:new Date(verified).toISOString(),expires_at:new Date(expires).toISOString(),product:{id:productId,category:{slug:category}}});
+const sample=[makeOffer("a","home",now-100),makeOffer("b","home",now-200),makeOffer("c","tech",now-300),makeOffer("d","tech",now-400,now+1000,"c"),makeOffer("e","travel",now-500,now),makeOffer("f","travel",now+100)];
+assert.deepEqual(discovery.discoveryOffers(sample,now).map(o=>o.id),["a","c","b"]);
+assert.deepEqual(discovery.discoveryOffers(sample,now,2).map(o=>o.id),["a","c"]);
+assert.deepEqual(discovery.discoveryOffers(sample,now,0),[]);
+assert.deepEqual(discovery.discoveryOffers([],now),[]);
+assert.deepEqual(discovery.discoveryOffers(sample,NaN),[]);
 const layout=fs.readFileSync("app/layout.tsx","utf8");assert.ok(layout.includes('<html lang="en-US" translate="no">'));assert.ok(layout.includes('"google":"notranslate"'));assert.ok(fs.readFileSync("AGENTS.md","utf8").includes("English (US) is the only supported language"));
 const lifestyle=fs.readFileSync("app/lifestyle/page.tsx","utf8"),solutions=fs.readFileSync("app/solutions/page.tsx","utf8");
 for(const i of prefs.interests)assert.ok(lifestyle.includes('id:"'+i.href.split("#")[1]+'"'));
