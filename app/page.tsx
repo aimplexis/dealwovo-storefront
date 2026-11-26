@@ -13,10 +13,12 @@ import ShopCatalog from "./shop/ShopCatalog";
 import {getPublicOffers} from "../src/lib/catalog/public";
 import {catalogConfigured} from "../src/lib/supabase/config";
 import "./shop/shop.css";
+import "./home-commerce.css";
+import {departments} from "../src/lib/catalog/category-suggestions";
 export const dynamic="force-dynamic";
 export const metadata=pageMetadata("/");
 const collections=[
- {number:"01",type:"THE CURIOUS EDIT",title:"Clever tech.",subtitle:"For the ‘wait, that's brilliant’ moments.",href:"/trending",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1400&q=86",tone:"lime",alt:"Modern headphones on a golden yellow background"},
+ {number:"01",type:"THE CURIOUS EDIT",title:"Clever tech.",subtitle:"For the ‘wait, that's brilliant’ moments.",href:"/trending",image:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1400&q=86",tone:"lavender",alt:"Laptop on a desk, illustrating everyday technology"},
  {number:"02",type:"THE THOUGHTFUL EDIT",title:"Gifts with feeling.",subtitle:"Less guessing. More ‘you really get me.’",href:"/gifts",image:"https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1400&q=86",tone:"pink",alt:"Beautifully wrapped gifts and ribbons"},
  {number:"03",type:"THE LIVING EDIT",title:"Everyday, better.",subtitle:"Useful little upgrades for real life.",href:"/essentials",image:"https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=86",tone:"lavender",alt:"Welcoming modern kitchen with thoughtful home details"},
  {number:"04",type:"THE SAVINGS EDIT",title:"Today’s deals.",subtitle:"Find current reviewed promotions and everyday shopping value.",href:"/deals",image:"https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=86",tone:"peach",alt:"Everyday home and kitchen inspiration"}
@@ -24,19 +26,29 @@ const collections=[
 export default async function Home(){
  const offers=await getPublicOffers(100);
  return <main className="dw-wow-shop dw2-home">
-  <section className="wrap dw-intent-discovery dw-revenue-shortcuts" aria-label="Search products and deals">
+  <section className="dw-commerce-light" aria-label="Search products and deals"><div className="wrap dw-commerce-search">
    <form action="/shop#verified-offers" method="get" className="dw-revenue-search"><label htmlFor="home-commerce-query">Search products, categories and retailers</label><div><input id="home-commerce-query" name="q" type="search" maxLength={100} placeholder="What are you shopping for?"/><button type="submit">Search ↗</button></div></form>
-  </section>
+   <nav aria-label="Quick shopping links"><Link href="/deals">Today's Deals</Link><Link href="/shop">Shop All</Link><Link href="/wishlist">Saved products</Link></nav>
+  </div></section>
   <ShopSpotlight/>
-  <section className="wrap dw-intent-discovery dw-revenue-shortcuts" aria-label="Browse shopping departments">
-   <div className="dw-revenue-discover"><div><span className="dw2-eyebrow">EVERYDAY SHOPPING</span><h2>Shop by department.</h2><p>Search the current reviewed catalog by shopping interest.</p></div><Link href="/shop#verified-offers">Shop all products ↗</Link></div>
-   <div className="dw-intent-grid">{[["Home","home"],["Kitchen","kitchen"],["Grocery","grocery"],["Beauty","beauty"],["Electronics","electronics"],["Clothing","clothing"],["Pets","pet"],["Tools","tools"],["Baby","baby"],["Automotive","automotive"],["Office","office"],["Travel","travel"]].map(([label,query])=><Link className="dw-intent-card" key={query} href={"/shop?q="+encodeURIComponent(query)+"#verified-offers"}><span className="dw-intent-symbol" aria-hidden="true">↗</span><strong>{label}</strong><span aria-hidden="true">›</span></Link>)}</div>
+  <div className="dw-commerce-light">
+  <section className="wrap dw-commerce-departments" aria-labelledby="commerce-department-title">
+   <header><div><span className="dw2-eyebrow">EVERYDAY SHOPPING</span><h2 id="commerce-department-title">Shop by department.</h2></div><Link href="/shop#verified-offers">Shop all products ↗</Link></header>
+   <div className="dw-commerce-grid">{departments.map((d,i)=><Link className="dw-commerce-department" key={d.key} href={"/shop?category="+encodeURIComponent(d.key)+"#verified-offers"}><span className="dw-commerce-symbol" aria-hidden="true">{["◉","⌂","◫","✧","◇","♧","♡","◎","♢","▤","▣","✳"][i]}</span><strong>{d.name}</strong><span className="dw-commerce-arrow" aria-hidden="true">↗</span></Link>)}</div>
+   <p>Browse current reviewed offers by department. Selection varies as retailer catalogs become available.</p>
+  </section>
+  <section className="wrap dw-commerce-savings" aria-label="Shopping and savings shortcuts">
+   <Link href="/deals"><small>THE SAVINGS EDIT</small><strong>Today's Deals</strong><span>Explore reviewed promotions ↗</span></Link>
+   <Link href="/shop?budget=25#verified-offers"><small>SHOP BY PRICE</small><strong>Under $25</strong><span>Find affordable products ↗</span></Link>
+   <Link href="/shop?budget=50#verified-offers"><small>EVERYDAY VALUE</small><strong>Under $50</strong><span>Browse by budget ↗</span></Link>
+   <Link href="/assistant"><small>SHOPPING GUIDANCE</small><strong>Find your match</strong><span>Get help choosing ↗</span></Link>
   </section>
   <DailyFeatureServer/>
-  {offers.length>0&&<><MerchandisingServer kind="discovery" title="Worth discovering." description="Explore recently reviewed finds across different shopping categories. Selection favors variety, not popularity." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/></>}
-  <ShoppingShortcuts hasOffers={offers.length>0}/>
-  <DiscoveryEdit now={Date.now()}/>
+  {offers.length>0&&<MerchandisingServer kind="discovery" title="Worth discovering." description="Recently reviewed finds across shopping categories. Not necessarily discounted." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/>}
   <ShopCatalog offers={offers} configured={catalogConfigured()}/>
+  <ShoppingShortcuts hasOffers={offers.length>0}/>
+  </div>
+  <DiscoveryEdit now={Date.now()}/>
   <PersonalDiscovery/>
   <RecentDiscovery/>
   <section className="dw2-intro-band" aria-label="Our approach">
