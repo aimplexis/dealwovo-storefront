@@ -3,10 +3,11 @@ import AmazonEditorial from "./AmazonEditorial";
 import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import Image from "next/image";
-import {getPublicOffers,getReviewedPriceChanges} from "../../src/lib/catalog/public";
+import {searchPublicCatalog,getReviewedPriceChanges} from "../../src/lib/catalog/public";
 import {catalogConfigured} from "../../src/lib/supabase/config";
 import ShopCatalog from "./ShopCatalog";
 import "./shop.css";
+import {departments} from "../../src/lib/catalog/category-suggestions";
 export const dynamic="force-dynamic";
 export const metadata=pageMetadata("/shop");
 const categories=[
@@ -15,7 +16,11 @@ const categories=[
  {name:"Everyday living",label:"03 / THE DAILY EDIT",href:"/essentials",image:"https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1100&q=84",alt:"Bright modern home interior"}
 ];
 export default async function ShopPage({searchParams}:{searchParams:Promise<Record<string,string|string[]|undefined>>}){
- const [offers,params]=await Promise.all([getPublicOffers(100),searchParams]);const filters=parseShopFilters(params);
+ const params=await searchParams;const filters=parseShopFilters(params);
+ const rawPage=typeof params.page==="string"&&/^\d{1,3}$/.test(params.page)?Number(params.page):1;const page=Math.max(1,Math.min(500,rawPage));
+ const retailer=typeof params.retailer==="string"?params.retailer.trim().slice(0,100):"";
+ const {offers,available,hasMore}=await searchPublicCatalog(filters,page,retailer);
+ const pageHref=(n:number)=>"/shop?"+new URLSearchParams({...filters,retailer,page:String(n)}).toString()+"#verified-offers";
  const {changes}=await getReviewedPriceChanges(offers.map(o=>o.id));const initialNow=Date.now();
  return <main className="dw-wow-shop dw2-shop">
   <section className="wrap dw2-shop-hero">
@@ -32,7 +37,9 @@ export default async function ShopPage({searchParams}:{searchParams:Promise<Reco
     <span className="dw2-shop-photo-label">CURIOUSLY GOOD / 2026</span>
    </div>
   </section>
-  <ShopCatalog key={JSON.stringify(filters)} offers={offers} configured={catalogConfigured()} changes={changes} initialNow={initialNow} initial={filters}/>
+  <section className="wrap dw-revenue-shortcuts" aria-label="Search the full reviewed catalog"><form action="/shop#verified-offers" method="get" className="dw-wow-filterbar dw-full-search" key={JSON.stringify([filters,retailer])}><label>Search products<input name="q" type="search" maxLength={100} defaultValue={filters.q} placeholder="Product or everyday need"/></label><label>Department<select name="category" defaultValue={filters.category}><option value="all">All departments</option>{departments.map(d=><option key={d.key} value={d.key}>{d.name}</option>)}{filters.category!=="all"&&!departments.some(d=>d.key===filters.category)&&<option value={filters.category}>{filters.category}</option>}</select></label><label>Retailer<input name="retailer" maxLength={100} defaultValue={retailer} placeholder="Exact retailer name"/></label><label>Budget<select name="budget" defaultValue={filters.budget}><option value="all">Any budget</option><option value="25">Under $25</option><option value="50">Under $50</option><option value="100">Under $100</option><option value="150plus">$150 &amp; up</option></select></label><label>Sort<select name="sort" defaultValue={filters.sort}><option value="recent">Recently reviewed</option><option value="price_low">Price: low to high</option><option value="price_high">Price: high to low</option><option value="name">Name: A–Z</option></select></label><button type="submit">Search catalog ↗</button><Link href="/shop#verified-offers">Reset search</Link></form><p>{available?`Page ${page} · ${offers.length} matching offers on this page`:"Catalog search is temporarily unavailable."}</p></section>
+  <ShopCatalog key={JSON.stringify([filters,retailer,page])} offers={offers} configured={catalogConfigured()&&available} changes={changes} initialNow={initialNow} serverSearch/>
+  <nav className="wrap dw-catalog-pagination" aria-label="Catalog pages">{page>1&&<Link href={pageHref(page-1)}>← Previous page</Link>}<span>Page {page}</span>{available&&hasMore&&page<500&&<Link href={pageHref(page+1)}>Next page →</Link>}</nav>
   <section className="dw2-shop-edits"><div className="wrap">
    <div className="dw2-shop-edits-head"><div><span className="dw2-eyebrow">PICK YOUR PATH</span><h2>Explore the <em>edits.</em></h2></div><p>Different interests, one place to start. Discover editorial categories while we build the verified product catalog.</p></div>
    <div className="dw2-shop-edits-grid">{categories.map(c=><Link key={c.name} href={c.href} className="dw2-shop-edit">
