@@ -1,19 +1,14 @@
+import Link from "next/link";
 import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
 import MerchandisingServer from "../../src/components/MerchandisingServer";
 import DailyFeatureServer from "../../src/components/DailyFeatureServer";
 import SeasonalShopping from "../../src/components/SeasonalShopping";
-import EditorialCategory from "../../src/components/EditorialCategory";
 export const dynamic="force-dynamic";
 export const metadata=pageMetadata("/deals");
-export default function Deals(){return <EditorialCategory data={{
- eyebrow:"03 / CELEBRATE THE MOMENT",title:"MAKE IT",accent:"MEMORABLE.",
- intro:"For meaningful moments, small celebrations, and all the people you love. Come for the inspiration; stay for that ‘perfect idea’ feeling.",
- heroImage:"https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=1400&q=88",heroAlt:"Festive decorated tree with ornaments and warm lights",
- stamp:"THE GOOD\nMOMENTS.",sectionEyebrow:"THE SEASONAL EDIT",sectionTitle:"MORE MEANING.",sectionAccent:"MORE MAGIC.",
- sectionIntro:"Fresh inspiration for gifting, gathering and making thoughtful moments last.",
- cards:[
- {label:"GIFTS",name:"Make their day",description:"Ideas that feel considered, not last-minute.",href:"/gifts",image:"https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=950&q=84",alt:"Wrapped presents and colorful ribbon"},
- {label:"HOME & HOSTING",name:"Make a moment",description:"Bring a little more warmth to the gathering.",href:"/essentials",image:"https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=950&q=84",alt:"Welcoming home with warm details"},
- {label:"SEASONAL JOY",name:"The festive feeling",description:"Find the inspiration behind memorable celebrations.",href:"/gifts",image:"https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=950&q=84",alt:"Decorated Christmas tree with ornaments"}
- ],closingTitle:"Thoughtful beats ordinary.",closingCopy:"This is our seasonal inspiration edit, not a collection of unverified discounts. Approved offers will appear in the Shop when ready."
- }}><DailyFeatureServer/><MerchandisingServer kind="seasonal" title="Seasonal shopping finds." description="Current reviewed offers with seasonal language in the catalog. Not necessarily discounted." emptyHref="/gifts" emptyLabel="Explore gift inspiration"/><SeasonalShopping/></EditorialCategory>}
+export default function Deals(){return <main className="dw2-home">
+<section className="wrap dw2-home-collections"><div className="dw2-section-heading"><div><span className="dw2-eyebrow">THE SAVINGS EDIT</span><h1>Today&apos;s Deals.</h1></div><p>Discover reviewed promotions and affordable everyday products. Confirm final prices and terms at the retailer.</p></div><Link className="dw2-button-dark" href="/shop#verified-offers">Shop all reviewed products ↗</Link></section>
+<DailyFeatureServer/>
+<MerchandisingServer kind="discovery" title="Everyday finds worth exploring." description="Current reviewed products; not necessarily discounted." emptyHref="/shop" emptyLabel="Explore the shop" limit={12}/>
+<section className="wrap dw2-home-collections"><div className="dw2-section-heading"><div><span className="dw2-eyebrow">SHOP YOUR BUDGET</span><h2>Good finds at every price.</h2></div><p>Recorded product prices before shipping and tax, not a claim of savings.</p></div><div className="dw-revenue-budgets">{[25,50,100].map((n,i)=><Link className={"dw-revenue-budget tone-"+i} key={n} href={"/shop?budget="+n+"#verified-offers"}><strong>Under ${n}</strong><span aria-hidden="true">↗</span></Link>)}</div></section>
+<SeasonalShopping/>
+</main>;}
