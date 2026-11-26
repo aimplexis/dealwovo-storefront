@@ -1,0 +1,35 @@
+/* Premium commerce surfaces: light retail browsing and the existing dark hero. */
+.dw-commerce-light{background:#f9f7f4;color:#181425;padding-bottom:12px}
+.dw-commerce-light .dw2-eyebrow{color:#6543c6}
+.dw-commerce-search{padding-block:16px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:24px}
+.dw-commerce-search nav{display:flex;flex-wrap:wrap;gap:14px;padding-bottom:14px;color:#5637ac;font-size:13px;font-weight:800}
+.dw-commerce-search .dw-revenue-search button{background:#6543c6;color:white}
+.dw-commerce-departments{padding-block:42px 24px}
+.dw-commerce-departments header{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}
+.dw-commerce-departments h2{font-size:clamp(28px,3.2vw,46px);letter-spacing:-.055em;line-height:1.1;margin:8px 0 0}
+.dw-commerce-departments header>a{font-weight:800;color:#5637ac;font-size:13px}
+.dw-commerce-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.dw-commerce-department{position:relative;min-width:0;min-height:126px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding:16px;background:white;border:1px solid #e0d9e9;border-radius:16px;color:#181425;transition:transform .18s,border-color .18s,box-shadow .18s}
+.dw-commerce-department:hover{transform:translateY(-3px);border-color:#8769d9;box-shadow:0 8px 22px #392b5810}
+.dw-commerce-symbol{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:#eee8fa;color:#5637ac;font-size:25px}
+.dw-commerce-department:nth-child(3n+2) .dw-commerce-symbol{background:#f8e7e2;color:#873c50}
+.dw-commerce-department:nth-child(3n+3) .dw-commerce-symbol{background:#e0f1ec;color:#08685e}
+.dw-commerce-department strong{font-size:14px;line-height:1.35;overflow-wrap:anywhere}
+.dw-commerce-arrow{position:absolute;right:12px;top:12px;color:#6543c6;font-size:17px}
+.dw-commerce-departments>p{color:#62596b;font-size:12px;margin-top:15px}
+.dw-commerce-savings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding-block:12px 24px}
+.dw-commerce-savings>a{display:flex;flex-direction:column;gap:7px;min-height:132px;border-radius:16px;padding:20px;background:#eee8fa;color:#181425;border:1px solid #ded4ef}
+.dw-commerce-savings>a:first-child{background:#32234d;color:#fff;border-color:#32234d}
+.dw-commerce-savings>a:nth-child(3){background:#f8e7e2;border-color:#efdad4}
+.dw-commerce-savings>a:last-child{background:#e0f1ec;border-color:#cde4dd}
+.dw-commerce-savings small{font-weight:800;font-size:10px;letter-spacing:.09em}
+.dw-commerce-savings strong{font-size:clamp(21px,2.2vw,32px);letter-spacing:-.045em;line-height:1.1}
+.dw-commerce-savings span{font-size:12px;margin-top:auto;font-weight:650}
+.dw-commerce-light .dw-wow-section-heading h2,.dw-commerce-light .dw-wow-section-heading h2 em{color:#181425}
+.dw-commerce-light .dw-wow-section-heading p,.dw-commerce-light .dw-wow-kicker{color:#62596b}
+.dw-commerce-light .dw-wow-catalog{padding-block:30px 42px;scroll-margin-top:105px}
+.dw-commerce-light .dw-revenue-budget.tone-0{background:#eee8fa}
+.dw-commerce-light :focus-visible{outline:3px solid #6543c6!important;outline-offset:3px}
+@media(max-width:1000px){.dw-commerce-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.dw-commerce-search{grid-template-columns:1fr;gap:10px}.dw-commerce-search nav{padding-bottom:0}}
+@media(max-width:640px){.dw-commerce-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.dw-commerce-savings{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.dw-commerce-departments header{align-items:start;flex-direction:column;gap:8px}.dw-commerce-department{min-height:112px;padding:13px}.dw-commerce-savings>a{padding:15px;min-height:120px}.dw-commerce-search{padding-block:12px}}
+@media(prefers-reduced-motion:reduce){.dw-commerce-department{transition:none}.dw-commerce-department:hover{transform:none}}
