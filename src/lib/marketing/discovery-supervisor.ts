@@ -1,0 +1,17 @@
+// Read-only workforce coordination. No task here authorizes execution or publication.
+export type DiscoverySnapshot={authorizedSources:number|null;eligibleCandidates:number|null;eligibleOffers:number|null;attentionOffers:number|null;researchOpportunities:number|null;reviewedDemand:number|null;evidenceRecords:number|null};
+export type Handoff={key:string;role:string;priority:number;status:"blocked"|"review"|"available";detail:string;href:string;execution:"human_only"};
+const count=(n:number|null)=>typeof n==="number"&&Number.isSafeInteger(n)&&n>=0?n:null;
+export function discoveryHandoffs(s:DiscoverySnapshot):Handoff[]{
+ const sources=count(s.authorizedSources),candidates=count(s.eligibleCandidates),offers=count(s.eligibleOffers),attention=count(s.attentionOffers),opportunities=count(s.researchOpportunities),demand=count(s.reviewedDemand),evidence=count(s.evidenceRecords);
+ const rows:Handoff[]=[];
+ const add=(key:string,role:string,priority:number,status:Handoff["status"],detail:string,href:string)=>rows.push({key,role,priority,status,detail,href,execution:"human_only"});
+ add("quality","Product Quality",attention===null||attention>0?1:4,attention===null?"blocked":"review",attention===null?"Offer quality data unavailable. No health conclusion.":attention>0?attention+" stored offers require attention. Review these before promotion; independent safety and rights checks remain mandatory.":"No expired, blocked or expiring offers reported. Product-level quality worksheet remains temporary and advisory; no safety conclusion.","/admin/quality");
+ add("sourcing","Product Discovery",2,sources===null||candidates===null||sources===0?"blocked":"review",sources===null||candidates===null?"Candidate or source report unavailable.":sources===0?"No recorded authorized sources. Owner authorization is required before sourcing.":candidates===0?"Authorized sources recorded; stage a permitted feed when available.":candidates+" eligible staged candidates reported. Review exact product identity and permissions.","/admin/discovery");
+ add("evaluation","Product Evaluation",3,candidates===null||evidence===null||candidates===0?"blocked":"review",candidates===null||evidence===null?"Candidate or evidence count unavailable.":candidates===0?"No eligible staged candidates to evaluate.":evidence+" historical evidence records across all candidates. This count does not establish current or complete assessments; review each eligible candidate.","/admin/discovery");
+ const trendKnown=opportunities!==null&&demand!==null&&demand<=opportunities;
+ add("research","Trend Intelligence",4,!trendKnown?"blocked":"review",!trendKnown?"Research coverage unavailable.":demand+" of "+opportunities+" loaded opportunity hypotheses have a reviewed current US demand observation. This is not measured trend growth; collect or refresh comparable evidence.","/admin/discovery/opportunities");
+ add("editorial","Editorial Content",5,"available","Evergreen private drafts can be prepared manually without eligible offers. No automatic transfer, approval or publication.","/admin/marketing/lab");
+ add("campaign","Product Campaign",6,offers===null||offers===0?"blocked":"review",offers===null?"Offer count unavailable.":offers===0?"No database-eligible offers reported. Product campaigns remain dependent on authorized source-linked offers.":offers+" database-eligible offers reported; campaign-specific source and review gates still apply.","/admin/marketing/products");
+ return rows.sort((a,b)=>a.priority-b.priority||a.key.localeCompare(b.key));
+}
