@@ -40,6 +40,7 @@ export default function SiteHeader(){
      </button>
     </div>
    </div>
+   <nav className="dw-mobile-shopping" aria-label="Quick shopping navigation"><Link href="/shop#catalog-search" onClick={()=>setOpen(false)}>Search</Link><Link href="/deals" aria-current={pathname==="/deals"?"page":undefined} onClick={()=>setOpen(false)}>Today’s Deals</Link><Link href="/shop" aria-current={pathname==="/shop"?"page":undefined} onClick={()=>setOpen(false)}>Shop All</Link><Link href="/wishlist" aria-current={pathname==="/wishlist"?"page":undefined} onClick={()=>setOpen(false)}>Saved{wishlist.ready&&wishlist.items.length>0?" ("+wishlist.items.length+")":""}</Link></nav>
    <nav id="dw2-mobile-nav" className={open?"dw2-mobile-nav is-open":"dw2-mobile-nav"} aria-label="Mobile navigation" inert={!open}>
     {links.map((link,i)=><Link key={link.href} href={link.href} aria-current={pathname===link.href?"page":undefined} onClick={()=>setOpen(false)}><small>0{i+1}</small>{link.label}<span aria-hidden="true">↗</span></Link>)}
     <Link href="/wishlist" aria-current={pathname==="/wishlist"?"page":undefined} onClick={()=>setOpen(false)}><small>♡</small>Saved products{wishlist.ready?" ("+wishlist.items.length+")":""}<span aria-hidden="true">↗</span></Link>
