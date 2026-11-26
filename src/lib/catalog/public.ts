@@ -3,11 +3,11 @@ import {publicSupabase} from "../supabase/public";
 import {validExternalHttps} from "./feed-csv";
 
 export type PublicOffer={
- id:string;price_cents:number|null;currency:string;verified_at:string;
+ id:string;price_cents:number|null;currency:string;verified_at:string;expires_at:string;
  product:{id:string;slug:string;title:string;description:string;image_url:string|null;category:{slug:string;name:string}};
  merchant:{id:string;name:string};
 };
-const selector="id,price_cents,currency,verified_at,product:catalog_products!inner(id,slug,title,description,image_url,category:catalog_categories!inner(slug,name)),merchant:catalog_merchants!inner(id,name)";
+const selector="id,price_cents,currency,verified_at,expires_at,product:catalog_products!inner(id,slug,title,description,image_url,category:catalog_categories!inner(slug,name)),merchant:catalog_merchants!inner(id,name)";
 export async function getPublicOffers(limit=36):Promise<PublicOffer[]>{
  const client=publicSupabase();
  if(!client)return [];
@@ -32,7 +32,7 @@ export async function getVerifiedProductBySlug(slug:string):Promise<{product:Pub
  if(productError||!product)return null;
  const now=new Date().toISOString();
  const {data:offers,error:offersError}=await client.from("catalog_offers")
-   .select("id,price_cents,currency,verified_at,product:catalog_products!inner(id,slug,title,description,image_url,category:catalog_categories!inner(slug,name)),merchant:catalog_merchants!inner(id,name)")
+   .select("id,price_cents,currency,verified_at,expires_at,product:catalog_products!inner(id,slug,title,description,image_url,category:catalog_categories!inner(slug,name)),merchant:catalog_merchants!inner(id,name)")
    .eq("product_id",product.id).eq("status","approved")
    .lte("verified_at",now).gt("expires_at",now).order("verified_at",{ascending:false}).limit(20);
  if(offersError||!offers?.length)return null;
