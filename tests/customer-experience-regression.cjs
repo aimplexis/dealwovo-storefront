@@ -53,5 +53,12 @@ assert.ok(!home.includes("&&<><DailyFeatureServer/>"));
 assert.ok(header.includes('label:"Today’s Deals"'));
 assert.ok(deals.includes("Current reviewed products; not necessarily discounted."));
 assert.ok(deals.includes("<SeasonalShopping/>"));
+const commerceCss=fs.readFileSync("app/home-commerce.css","utf8");
+assert.ok(home.includes('import {departments} from "../src/lib/catalog/category-suggestions"'));
+assert.ok(home.includes('"/shop?category="+encodeURIComponent(d.key)'));
+assert.ok(home.includes('<ShopCatalog offers={offers} configured={catalogConfigured()}/>'));
+assert.ok(home.indexOf("<ShopCatalog")<home.indexOf("<PersonalDiscovery/>"));
+assert.ok(commerceCss.includes("repeat(6,minmax(0,1fr))"));
+assert.ok(commerceCss.includes("prefers-reduced-motion:reduce"));
 console.log("PASS customer experience: opt-in history, expiry, bounds, safe slugs, preference validation, guidance, price evidence, English declaration and route anchors");
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
