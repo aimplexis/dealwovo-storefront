@@ -1,1 +1,24 @@
-const assert=require("node:assert/strict"),fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=require("node:child_process");const dir=fs.mkdtempSync(path.join(os.tmpdir(),"dw-growth-"));try{cp.execFileSync(process.execPath,[require.resolve("typescript/bin/tsc"),"--target","ES2022","--module","commonjs","--strict","--skipLibCheck","--outDir",dir,"src/lib/marketing/growth-overseer.ts"],{stdio:"inherit"});const {canExecute:c}=require(path.join(dir,"growth-overseer.js"));const now=Date.parse("2026-11-24T12:00:00Z");assert.equal(c("internal","newsletter","ready",0,null,now,0),true);assert.equal(c("observe","newsletter","ready",0,null,now,0),false);assert.equal(c("paused","daily_brief","ready",0,null,now,0),false);assert.equal(c("internal","source_access","ready",0,null,now,1),false);assert.equal(c("internal","product_campaign","ready",0,null,now,0),false);assert.equal(c("internal","product_campaign","ready",0,null,now,1),true);assert.equal(c("internal","newsletter","failed",2,"2026-11-24T11:00:00Z",now,0),true);assert.equal(c("internal","newsletter","failed",2,"2026-11-24T13:00:00Z",now,0),false);assert.equal(c("internal","newsletter","failed",3,"2026-11-24T11:00:00Z",now,0),false);assert.equal(c("internal","newsletter","completed",1,null,now,0),false);console.log("PASS growth supervisor policy: modes, allowlist, eligibility, retry time and attempt caps");}finally{fs.rmSync(dir,{recursive:true,force:true});}
+const assert=require("node:assert/strict"),fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=require("node:child_process");const dir=fs.mkdtempSync(path.join(os.tmpdir(),"dw-growth-"));try{cp.execFileSync(process.execPath,[require.resolve("typescript/bin/tsc"),"--target","ES2022","--module","commonjs","--strict","--skipLibCheck","--outDir",dir,"src/lib/marketing/growth-overseer.ts","src/lib/marketing/discovery-supervisor.ts"],{stdio:"inherit"});const {canExecute:c}=require(path.join(dir,"growth-overseer.js"));const now=Date.parse("2026-11-24T12:00:00Z");assert.equal(c("internal","newsletter","ready",0,null,now,0),true);assert.equal(c("observe","newsletter","ready",0,null,now,0),false);assert.equal(c("paused","daily_brief","ready",0,null,now,0),false);assert.equal(c("internal","source_access","ready",0,null,now,1),false);assert.equal(c("internal","product_campaign","ready",0,null,now,0),false);assert.equal(c("internal","product_campaign","ready",0,null,now,1),true);assert.equal(c("internal","newsletter","failed",2,"2026-11-24T11:00:00Z",now,0),true);assert.equal(c("internal","newsletter","failed",2,"2026-11-24T13:00:00Z",now,0),false);assert.equal(c("internal","newsletter","failed",3,"2026-11-24T11:00:00Z",now,0),false);assert.equal(c("internal","newsletter","completed",1,null,now,0),false);const {discoveryHandoffs}=require(path.join(dir,"discovery-supervisor.js"));
+const empty={authorizedSources:0,eligibleCandidates:0,eligibleOffers:0,attentionOffers:0,researchOpportunities:0,reviewedDemand:0,evidenceRecords:0};
+const get=(s,k)=>discoveryHandoffs(s).find(x=>x.key===k);
+assert.equal(discoveryHandoffs(empty).length,6);
+assert.equal(get(empty,"sourcing").status,"blocked");
+assert.equal(get(empty,"evaluation").status,"blocked");
+assert.equal(get(empty,"campaign").status,"blocked");
+assert.equal(get(empty,"editorial").status,"available");
+const unknown=Object.fromEntries(Object.keys(empty).map(k=>[k,null]));
+assert.equal(get(unknown,"quality").status,"blocked");
+assert.equal(get(unknown,"research").status,"blocked");
+assert.match(get(unknown,"evaluation").detail,/unavailable/);
+assert.equal(get({...empty,reviewedDemand:1},"research").status,"blocked");
+assert.equal(get({...empty,authorizedSources:-1},"sourcing").status,"blocked");
+const populated={authorizedSources:1,eligibleCandidates:3,eligibleOffers:2,attentionOffers:1,researchOpportunities:10,reviewedDemand:4,evidenceRecords:17};
+const queue=discoveryHandoffs(populated);
+assert.equal(queue[0].key,"quality");
+assert.match(get(populated,"evaluation").detail,/does not establish current or complete/);
+assert.match(get(populated,"research").detail,/4 of 10/);
+assert.ok(queue.every(h=>h.execution==="human_only"&&h.href.startsWith("/admin/")));
+for(const h of queue)assert.equal(c("internal",h.key,"ready",0,null,now,2),false);
+assert.equal(c("internal","publish","ready",0,null,now,2),false);
+console.log("PASS discovery supervisor: real counts, unknowns, quality priority, human-only handoffs");
+console.log("PASS growth supervisor policy: modes, allowlist, eligibility, retry time and attempt caps");}finally{fs.rmSync(dir,{recursive:true,force:true});}
