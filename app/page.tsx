@@ -10,7 +10,7 @@ import PersonalDiscovery from "../src/components/PersonalDiscovery";
 import RecentDiscovery from "../src/components/RecentDiscovery";
 import ShopSpotlight from "./shop/ShopSpotlight";
 import ShopCatalog from "./shop/ShopCatalog";
-import {getPublicOffers} from "../src/lib/catalog/public";
+import {getPublicOffers,getReviewedPriceChanges} from "../src/lib/catalog/public";
 import {catalogConfigured} from "../src/lib/supabase/config";
 import "./shop/shop.css";
 import "./home-commerce.css";
@@ -25,6 +25,7 @@ const collections=[
 ];
 export default async function Home(){
  const offers=await getPublicOffers(100);
+ const {changes}=await getReviewedPriceChanges(offers.map(o=>o.id));const initialNow=Date.now();
  return <main className="dw-wow-shop dw2-home">
   <section className="dw-commerce-light" aria-label="Search products and deals"><div className="wrap dw-commerce-search">
    <form action="/shop#verified-offers" method="get" className="dw-revenue-search"><label htmlFor="home-commerce-query">Search products, categories and retailers</label><div><input id="home-commerce-query" name="q" type="search" maxLength={100} placeholder="What are you shopping for?"/><button type="submit">Search ↗</button></div></form>
@@ -45,7 +46,7 @@ export default async function Home(){
   </section>
   <DailyFeatureServer/>
   {offers.length>0&&<MerchandisingServer kind="discovery" title="Worth discovering." description="Recently reviewed finds across shopping categories. Not necessarily discounted." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/>}
-  <ShopCatalog offers={offers} configured={catalogConfigured()}/>
+  <ShopCatalog offers={offers} configured={catalogConfigured()} changes={changes} initialNow={initialNow}/>
   <ShoppingShortcuts hasOffers={offers.length>0}/>
   </div>
   <DiscoveryEdit now={Date.now()}/>
