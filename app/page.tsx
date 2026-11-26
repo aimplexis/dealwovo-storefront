@@ -24,11 +24,19 @@ const collections=[
 export default async function Home(){
  const offers=await getPublicOffers(100);
  return <main className="dw-wow-shop dw2-home">
+  <section className="wrap dw-intent-discovery dw-revenue-shortcuts" aria-label="Search products and deals">
+   <form action="/shop#verified-offers" method="get" className="dw-revenue-search"><label htmlFor="home-commerce-query">Search products, categories and retailers</label><div><input id="home-commerce-query" name="q" type="search" maxLength={100} placeholder="What are you shopping for?"/><button type="submit">Search ↗</button></div></form>
+  </section>
   <ShopSpotlight/>
+  <section className="wrap dw-intent-discovery dw-revenue-shortcuts" aria-label="Browse shopping departments">
+   <div className="dw-revenue-discover"><div><span className="dw2-eyebrow">EVERYDAY SHOPPING</span><h2>Shop by department.</h2><p>Search the current reviewed catalog by shopping interest.</p></div><Link href="/shop#verified-offers">Shop all products ↗</Link></div>
+   <div className="dw-intent-grid">{[["Home","home"],["Kitchen","kitchen"],["Grocery","grocery"],["Beauty","beauty"],["Electronics","electronics"],["Clothing","clothing"],["Pets","pet"],["Tools","tools"],["Baby","baby"],["Automotive","automotive"],["Office","office"],["Travel","travel"]].map(([label,query])=><Link className="dw-intent-card" key={query} href={"/shop?q="+encodeURIComponent(query)+"#verified-offers"}><span className="dw-intent-symbol" aria-hidden="true">↗</span><strong>{label}</strong><span aria-hidden="true">›</span></Link>)}</div>
+  </section>
   <DailyFeatureServer/>
   {offers.length>0&&<><MerchandisingServer kind="discovery" title="Worth discovering." description="Explore recently reviewed finds across different shopping categories. Selection favors variety, not popularity." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/></>}
   <ShoppingShortcuts hasOffers={offers.length>0}/>
   <DiscoveryEdit now={Date.now()}/>
+  <ShopCatalog offers={offers} configured={catalogConfigured()}/>
   <PersonalDiscovery/>
   <RecentDiscovery/>
   <section className="dw2-intro-band" aria-label="Our approach">
@@ -51,10 +59,6 @@ export default async function Home(){
    <div className="dw2-feature-copy"><span className="dw2-eyebrow">02 / BETTER GIFTING BEGINS HERE</span><h2>Gift the feeling.<br/><em>Not the guesswork.</em></h2><p>Someone special on your mind? A few thoughtful answers can point you toward categories they'll actually love. No endless tabs required.</p><Link href="/gifts" className="dw2-button-dark">Find their kind of wow <span aria-hidden="true">↗</span></Link><small>Explore editorial ideas and matching reviewed retailer products when available.</small></div>
    <div className="dw2-feature-art" aria-label="Editorial gift inspiration"><div className="dw2-feature-picture"><Image src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1600&q=88" alt="Colorful carefully wrapped presents" fill sizes="(max-width: 820px) 90vw, 45vw" quality={75}/></div><div className="dw2-feature-sticker">THE ART<br/>OF GETTING<br/><b>IT RIGHT.</b><span>✳</span></div></div>
   </div></section>
-  <section className="wrap dw2-home-catalog">
-   <div className="dw2-small-bar"><span className="dw2-eyebrow">03 / MADE FOR REAL DISCOVERIES</span><Link href="/shop">Enter the shop <span aria-hidden="true">↗</span></Link></div>
-   {offers.length>0?<ShopCatalog offers={offers} configured={catalogConfigured()}/>:<div className="dw-intent-empty"><h2>Good finds are taking shape.</h2><p>Our reviewed product collection is in preparation. In the meantime, explore everyday solutions, lifestyle ideas and practical shopping guides.</p><Link href="/guides" className="dw2-button-lime">Explore buying guides ↗</Link></div>}
-  </section>
   <section className="dw2-home-principles"><div className="wrap dw2-principles-wrap"><div><span className="dw2-eyebrow">THE DEALWOVO WAY</span><h2>A little more wonder.<br/><em>A lot more intention.</em></h2></div><div className="dw2-principles"><article><span>01</span><strong>Discover differently.</strong><p>Start with interests and ideas—not a wall of anonymous listings.</p></article><article><span>02</span><strong>Know what&apos;s real.</strong><p>We distinguish editorial inspiration from reviewed retailer offers.</p></article><article><span>03</span><strong>Shop with clarity.</strong><p>When an offer is available, complete your purchase on the retailer&apos;s site.</p></article></div></div></section>
   <NewsletterTeaser/>
   <section className="wrap dw2-home-finale"><span className="dw2-eyebrow">THE GOOD STUFF IS OUT THERE</span><h2>COME CURIOUS.<br/><em>LEAVE INSPIRED.</em></h2><p>There&apos;s always another little thing worth discovering.</p><Link href={offers.length>0?"/shop#verified-offers":"/solutions"} className="dw2-button-lime">{offers.length>0?"Shop reviewed finds":"Explore everyday solutions"} <span aria-hidden="true">↗</span></Link><span className="dw2-finale-star" aria-hidden="true">✳</span></section>
