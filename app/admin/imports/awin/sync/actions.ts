@@ -24,3 +24,17 @@ export async function reviewSync(f:FormData){
  const {data,error}=await a.db.rpc("review_awin_sync_item",{p_item_id:item,p_decision:decision});
  return done(error||data!==true?"stale":decision,run);
 }
+
+/** Independently authorize and validate each bounded batch. */
+export async function submitBulkBatch(source:string,csv:string,confirmed:boolean):Promise<{ok:true;run:string}|{ok:false;message:string}>{
+ const a=await visualAccess();if(!a.ok)return {ok:false,message:"Sign in again before continuing."};
+ if(confirmed!==true||typeof source!=="string"||!uid.test(source)||typeof csv!=="string"||new TextEncoder().encode(csv).length>102400)return {ok:false,message:"Invalid batch or confirmation."};
+ const {data:s,error}=await a.db.from("catalog_feed_sources").select("awin_publisher_id,awin_advertiser_id").eq("id",source).eq("status","authorized").eq("provider","awin").not("awin_merchant_id","is",null).maybeSingle();
+ if(error||!s?.awin_publisher_id||!s.awin_advertiser_id)return {ok:false,message:"Authorized advertiser unavailable."};
+ let rows:ReturnType<typeof parseAwinCSV>;
+ try{rows=parseAwinCSV(csv,{publisher:s.awin_publisher_id,advertiser:s.awin_advertiser_id});}catch{return {ok:false,message:"Batch validation failed."};}
+ const {data:run,error:e}=await a.db.rpc("sync_awin_feed",{p_source_id:source,p_rows:rows});
+ if(e||!run)return {ok:false,message:"Comparison not confirmed. Check recent runs before retrying."};
+ revalidatePath(base);revalidatePath("/admin/imports");
+ return {ok:true,run:String(run)};
+}
