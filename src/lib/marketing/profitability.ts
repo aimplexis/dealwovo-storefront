@@ -20,3 +20,17 @@ export function commercialDecisions(groups:unknown){
   return [{key:g.key,label:g.label,state,action,earnings:g.earnings,expenses:g.expenses,contribution:g.contribution}];
  }).sort((a,b)=>{const order=["reconcile","review_costs","verify_costs","insufficient","evaluate"];return order.indexOf(a.state)-order.indexOf(b.state)||a.key.localeCompare(b.key);});
 }
+
+/** Read-only owner handoffs. Missing pack coverage is not evidence of expiry. */
+export function overseerCommercialActions(groups:unknown,packs:unknown,now:number){
+ if(!Array.isArray(groups)||!Array.isArray(packs)||!Number.isFinite(now))return null;
+ const decisions=commercialDecisions(groups);
+ const output=decisions.map(d=>{
+  if(d.key==="unknown")return {...d,priority:1,href:"/admin/marketing/revenue/attribution"};
+  const p=packs.find(v=>v&&v.id===d.key);
+  if(!p)return {...d,state:"verify_eligibility",priority:2,action:"Campaign is outside the available report or missing. Check current eligibility before further promotion.",href:"/admin/marketing/products"};
+  if(p.current!==true||p.status!=="reviewed"||p.review?.status!=="reviewed"||!Number.isFinite(Date.parse(p.expires_at))||Date.parse(p.expires_at)<=now)return {...d,state:"hold_campaign",priority:0,action:"Hold promotion and review current offer and campaign eligibility. Historical revenue does not override eligibility.",href:"/admin/marketing/products"};
+  return {...d,priority:d.state==="review_costs"?1:d.state==="verify_costs"?2:d.state==="insufficient"?3:4,href:d.state==="review_costs"||d.state==="verify_costs"?"/admin/marketing/revenue/profitability":"/admin/marketing/products"};
+ });
+ return output.sort((a,b)=>a.priority-b.priority||a.key.localeCompare(b.key));
+}
