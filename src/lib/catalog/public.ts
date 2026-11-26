@@ -96,3 +96,10 @@ export async function getReviewedPriceChanges(ids:string[]):Promise<{available:b
  if(error||!Array.isArray(data))return {available:false,changes:[]};
  return {available:true,changes:data as import("./price-watch").PriceChange[]};
 }
+
+export async function searchPublicCatalog(filters:import("./shop-filters").Filters,page:number,retailer:string):Promise<{available:boolean;offers:PublicOffer[];hasMore:boolean}>{
+ const client=publicSupabase();if(!client)return {available:false,offers:[],hasMore:false};
+ const {data,error}=await client.rpc("search_public_catalog",{p_query:filters.q,p_category:filters.category,p_budget:filters.budget,p_sort:filters.sort,p_page:page,p_retailer:retailer});
+ if(error||!data||!Array.isArray(data.offers)||typeof data.hasMore!=="boolean")return {available:false,offers:[],hasMore:false};
+ return {available:true,offers:data.offers as PublicOffer[],hasMore:data.hasMore};
+}
