@@ -1,3 +1,4 @@
+import MobilePurchaseBar from "../../../src/components/MobilePurchaseBar";
 import MerchandisingServer from "../../../src/components/MerchandisingServer";
 import {cache} from "react";
 import {comparisonHref} from "../../../src/lib/catalog/comparison";
@@ -62,5 +63,6 @@ export default async function ProductDetail({params}:{params:Promise<{slug:strin
     </div>
    </section>
    <MerchandisingServer kind="recent" related={product} title="More to explore." description="Other products in the same department. Compare exact features and retailer terms before choosing." limit={4}/>
+   <MobilePurchaseBar offerId={primary.id} merchant={primary.merchant.name} price={priced(primary)?money(primary.price_cents!):"See retailer price"} verifiedAt={primary.verified_at} expiresAt={primary.expires_at} initialNow={now}/>
   </main>;
 }
