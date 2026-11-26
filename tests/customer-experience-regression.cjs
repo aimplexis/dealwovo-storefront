@@ -60,5 +60,10 @@ assert.ok(home.includes('<ShopCatalog offers={offers} configured={catalogConfigu
 assert.ok(home.indexOf("<ShopCatalog")<home.indexOf("<PersonalDiscovery/>"));
 assert.ok(commerceCss.includes("repeat(6,minmax(0,1fr))"));
 assert.ok(commerceCss.includes("prefers-reduced-motion:reduce"));
+const mobileHeaderCss=fs.readFileSync("app/dealwovo-v2.css","utf8"),mobileProductCss=fs.readFileSync("app/dealwovo-v2-product.css","utf8"),purchase=fs.readFileSync("src/components/MobilePurchaseBar.tsx","utf8"),productPage=fs.readFileSync("app/product/[slug]/page.tsx","utf8"),shop=fs.readFileSync("app/shop/page.tsx","utf8");
+assert.ok(header.includes('href="/shop#catalog-search"'));assert.ok(shop.includes('id="catalog-search"'));
+assert.ok(mobileHeaderCss.includes(".dw-mobile-shopping{display:none}"));assert.ok(mobileHeaderCss.includes("min-height:44px"));
+assert.ok(productPage.includes("<MobilePurchaseBar offerId={primary.id}"));assert.ok(purchase.includes("expiry>now"));assert.ok(purchase.includes("Date.now()>=expiry"));assert.ok(purchase.includes('"?placement=product"'));assert.ok(purchase.includes('href="/affiliate-disclosure"'));
+assert.ok(mobileProductCss.includes(".dw-mobile-purchase{display:none}"));assert.ok(mobileProductCss.includes("env(safe-area-inset-bottom)"));
 console.log("PASS customer experience: opt-in history, expiry, bounds, safe slugs, preference validation, guidance, price evidence, English declaration and route anchors");
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
