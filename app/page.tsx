@@ -25,11 +25,11 @@ export default async function Home(){
  const offers=await getPublicOffers(100);
  return <main className="dw-wow-shop dw2-home">
   <ShopSpotlight/>
+  {offers.length>0&&<><DailyFeatureServer/><MerchandisingServer kind="discovery" title="Worth discovering." description="Explore recently reviewed finds across different shopping categories. Selection favors variety, not popularity." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/></>}
   <DiscoveryEdit now={Date.now()}/>
   <ShoppingShortcuts hasOffers={offers.length>0}/>
   <PersonalDiscovery/>
   <RecentDiscovery/>
-  {offers.length>0&&<><DailyFeatureServer/><MerchandisingServer kind="discovery" title="Worth discovering." description="Explore recently reviewed finds across different shopping categories. Selection favors variety, not popularity." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/></>}
   <section className="dw2-intro-band" aria-label="Our approach">
    <div className="wrap dw2-intro-inner"><span>THOUGHTFULLY FOUND.</span><span aria-hidden="true">✳</span><span>DESIGNED FOR DISCOVERY.</span><span aria-hidden="true">✳</span><span>ALWAYS YOUR KIND OF WOW.</span></div>
   </section>
@@ -48,7 +48,7 @@ export default async function Home(){
   </section>
   <section className="dw2-home-feature"><div className="wrap dw2-feature-inner">
    <div className="dw2-feature-copy"><span className="dw2-eyebrow">02 / BETTER GIFTING BEGINS HERE</span><h2>Gift the feeling.<br/><em>Not the guesswork.</em></h2><p>Someone special on your mind? A few thoughtful answers can point you toward categories they'll actually love. No endless tabs required.</p><Link href="/gifts" className="dw2-button-dark">Find their kind of wow <span aria-hidden="true">↗</span></Link><small>Explore editorial ideas and matching reviewed retailer products when available.</small></div>
-   <div className="dw2-feature-art" aria-label="Editorial gift inspiration"><div className="dw2-feature-picture"><Image src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1600&q=88" alt="Colorful carefully wrapped presents" fill sizes="(max-width: 820px) 90vw, 45vw" quality={80}/></div><div className="dw2-feature-sticker">THE ART<br/>OF GETTING<br/><b>IT RIGHT.</b><span>✳</span></div></div>
+   <div className="dw2-feature-art" aria-label="Editorial gift inspiration"><div className="dw2-feature-picture"><Image src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1600&q=88" alt="Colorful carefully wrapped presents" fill sizes="(max-width: 820px) 90vw, 45vw" quality={75}/></div><div className="dw2-feature-sticker">THE ART<br/>OF GETTING<br/><b>IT RIGHT.</b><span>✳</span></div></div>
   </div></section>
   <section className="wrap dw2-home-catalog">
    <div className="dw2-small-bar"><span className="dw2-eyebrow">03 / MADE FOR REAL DISCOVERIES</span><Link href="/shop">Enter the shop <span aria-hidden="true">↗</span></Link></div>
@@ -56,6 +56,6 @@ export default async function Home(){
   </section>
   <section className="dw2-home-principles"><div className="wrap dw2-principles-wrap"><div><span className="dw2-eyebrow">THE DEALWOVO WAY</span><h2>A little more wonder.<br/><em>A lot more intention.</em></h2></div><div className="dw2-principles"><article><span>01</span><strong>Discover differently.</strong><p>Start with interests and ideas—not a wall of anonymous listings.</p></article><article><span>02</span><strong>Know what&apos;s real.</strong><p>We distinguish editorial inspiration from reviewed retailer offers.</p></article><article><span>03</span><strong>Shop with clarity.</strong><p>When an offer is available, complete your purchase on the retailer&apos;s site.</p></article></div></div></section>
   <NewsletterTeaser/>
-  <section className="wrap dw2-home-finale"><span className="dw2-eyebrow">THE GOOD STUFF IS OUT THERE</span><h2>COME CURIOUS.<br/><em>LEAVE INSPIRED.</em></h2><p>There&apos;s always another little thing worth discovering.</p><Link href="/shop" className="dw2-button-lime">Explore the good stuff <span aria-hidden="true">↗</span></Link><span className="dw2-finale-star" aria-hidden="true">✳</span></section>
+  <section className="wrap dw2-home-finale"><span className="dw2-eyebrow">THE GOOD STUFF IS OUT THERE</span><h2>COME CURIOUS.<br/><em>LEAVE INSPIRED.</em></h2><p>There&apos;s always another little thing worth discovering.</p><Link href={offers.length>0?"/shop#verified-offers":"/solutions"} className="dw2-button-lime">{offers.length>0?"Shop reviewed finds":"Explore everyday solutions"} <span aria-hidden="true">↗</span></Link><span className="dw2-finale-star" aria-hidden="true">✳</span></section>
  </main>;
 }
