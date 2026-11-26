@@ -197,3 +197,9 @@ body{background:var(--dw2-night);-webkit-font-smoothing:antialiased}
 @media(prefers-reduced-motion:reduce){
  .dw2-home .dw-wow-scene-card{transition:none!important}
 }
+
+/* Mobile shopping shortcuts: desktop navigation remains unchanged. */
+.dw-mobile-shopping{display:none}
+@media(max-width:960px){.dw2-header-inner{min-height:62px;gap:12px}.dw2-header-right{gap:10px}.dw2-header .dw2-header-saved{display:none}.dw2-menu-toggle{min-height:44px}.dw-mobile-shopping{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:4px 12px 7px;border-top:1px solid #ffffff19;background:#181425}.dw-mobile-shopping a{display:flex;align-items:center;justify-content:center;min-width:0;min-height:44px;padding:5px 3px;text-align:center;color:#f7f4ff;font-size:12px;font-weight:750;line-height:1.25;border-radius:8px;overflow-wrap:anywhere}.dw-mobile-shopping a[aria-current="page"]{background:#d9c7ff;color:#181425}.dw-mobile-shopping a:focus-visible{outline-offset:-3px}.dw2-mobile-nav{max-height:calc(100dvh - 140px);overflow-y:auto;overscroll-behavior:contain}.dw2-mobile-nav a{min-height:44px;padding:12px 10px;font-size:17px}#catalog-search,#verified-offers,#retailer-offers{scroll-margin-top:135px!important}}
+@media(max-width:360px){.dw-mobile-shopping{padding-inline:6px;gap:2px}.dw-mobile-shopping a{font-size:11px}.dw2-header-inner{padding-inline:12px}}
+@media(max-width:960px) and (max-height:430px){.dw2-header{position:relative}.dw2-mobile-nav{max-height:60dvh}}
