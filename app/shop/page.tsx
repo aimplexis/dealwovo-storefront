@@ -3,7 +3,7 @@ import AmazonEditorial from "./AmazonEditorial";
 import {pageMetadata} from "../../src/lib/marketing/seo-readiness";
 import Link from "next/link";
 import Image from "next/image";
-import {getPublicOffers} from "../../src/lib/catalog/public";
+import {getPublicOffers,getReviewedPriceChanges} from "../../src/lib/catalog/public";
 import {catalogConfigured} from "../../src/lib/supabase/config";
 import ShopCatalog from "./ShopCatalog";
 import "./shop.css";
@@ -16,6 +16,7 @@ const categories=[
 ];
 export default async function ShopPage({searchParams}:{searchParams:Promise<Record<string,string|string[]|undefined>>}){
  const [offers,params]=await Promise.all([getPublicOffers(100),searchParams]);const filters=parseShopFilters(params);
+ const {changes}=await getReviewedPriceChanges(offers.map(o=>o.id));const initialNow=Date.now();
  return <main className="dw-wow-shop dw2-shop">
   <section className="wrap dw2-shop-hero">
    <div className="dw2-shop-hero-copy">
@@ -31,7 +32,7 @@ export default async function ShopPage({searchParams}:{searchParams:Promise<Reco
     <span className="dw2-shop-photo-label">CURIOUSLY GOOD / 2026</span>
    </div>
   </section>
-  <ShopCatalog key={JSON.stringify(filters)} offers={offers} configured={catalogConfigured()} initial={filters}/>
+  <ShopCatalog key={JSON.stringify(filters)} offers={offers} configured={catalogConfigured()} changes={changes} initialNow={initialNow} initial={filters}/>
   <section className="dw2-shop-edits"><div className="wrap">
    <div className="dw2-shop-edits-head"><div><span className="dw2-eyebrow">PICK YOUR PATH</span><h2>Explore the <em>edits.</em></h2></div><p>Different interests, one place to start. Discover editorial categories while we build the verified product catalog.</p></div>
    <div className="dw2-shop-edits-grid">{categories.map(c=><Link key={c.name} href={c.href} className="dw2-shop-edit">
