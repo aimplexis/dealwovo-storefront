@@ -10,3 +10,11 @@ export function priceWatch(offer:WishlistOffer,change:PriceChange|undefined,targ
  const dropCents=change&&change.offerId===offer.id&&change.currentCents===offer.price_cents&&Date.parse(change.currentVerifiedAt)===verified&&validTarget(change.previousCents)&&Number.isFinite(previous)&&previous<verified&&previous>=now-90*86400000&&change.previousCents>offer.price_cents?change.previousCents-offer.price_cents:null;
  return {targetMet,dropCents};
 }
+
+// Historical observations are not retailer list prices or advertised sales.
+export function reviewedPriceDrop(offer:WishlistOffer,change:PriceChange|undefined,now:number){
+ if(!Number.isFinite(now)||!change)return null;
+ const {dropCents}=priceWatch(offer,change,undefined,now);
+ if(dropCents===null)return null;
+ return {dropCents,previousCents:change.previousCents,previousVerifiedAt:change.previousVerifiedAt,percent:Math.floor(dropCents*100/change.previousCents)};
+}
