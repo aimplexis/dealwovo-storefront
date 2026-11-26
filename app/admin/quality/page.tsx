@@ -1,4 +1,5 @@
 import FreshnessHistory from "./freshness";
+import ProductQualityAssessment from "./ProductQualityAssessment";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createSupabaseServer} from "../../../src/lib/supabase/server";
@@ -57,6 +58,7 @@ export default async function OfferQualityPage({searchParams}:{searchParams:Prom
    <div className="dw-quality-metric"><span>Pending review</span><strong>{report.totals.draft+report.totals.paused}</strong><small>Draft or paused offers</small></div>
   </div>
   <FreshnessHistory/>
+  <ProductQualityAssessment today={new Date().toISOString().slice(0,10)}/>
   <section className="dw-quality-overview">
    <div className="dw-quality-guide">
     <span className="dw-quality-eyebrow">✳ LAUNCH READINESS</span>
