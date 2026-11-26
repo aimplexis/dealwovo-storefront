@@ -2,6 +2,7 @@ import Link from "next/link";
 import {redirect} from "next/navigation";
 import {visualAccess} from "../../../marketing/visual/access";
 import {compareFeed,reviewSync} from "./actions";
+import BulkFeedImport from "./BulkFeedImport";
 import "../../../admin.css";
 export const dynamic="force-dynamic";
 export const metadata={title:"Awin Feed Synchronization | Dealwovo",robots:{index:false,follow:false}};
@@ -11,7 +12,7 @@ const price=(n:number|null)=>n===null?"Not supplied":"$"+(n/100).toFixed(2);
 export default async function Page({searchParams}:{searchParams:Promise<{run?:string;notice?:string}>}){
  const a=await visualAccess();if(!a.ok)redirect("/admin/login");
  const p=await searchParams;
- const [sources,runs]=await Promise.all([a.db.from("catalog_feed_sources").select("id,name").eq("provider","awin").eq("status","authorized").not("awin_merchant_id","is",null).order("name").limit(100),a.db.from("catalog_awin_sync_runs").select("id,source_id,created_at,row_count").order("id",{ascending:false}).limit(25)]);
+ const [sources,runs]=await Promise.all([a.db.from("catalog_feed_sources").select("id,name,awin_publisher_id,awin_advertiser_id").eq("provider","awin").eq("status","authorized").not("awin_merchant_id","is",null).order("name").limit(100),a.db.from("catalog_awin_sync_runs").select("id,source_id,created_at,row_count").order("id",{ascending:false}).limit(25)]);
  const requested=p.run&&/^[1-9][0-9]{0,15}$/.test(p.run)?p.run:null;
  const run=requested??String(runs.data?.[0]?.id??"");
  const selected=run?await a.db.from("catalog_awin_sync_runs").select("id,source_id,created_at,row_count").eq("id",run).maybeSingle():null;
@@ -20,6 +21,7 @@ export default async function Page({searchParams}:{searchParams:Promise<{run?:st
  return <main className="dw-admin"><div className="dw-admin-shell"><Link href="/admin/imports/awin">← Awin Quick Setup</Link><p className="dw-admin-kicker">DEALWOVO / INCREMENTAL FEED REVIEW</p><h1>Synchronize products.</h1><p>Upload a newly downloaded authorized CSV from one advertiser. No scheduled downloads or network API is active. Missing rows never imply out-of-stock. Product text and imagery are not overwritten automatically.</p>{p.notice&&<p role="status">{Object.hasOwn(notices,p.notice)?notices[p.notice]:"Check status."}</p>}
  {broken?<p role="alert">Synchronization data unavailable. Changes withheld.</p>:<>
  <section className="dw-admin-panel"><h2>Compare a fresh feed</h2>{!sources.data?.length?<p>Register and authorize an Awin program first.</p>:<form action={compareFeed} className="dw-admin-form"><label>Authorized advertiser<select name="source_id" required>{sources.data.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select></label><label>Fresh legacy CSV (100 rows / 100 KB max)<input name="file" type="file" accept=".csv,text/csv" required/></label><label><span><input type="checkbox" name="confirm" value="yes" required/> I confirm this authorized export and permit staging newly discovered products privately.</span></label><button>Compare and stage new products</button></form>}</section>
+ <BulkFeedImport sources={(sources.data??[]).flatMap(s=>s.awin_publisher_id&&s.awin_advertiser_id?[{id:s.id,name:s.name,awin_publisher_id:String(s.awin_publisher_id),awin_advertiser_id:String(s.awin_advertiser_id)}]:[])}/>
  <section className="dw-admin-panel"><h2>Recent comparisons</h2>{(runs.data??[]).map(r=><p key={r.id}><Link href={"?run="+r.id}>Run {r.id} · {r.row_count} rows · {new Date(r.created_at).toLocaleString("en-US",{timeZone:"UTC"})} UTC</Link></p>)}{!(runs.data??[]).length&&<p>No comparisons yet.</p>}</section>
  {requested&&!selected?.data&&<p role="alert">Comparison not found.</p>}
  {selected?.data&&<section><h2>Comparison {run}</h2><p>{selected.data.row_count} uploaded rows. Review applies only to proposed offer fields, not editorial metadata.</p>{Object.keys(labels).map(k=><p key={k}>{labels[k]}: {(result?.data??[]).filter(i=>i.kind===k).length}</p>)}
