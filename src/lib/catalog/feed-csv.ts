@@ -18,8 +18,11 @@ export function validExternalHttps(value:string):boolean{
   return true;
  }catch{return false}
 }
-export function readCsvRows(input:string):string[][]{
- if(new TextEncoder().encode(input).length>MAX_BYTES)throw new Error("File exceeds 100 KB");
+export function readCsvRows(input:string):string[][]{return readBoundedCsvRows(input,MAX_ROWS,MAX_BYTES);}
+
+/** Larger limits are used only for local feed preparation, never staging authorization. */
+export function readBoundedCsvRows(input:string,maxRows:number,maxBytes:number):string[][]{
+ if(new TextEncoder().encode(input).length>maxBytes)throw new Error("CSV exceeds permitted file size");
  const csv=input.replace(/^\uFEFF/,"");
  const rows:string[][]=[];let row:string[]=[],cell="",quoted=false,closed=false;
  for(let i=0;i<csv.length;i++){
@@ -34,13 +37,13 @@ export function readCsvRows(input:string):string[][]{
    if(c==="\r"&&csv[i+1]==="\n")i++;
    row.push(cell);cell="";closed=false;
    if(row.some(s=>s.trim().length>0))rows.push(row);
-   if(rows.length>MAX_ROWS+1)throw new Error("Maximum 100 rows per file");
+   if(rows.length>maxRows+1)throw new Error("CSV exceeds permitted row count");
    row=[];
   }else{if(closed)throw new Error("Unexpected character after closing quote");cell+=c;}
  }
  if(quoted)throw new Error("Unclosed quoted field in CSV");
  row.push(cell);if(row.some(s=>s.trim().length>0))rows.push(row);
- if(rows.length>MAX_ROWS+1)throw new Error("Maximum 100 rows per file");
+ if(rows.length>maxRows+1)throw new Error("CSV exceeds permitted row count");
  if(rows.length<2)throw new Error("CSV needs a header and at least one product");
 
  return rows;
