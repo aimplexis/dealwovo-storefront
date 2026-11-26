@@ -4,13 +4,13 @@ import {useWishlist} from "./WishlistProvider";
 import {usePathname} from "next/navigation";
 import {useEffect,useRef,useState} from "react";
 const links=[
- {href:"/shop",label:"Shop"},
+ {href:"/deals",label:"Today’s Deals"},
+ {href:"/shop",label:"Shop All"},
  {href:"/essentials",label:"Everyday"},
  {href:"/lifestyle",label:"Lifestyle"},
  {href:"/trending",label:"Tech & trends"},
  {href:"/gifts",label:"Gifts & occasions"},
- {href:"/assistant",label:"Shopping Assistant"},
- {href:"/deals",label:"Seasonal deals"}
+ {href:"/assistant",label:"Shopping Assistant"}
 ];
 export default function SiteHeader(){
  const pathname=usePathname();const wishlist=useWishlist();
