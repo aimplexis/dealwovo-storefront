@@ -47,5 +47,11 @@ const lifestyle=fs.readFileSync("app/lifestyle/page.tsx","utf8"),solutions=fs.re
 for(const i of prefs.interests)assert.ok(lifestyle.includes('id:"'+i.href.split("#")[1]+'"'));
 for(const g of guide.conciergeGoals)assert.ok(solutions.includes('id:"'+g.href.split("#")[1]+'"'));
 for(const route of ["lifestyle","solutions","trust","assistant","gifts","wishlist","guides","privacy"])assert.ok(fs.existsSync("app/"+route+"/page.tsx"));
+const home=fs.readFileSync("app/page.tsx","utf8"),header=fs.readFileSync("src/components/SiteHeader.tsx","utf8"),deals=fs.readFileSync("app/deals/page.tsx","utf8");
+assert.ok(home.includes("<DailyFeatureServer/>"));
+assert.ok(!home.includes("&&<><DailyFeatureServer/>"));
+assert.ok(header.includes('label:"Today’s Deals"'));
+assert.ok(deals.includes("Current reviewed products; not necessarily discounted."));
+assert.ok(deals.includes("<SeasonalShopping/>"));
 console.log("PASS customer experience: opt-in history, expiry, bounds, safe slugs, preference validation, guidance, price evidence, English declaration and route anchors");
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
