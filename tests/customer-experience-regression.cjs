@@ -65,5 +65,9 @@ assert.ok(header.includes('href="/shop#catalog-search"'));assert.ok(shop.include
 assert.ok(mobileHeaderCss.includes(".dw-mobile-shopping{display:none}"));assert.ok(mobileHeaderCss.includes("min-height:44px"));
 assert.ok(productPage.includes("<MobilePurchaseBar offerId={primary.id}"));assert.ok(purchase.includes("expiry>now"));assert.ok(purchase.includes("Date.now()>=expiry"));assert.ok(purchase.includes('"?placement=product"'));assert.ok(purchase.includes('href="/affiliate-disclosure"'));
 assert.ok(mobileProductCss.includes(".dw-mobile-purchase{display:none}"));assert.ok(mobileProductCss.includes("env(safe-area-inset-bottom)"));
+const motion=fs.readFileSync("app/ExperienceMotion.tsx","utf8"),publicCatalog=fs.readFileSync("src/lib/catalog/public.ts","utf8");
+assert.ok(home.includes("getPublicOffers(24)"));assert.ok(home.includes("Search the full catalog"));
+assert.ok(publicCatalog.includes("getAssistantOffers=cache("));assert.ok(motion.includes('matchMedia("(max-width: 720px)")'));assert.ok(!motion.includes('".dw-wow-product-card"'));
+assert.ok(purchase.includes("window.setTimeout(tick"));assert.ok(!purchase.includes("setInterval("));
 console.log("PASS customer experience: opt-in history, expiry, bounds, safe slugs, preference validation, guidance, price evidence, English declaration and route anchors");
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
