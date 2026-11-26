@@ -7,10 +7,10 @@ export default function ExperienceMotion(){
  const path=usePathname();
  useEffect(()=>{
    const prefersReduced=window.matchMedia("(prefers-reduced-motion: reduce)");
-   if(prefersReduced.matches || typeof IntersectionObserver==="undefined")return;
+   if(prefersReduced.matches || window.matchMedia("(max-width: 720px)").matches || typeof IntersectionObserver==="undefined")return;
    const selectors=[
      ".dw-wow-section-heading",".dw-wow-collection",".dw-wow-vibe-layout > div:first-child",
-     ".dw-wow-coming",".dw-wow-product-card",".dw-wow-bottom-cta",
+     ".dw-wow-coming",".dw-wow-bottom-cta",
      ".tile",".blurb-grid > a",".inner-card",".inner-section > .kicker",
      ".inner-section > .section-title",".gift-controls",".gift-head"
    ].join(",");
@@ -22,9 +22,10 @@ export default function ExperienceMotion(){
        observer.unobserve(element);
      }
    },{rootMargin:"0px 0px -30px 0px",threshold:.08});
+   const belowFold=elements.filter(element=>element.getBoundingClientRect().top>window.innerHeight*.94);
    let index=0;
-   for(const element of elements){
-     if(element.getBoundingClientRect().top>window.innerHeight*.94){
+   for(const element of belowFold){
+     {
        element.style.setProperty("--dw-delay",String((index%3)*75)+"ms");
        element.classList.add("dw-scroll-enter");
        observer.observe(element);
