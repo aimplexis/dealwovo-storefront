@@ -24,7 +24,7 @@ const collections=[
  {number:"04",type:"THE SAVINGS EDIT",title:"Today’s deals.",subtitle:"Find current reviewed promotions and everyday shopping value.",href:"/deals",image:"https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=86",tone:"peach",alt:"Everyday home and kitchen inspiration"}
 ];
 export default async function Home(){
- const offers=await getPublicOffers(100);
+ const offers=await getPublicOffers(24);
  const {changes}=await getReviewedPriceChanges(offers.map(o=>o.id));const initialNow=Date.now();
  return <main className="dw-wow-shop dw2-home">
   <section className="dw-commerce-light" aria-label="Search products and deals"><div className="wrap dw-commerce-search">
@@ -48,6 +48,7 @@ export default async function Home(){
   <section className="wrap dw-commerce-departments" aria-label="Discover more savings"><header><div><span className="dw2-eyebrow">SMART SAVINGS</span><h2>Look for recently reduced prices.</h2><p>Compare current offers with earlier reviewed prices, when evidence is available.</p></div><Link href="/deals#savings-title">Explore price drops ↗</Link></header></section>
   {offers.length>0&&<MerchandisingServer kind="discovery" title="Worth discovering." description="Recently reviewed finds across shopping categories. Not necessarily discounted." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/>}
   <ShopCatalog offers={offers} configured={catalogConfigured()} changes={changes} initialNow={initialNow}/>
+  <div className="wrap dw-home-more"><Link className="dw2-button-dark" href="/shop#catalog-search">Search the full catalog ↗</Link><p>Explore all eligible offers using the full catalog search.</p></div>
   <ShoppingShortcuts hasOffers={offers.length>0}/>
   </div>
   <DiscoveryEdit now={Date.now()}/>
