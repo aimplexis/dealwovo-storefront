@@ -39,12 +39,13 @@ export default async function Home(){
    <p>Browse current reviewed offers by department. Selection varies as retailer catalogs become available.</p>
   </section>
   <section className="wrap dw-commerce-savings" aria-label="Shopping and savings shortcuts">
-   <Link href="/deals"><small>THE SAVINGS EDIT</small><strong>Today's Deals</strong><span>Explore reviewed promotions ↗</span></Link>
+   <Link href="/deals"><small>THE SAVINGS EDIT</small><strong>Today's Deals</strong><span>Promotions and reviewed price drops ↗</span></Link>
    <Link href="/shop?budget=25#verified-offers"><small>SHOP BY PRICE</small><strong>Under $25</strong><span>Find affordable products ↗</span></Link>
    <Link href="/shop?budget=50#verified-offers"><small>EVERYDAY VALUE</small><strong>Under $50</strong><span>Browse by budget ↗</span></Link>
    <Link href="/assistant"><small>SHOPPING GUIDANCE</small><strong>Find your match</strong><span>Get help choosing ↗</span></Link>
   </section>
   <DailyFeatureServer/>
+  <section className="wrap dw-commerce-departments" aria-label="Discover more savings"><header><div><span className="dw2-eyebrow">SMART SAVINGS</span><h2>Look for recently reduced prices.</h2><p>Compare current offers with earlier reviewed prices, when evidence is available.</p></div><Link href="/deals#savings-title">Explore price drops ↗</Link></header></section>
   {offers.length>0&&<MerchandisingServer kind="discovery" title="Worth discovering." description="Recently reviewed finds across shopping categories. Not necessarily discounted." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/>}
   <ShopCatalog offers={offers} configured={catalogConfigured()} changes={changes} initialNow={initialNow}/>
   <ShoppingShortcuts hasOffers={offers.length>0}/>
