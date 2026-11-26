@@ -32,7 +32,7 @@ export default async function ProductDetail({params}:{params:Promise<{slug:strin
   return <main className="dw-product-page"><RecordRecentProduct slug={product.slug} title={product.title}/>
    <div className="wrap dw-product-breadcrumb"><Link href="/shop">← Shop verified finds</Link><span>/</span><Link href={"/shop?category="+encodeURIComponent(product.category.slug)+"#verified-offers"}>{product.category.name}</Link></div>
    <section className="wrap dw-product-content">
-    <div className="dw-product-visual">{product.image_url?<img src={product.image_url} alt={product.title} referrerPolicy="no-referrer"/>:<div className="dw-product-no-image" aria-label="Product image not available">✳</div>}</div>
+    <div className="dw-product-visual">{product.image_url?<img src={product.image_url} alt={product.title} fetchPriority="high" decoding="async" referrerPolicy="no-referrer"/>:<div className="dw-product-no-image" aria-label="Product image not available">✳</div>}</div>
     <div className="dw-product-information">
      <span className="dw-product-kicker">✳ VERIFIED RETAILER DISCOVERY</span>
      <h1>{product.title}</h1><p>{product.description||"Explore this product through approved retail partners."}</p>
