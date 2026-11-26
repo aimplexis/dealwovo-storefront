@@ -25,18 +25,19 @@ export default async function ProductDetail({params}:{params:Promise<{slug:strin
     <div className="dw-product-information">
      <span className="dw-product-kicker">✳ VERIFIED RETAILER DISCOVERY</span>
      <h1>{product.title}</h1><p>{product.description||"Explore this product through approved retail partners."}</p>
-     <SaveProduct id={product.id} title={product.title}/><section className="dw-product-note" aria-label="Buying considerations"><h2>Before you buy</h2><ul>{buyingChecks(product.category.slug).map(check=><li key={check}>{check}</li>)}</ul><p>These are general buying checks, not tested product attributes or a guarantee of suitability.</p></section>
      <div className="dw-product-offers">
-      <h2>Where to explore</h2>{offers.length>1&&<p><Link href={comparisonHref(offers.slice(0,4).map(o=>o.id))}>Compare {Math.min(4,offers.length)} retailer offers ↗</Link></p>}
+      <h2>Shop this product</h2>{offers.length>1&&<p><Link href={comparisonHref(offers.slice(0,4).map(o=>o.id))}>Compare {Math.min(4,offers.length)} retailer offers ↗</Link></p>}
       <p className="dw-product-note">Each offer is checked for validity and expiry. The retailer handles checkout, payment, delivery, returns and order support. Confirm final price, stock and retailer terms before buying.</p>
       <p className="dw-product-disclosure">Dealwovo may earn a commission from qualifying purchases. <Link href="/affiliate-disclosure">How affiliate links work</Link>.</p>
       {offers.map(offer=><article className="dw-product-offer" key={offer.id}>
        <div><span>Approved retailer</span><strong>{offer.merchant.name}</strong>
         <small>Verified {new Date(offer.verified_at).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</small>
        </div><div className="dw-product-offer-action"><strong>{offer.price_cents===null?"Price at retailer":new Intl.NumberFormat("en-US",{style:"currency",currency:offer.currency}).format(offer.price_cents/100)}</strong>
-       <a href={"/out/"+offer.id+"?placement=product"} rel="sponsored nofollow noreferrer">Visit retailer ↗</a></div>
+       <a href={"/out/"+offer.id+"?placement=product"} rel="sponsored nofollow noreferrer">Check price at retailer ↗</a></div>
       </article>)}
      </div>
+     <SaveProduct id={product.id} title={product.title}/><section className="dw-product-note" aria-label="Buying considerations"><h2>Before you buy</h2><ul>{buyingChecks(product.category.slug).map(check=><li key={check}>{check}</li>)}</ul><p>These are general buying checks, not tested product attributes or a guarantee of suitability.</p></section>
+     
      <p className="dw-product-disclosure">Affiliate disclosure: We may earn a commission from eligible retailer purchases, at no additional cost to you. Dealwovo does not process the purchase. <Link href="/affiliate-disclosure">Read details</Link>.</p>
     </div>
    </section>
