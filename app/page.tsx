@@ -24,7 +24,7 @@ const collections=[
 ];
 export default async function Home(){
  const {offers,available}=await getPublicOfferResult(24);
- const {changes}=await getReviewedPriceChanges(offers.map(o=>o.id));const initialNow=Date.now();
+ const {changes,available:priceHistoryAvailable}=await getReviewedPriceChanges(offers.map(o=>o.id));const initialNow=Date.now();
  return <main className="dw-wow-shop dw2-home">
   <section className="dw-commerce-light" aria-label="Search products and deals"><div className="wrap dw-commerce-search">
    <form action="/shop#verified-offers" method="get" className="dw-revenue-search"><label htmlFor="home-commerce-query">Search products, categories and retailers</label><div><input id="home-commerce-query" name="q" type="search" maxLength={100} placeholder="What are you shopping for?"/><button type="submit">Search ↗</button></div></form>
@@ -47,7 +47,7 @@ export default async function Home(){
   <DailyFeatureServer/>
   <section className="wrap dw-commerce-departments" aria-label="Discover more savings"><header><div><span className="dw2-eyebrow">SMART SAVINGS</span><h2>Look for recently reduced prices.</h2><p>Compare current offers with earlier reviewed prices, when evidence is available.</p></div><Link href="/deals#savings-title">Explore price drops ↗</Link></header></section>
   {offers.length>0&&<MerchandisingServer kind="discovery" title="Worth discovering." description="Recently reviewed finds across shopping categories. Not necessarily discounted." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/>}
-  <ShopCatalog offers={offers} configured={available} changes={changes} initialNow={initialNow} placement="home"/>
+  <ShopCatalog offers={offers} configured={available} changes={changes} priceHistoryAvailable={priceHistoryAvailable} initialNow={initialNow} placement="home"/>
   <div className="wrap dw-home-more"><Link className="dw2-button-dark" href="/shop#catalog-search">Search the full catalog ↗</Link><p>Explore all eligible offers using the full catalog search.</p></div>
   {offers.length>0&&<ShoppingShortcuts hasOffers available={available}/>}
   </div>
