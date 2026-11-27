@@ -9,16 +9,17 @@ export type PublicOffer={
  merchant:{id:string;name:string};
 };
 const selector="id,price_cents,currency,verified_at,expires_at,product:catalog_products!inner(id,slug,title,description,image_url,category:catalog_categories!inner(slug,name)),merchant:catalog_merchants!inner(id,name)";
-export async function getPublicOffers(limit=36):Promise<PublicOffer[]>{
+export async function getPublicOfferResult(limit=36):Promise<{available:boolean;offers:PublicOffer[]}>{
  const client=publicSupabase();
- if(!client)return [];
+ if(!client)return {available:false,offers:[]};
  const {data,error}=await client.from("catalog_offers").select(selector)
   .eq("status","approved").lte("verified_at",new Date().toISOString())
-  .gt("expires_at",new Date().toISOString()).order("verified_at",{ascending:false})
+  .gt("expires_at",new Date().toISOString()).order("verified_at",{ascending:false}).order("id")
   .limit(Math.min(Math.max(1,limit),100));
- if(error){console.error("Catalog read unavailable",error.code);return [];}
- return (data||[]) as unknown as PublicOffer[];
+ if(error){console.error("Catalog read unavailable",error.code);return {available:false,offers:[]};}
+ return {available:true,offers:(data??[]) as unknown as PublicOffer[]};
 }
+export async function getPublicOffers(limit=36):Promise<PublicOffer[]>{return (await getPublicOfferResult(limit)).offers;}
 
 /**
  * Only published products with at least one verified, current offer can be
