@@ -15,7 +15,7 @@ export function commercialDecisions(groups:unknown){
   if(!g||g.kind!=="campaign"||typeof g.key!=="string"||typeof g.label!=="string"||typeof g.earnings!=="string"||typeof g.expenses!=="string"||typeof g.contribution!=="string"||![g.earnings,g.expenses].every(v=>/^\d{1,40}$/.test(v))||! /^-?\d{1,41}$/.test(g.contribution))return [];
   const earned=BigInt(g.earnings),cost=BigInt(g.expenses),difference=earned-cost;
   if(difference!==BigInt(g.contribution))return [];
-  const state=g.key==="unknown"?"reconcile":difference<0n?"review_costs":earned===0n?"insufficient":cost===0n?"verify_costs":"evaluate";
+  const state=g.key==="unknown"?"reconcile":difference<BigInt(0)?"review_costs":earned===BigInt(0)?"insufficient":cost===BigInt(0)?"verify_costs":"evaluate";
   const action={reconcile:"Reconcile unmatched commissions or costs using explicit evidence.",review_costs:"Review documented costs and attribution before further investment.",insufficient:"Collect genuine transaction and cost evidence before ranking.",verify_costs:"Check whether costs are missing; do not assume zero acquisition cost.",evaluate:"Review offer eligibility, comparable cohorts and complete costs before considering expansion."}[state];
   return [{key:g.key,label:g.label,state,action,earnings:g.earnings,expenses:g.expenses,contribution:g.contribution}];
  }).sort((a,b)=>{const order=["reconcile","review_costs","verify_costs","insufficient","evaluate"];return order.indexOf(a.state)-order.indexOf(b.state)||a.key.localeCompare(b.key);});
