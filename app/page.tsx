@@ -47,7 +47,7 @@ export default async function Home(){
   <DailyFeatureServer/>
   <section className="wrap dw-commerce-departments" aria-label="Discover more savings"><header><div><span className="dw2-eyebrow">SMART SAVINGS</span><h2>Look for recently reduced prices.</h2><p>Compare current offers with earlier reviewed prices, when evidence is available.</p></div><Link href="/deals#savings-title">Explore price drops ↗</Link></header></section>
   {offers.length>0&&<MerchandisingServer kind="discovery" title="Worth discovering." description="Recently reviewed finds across shopping categories. Not necessarily discounted." emptyHref="/guides" emptyLabel="Read shopping guides" limit={6}/>}
-  <ShopCatalog offers={offers} configured={catalogConfigured()} changes={changes} initialNow={initialNow}/>
+  <ShopCatalog offers={offers} configured={catalogConfigured()} changes={changes} initialNow={initialNow} placement="home"/>
   <div className="wrap dw-home-more"><Link className="dw2-button-dark" href="/shop#catalog-search">Search the full catalog ↗</Link><p>Explore all eligible offers using the full catalog search.</p></div>
   <ShoppingShortcuts hasOffers={offers.length>0}/>
   </div>
