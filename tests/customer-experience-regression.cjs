@@ -56,7 +56,7 @@ assert.ok(deals.includes("<SeasonalShopping/>"));
 const commerceCss=fs.readFileSync("app/home-commerce.css","utf8");
 assert.ok(home.includes('import {departments} from "../src/lib/catalog/category-suggestions"'));
 assert.ok(home.includes('"/shop?category="+encodeURIComponent(d.key)'));
-assert.ok(home.includes('<ShopCatalog offers={offers} configured={catalogConfigured()} changes={changes} initialNow={initialNow}/>'));
+assert.ok(home.includes('<ShopCatalog offers={offers} configured={available} changes={changes} initialNow={initialNow} placement="home"/>'));
 assert.ok(home.indexOf("<ShopCatalog")<home.indexOf("<PersonalDiscovery/>"));
 assert.ok(commerceCss.includes("repeat(6,minmax(0,1fr))"));
 assert.ok(commerceCss.includes("prefers-reduced-motion:reduce"));
@@ -66,8 +66,8 @@ assert.ok(mobileHeaderCss.includes(".dw-mobile-shopping{display:none}"));assert.
 assert.ok(productPage.includes("<MobilePurchaseBar offerId={primary.id}"));assert.ok(purchase.includes("expiry>now"));assert.ok(purchase.includes("Date.now()>=expiry"));assert.ok(purchase.includes('"?placement=product"'));assert.ok(purchase.includes('href="/affiliate-disclosure"'));
 assert.ok(mobileProductCss.includes(".dw-mobile-purchase{display:none}"));assert.ok(mobileProductCss.includes("env(safe-area-inset-bottom)"));
 const motion=fs.readFileSync("app/ExperienceMotion.tsx","utf8"),publicCatalog=fs.readFileSync("src/lib/catalog/public.ts","utf8");
-assert.ok(home.includes("getPublicOffers(24)"));assert.ok(home.includes("Search the full catalog"));
+assert.ok(home.includes("getPublicOfferResult(24)"));assert.ok(home.includes("Search the full catalog"));
 assert.ok(publicCatalog.includes("getAssistantOffers=cache("));assert.ok(motion.includes('matchMedia("(max-width: 720px)")'));assert.ok(!motion.includes('".dw-wow-product-card"'));
 assert.ok(purchase.includes("window.setTimeout(tick"));assert.ok(!purchase.includes("setInterval("));
-console.log("PASS customer experience: opt-in history, expiry, bounds, safe slugs, preference validation, guidance, price evidence, English declaration and route anchors");
+assert.ok(deals.includes("getPublicOfferResult(100)"));assert.ok(deals.includes("configured={catalogAvailable}"));assert.ok(home.indexOf("<ShoppingShortcuts hasOffers={false}")<home.indexOf("<ShopCatalog"));assert.ok(home.includes("available={available}"));const catalog=fs.readFileSync("app/shop/ShopCatalog.tsx","utf8");assert.ok(catalog.includes("No current offers match this search."));assert.ok(catalog.includes("Shopping catalog temporarily unavailable."));assert.ok(shop.includes("searchActive={Boolean("));assert.ok(publicCatalog.includes("return {available:false,offers:[]}"));console.log("PASS customer experience: opt-in history, expiry, bounds, safe slugs, preference validation, guidance, price evidence, English declaration and route anchors");
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
