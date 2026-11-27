@@ -30,3 +30,15 @@ export async function importSupplierProducts(form:FormData){
  if(error)redirect("/admin/suppliers/products?message=failed");
  revalidatePath("/admin/suppliers/products");redirect("/admin/suppliers/products?message=saved");
 }
+
+export async function reviewSupplier(form:FormData){
+ const a=await visualAccess();if(!a.ok)redirect("/admin/login");
+ const supplier_id=field(form,"supplier_id"),decision=field(form,"decision");
+ const keys=["identity_ref","rights_ref","fulfillment_ref","returns_ref","terms_ref","safety_ref"] as const;
+ const refs=Object.fromEntries(keys.map(k=>[k,field(form,k)]));
+ const asset_light_confirmed=form.get("asset_light")==="yes";
+ if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(supplier_id)||!["qualified","hold","rejected"].includes(decision)||keys.some(k=>refs[k].length<3||refs[k].length>500)||decision==="qualified"&&!asset_light_confirmed||form.get("review_confirmed")!=="yes")redirect("/admin/suppliers?message=review-invalid");
+ const {error}=await a.db.from("retail_supplier_reviews").insert({supplier_id,decision,...refs,asset_light_confirmed});
+ if(error)redirect("/admin/suppliers?message=review-failed");
+ revalidatePath("/admin/suppliers");redirect("/admin/suppliers?message=review-saved");
+}
