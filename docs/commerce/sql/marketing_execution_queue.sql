@@ -68,7 +68,7 @@ revoke all on function public.mark_uncertain_marketing_execution() from public,a
 grant execute on function public.mark_uncertain_marketing_execution() to service_role;
 -- Completion requires the original claim token. Unknown outcomes cannot be reset to pending.
 create function public.finish_marketing_execution(p_id uuid,p_token uuid,p_state text,p_external_id text default null)
-returns boolean language sql security invoker set search_path='' as $
+returns boolean language sql security invoker set search_path='' as $$
  with changed as (
  update public.marketing_execution_jobs set state=p_state,external_id=p_external_id,updated_at=clock_timestamp()
  where id=p_id and claim_token=p_token and state in ('dispatching','uncertain')
@@ -77,7 +77,27 @@ returns boolean language sql security invoker set search_path='' as $
  and ((p_state='published' and length(btrim(p_external_id)) between 1 and 256 and length(p_external_id)<=256) or (p_state<>'published' and p_external_id is null))
  returning id
  ) select exists(select 1 from changed);
-$;
+$$;
 revoke all on function public.finish_marketing_execution(uuid,uuid,text,text) from public,anon,authenticated;
 grant execute on function public.finish_marketing_execution(uuid,uuid,text,text) to service_role;
+
+-- Revalidate the original claim, current source reviews, owner role and emergency stop.
+create function public.revalidate_marketing_execution(p_id uuid,p_token uuid)
+returns setof public.marketing_execution_jobs language sql stable security invoker set search_path='' as $$
+ select j.* from public.marketing_execution_jobs j
+ join public.marketing_social_plans p on p.id=j.plan_id
+ join public.marketing_campaign_drafts d on d.id=p.draft_id
+ join public.marketing_visual_assets a on a.id=p.asset_id
+ where j.id=p_id and j.claim_token=p_token and j.state='dispatching'
+ and j.claimed_at>=now()-interval '15 minutes'
+ and j.scheduled_at<=now() and j.expires_at>now()
+ and exists(select 1 from public.marketing_execution_control where singleton and enabled)
+ and j.release_approved_at<=now() and exists(select 1 from public.catalog_admins where user_id=j.release_approved_by and role='owner')
+ and j.rights_verified and j.destination_verified and j.disclosure_reviewed and j.media_ready
+ and p.status='prepared' and p.planned_on=(now() at time zone 'UTC')::date
+ and d.status='reviewed' and d.channel=j.channel and a.status='reviewed' and a.template_version=1
+ and ((j.channel='instagram' and a.format in ('square','portrait')) or (j.channel='facebook' and a.format in ('square','landscape')) or (j.channel='pinterest' and a.format='portrait'));
+$$;
+revoke all on function public.revalidate_marketing_execution(uuid,uuid) from public,anon,authenticated;
+grant execute on function public.revalidate_marketing_execution(uuid,uuid) to service_role;
 commit;
