@@ -42,6 +42,13 @@ assert.deepEqual(discovery.discoveryOffers(sample,now,2).map(o=>o.id),["a","c"])
 assert.deepEqual(discovery.discoveryOffers(sample,now,0),[]);
 assert.deepEqual(discovery.discoveryOffers([],now),[]);
 assert.deepEqual(discovery.discoveryOffers(sample,NaN),[]);
+cp.execFileSync(process.execPath,[require.resolve("typescript/bin/tsc"),"--target","ES2022","--module","commonjs","--strict","--skipLibCheck","--outDir",dir,"src/lib/marketing/social-handoff.ts"],{stdio:"inherit"});
+const {socialHandoff}=require(path.join(dir,"social-handoff.js"));
+const handoff={status:"prepared",readiness:"internally_prepared",copy_status:"reviewed",visual_status:"reviewed",channel:"instagram",format:"portrait",planned_on:"2026-12-01",campaign_name:"Fixture",hook:"Hook",body:"Body",cta:"CTA"};
+assert.ok(socialHandoff(handoff,"2026-11-27").includes("NOT AUTHORIZED FOR PUBLICATION"));
+for(const patch of [{status:"archived"},{readiness:"date_elapsed"},{copy_status:"draft"},{visual_status:"archived"},{channel:"tiktok"},{format:"landscape"},{planned_on:"2026-11-26"},{body:""}])assert.equal(socialHandoff({...handoff,...patch},"2026-11-27"),null);
+assert.ok(socialHandoff({...handoff,channel:"pinterest"},"2026-12-01"));
+console.log("PASS guarded social campaign handoff");
 const layout=fs.readFileSync("app/layout.tsx","utf8");assert.ok(layout.includes('<html lang="en-US" translate="no">'));assert.ok(layout.includes('"google":"notranslate"'));assert.ok(fs.readFileSync("AGENTS.md","utf8").includes("English (US) is the only supported language"));
 const lifestyle=fs.readFileSync("app/lifestyle/page.tsx","utf8"),solutions=fs.readFileSync("app/solutions/page.tsx","utf8");
 for(const i of prefs.interests)assert.ok(lifestyle.includes('id:"'+i.href.split("#")[1]+'"'));
