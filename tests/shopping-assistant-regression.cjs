@@ -1,7 +1,7 @@
 const assert=require("node:assert/strict"),fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=require("node:child_process");
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),"dw-assistant-"));
 try{cp.execFileSync(process.execPath,[require.resolve("typescript/bin/tsc"),"--target","ES2022","--module","commonjs","--strict","--skipLibCheck","--outDir",dir,"src/lib/catalog/shopping-assistant.ts"],{stdio:"inherit"});
-const {planShopping:p,recommendOffers:r}=require(path.join(dir,"shopping-assistant.js"));
+const {planShopping:p,recommendOffers:r,catalogSearchHref:href}=require(path.join(dir,"shopping-assistant.js"));
 const req={need:"",category:"all",maxBudget:"",purpose:"self"},now=Date.parse("2026-11-24T12:00:00Z");
 const offer=(id,price,title,patch={})=>({id,price_cents:price,currency:"USD",verified_at:"2026-11-24T01:00:00Z",expires_at:"2026-11-25T00:00:00Z",product:{id,slug:id,title,description:"Portable audio",image_url:null,category:{name:"Electronics",slug:"electronics"}},merchant:{name:"Fixture"},...patch});
 const a=offer("a",4999,"Wireless Headphones"),b=offer("b",5000,"Headphones"),c=offer("c",null,"Headphones"),d=offer("d",4000,"Wireless Speaker"),e=offer("e",2000,"Headphones",{expires_at:"2026-11-24T11:59:59Z"}),f=offer("f",2000,"Headphones",{currency:"EUR"}),g=offer("g",2000,"Headphones",{verified_at:"2026-11-25T00:00:00Z"}),h=offer("h",3000,"Headphones",{product:{...a.product,id:"a"}});
@@ -20,5 +20,12 @@ assert.equal(p({...req,need:"headphones under $1,000"}).ok,false);
 assert.deepEqual(p({...req,need:"watches"}).words,["watch"]);
 assert.deepEqual(p({...req,need:"boxes"}).words,["box"]);
 assert.deepEqual(r([offer("watch",1000,"Smart Watch")],p({...req,need:"watches"}),now).map(x=>x.offer.id),["watch"]);
+assert.equal(href(plan),"/shop?q=headphone&category=all&budget=50&sort=recent#verified-offers");
+assert.equal(href(p({...req,need:"headphones",maxBudget:"50"})),null);
+assert.equal(href(p({...req,need:"headphones",maxBudget:"49.99"})),"/shop?q=headphone&category=all&budget=50&sort=recent#verified-offers");
+assert.equal(href(p({...req,need:"coffee maker",category:"kitchen"})),"/shop?q=coffee+maker&category=kitchen&budget=all&sort=recent#verified-offers");
+assert.equal(href(p({...req,need:"headphones under $35"})),null);
+assert.equal(href({...plan,words:["x".repeat(101)]}),null);
+assert.deepEqual(r([offer("zero",0,"Headphones"),offer("negative",-1,"Headphones"),offer("valid",2499,"Headphones")],plan,now).map(x=>x.offer.id),["valid"]);
 console.log("PASS shopping assistant: natural-language upper bounds, exact keyword matches, no budget widening, expiry, deduplication and no-match handling");
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
