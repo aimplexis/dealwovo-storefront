@@ -47,3 +47,6 @@ body{background:var(--dw-ink)}
 @media(max-width:920px){.nav{padding-top:14px;padding-bottom:14px;gap:13px}.nav-links{justify-content:center;gap:3px}.nav-links a{font-size:12px}.site-head{position:relative}.inner-hero::after{right:3%}}
 @media(max-width:580px){.nav-links a{font-size:11px;padding:8px 7px}.nav-gift{padding:12px 15px}.inner-hero{padding:65px 0;min-height:auto}.inner-hero h1{font-size:clamp(50px,11vw,70px)}.inner-hero::before{right:-320px}.inner-hero::after{font-size:45px;top:23px}.inner-cards{grid-template-columns:1fr}.inner-card{min-height:320px}.gift-controls{padding:18px}.notice{font-size:9px}.notice span{margin-left:8px}}
 @media(prefers-reduced-motion:reduce){.notice::before,.inner-hero::before,.inner-hero::after{animation:none!important}.inner-hero :is(h1,p,.action),.dw-scroll-enter,.dw-scroll-enter.dw-scroll-visible{animation:none!important;transition:none!important;opacity:1!important;translate:0 0!important}}
+
+/* Keyboard focus must reveal animated sections immediately, even before intersection. */
+.dw-scroll-enter:focus-within{opacity:1;translate:0 0;transition:none!important}
