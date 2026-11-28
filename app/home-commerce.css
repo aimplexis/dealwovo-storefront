@@ -52,3 +52,41 @@
 @media(max-width:850px){.dw-home-season-inner{grid-template-columns:1fr;gap:20px}}
 @media(max-width:480px){.dw-home-season-inner{padding-block:24px}.dw-home-season-actions{grid-template-columns:1fr;gap:8px}.dw-home-season-actions a{min-height:60px;flex-direction:row;align-items:center;padding:13px}.dw-home-season-actions strong{font-size:16px}.dw-home-season-actions span{text-align:right;max-width:50%}}
 @media(prefers-reduced-motion:reduce){.dw-home-season-actions a{transition:none}.dw-home-season-actions a:hover{transform:none}}
+
+/* Founder-approved Premium Midnight Retail — homepage only, natural product photography. */
+.dw2-home{--retail-night:#151625;--retail-panel:#222330;--retail-white:#f7f7fa;--retail-plum:#29223b;--retail-accent:#7350ce;--retail-rose:#d93b82;background:var(--retail-night)!important}
+.dw2-home .dw-wow-hero{background:radial-gradient(ellipse at 80% 22%,#292b3b 0%,var(--retail-night) 58%,#10111d 100%)}
+.dw2-home .dw-wow-orb{opacity:.055}
+.dw2-home .dw-wow-scene-flare{opacity:.12}
+.dw2-home .dw-wow-headline-pop{background:none;color:var(--retail-white);-webkit-text-fill-color:var(--retail-white);animation:none}
+.dw2-home .dw-wow-lead{color:#d1d1dc}
+.dw2-home .dw-wow-primary{background:var(--retail-accent);color:white;box-shadow:0 8px 22px #0003}
+.dw2-home .dw-wow-primary:hover{background:#6342bc;box-shadow:0 10px 24px #0005}
+.dw2-home .dw-wow-secondary{background:var(--retail-panel);color:var(--retail-white);border-color:#555667}
+.dw2-home .dw-wow-tab{background:var(--retail-panel);color:var(--retail-white);border-color:#454656}
+.dw2-home .dw-wow-tab.is-active,.dw2-home .dw-wow-tab.is-active:hover{background:var(--retail-accent);color:white;border-color:var(--retail-accent)}
+.dw2-home .dw-wow-ping{background:#c5b4e8;box-shadow:none}
+.dw2-home .dw-wow-ticker{background:var(--retail-panel);color:#e1e1e9;border-top:1px solid #383949}
+.dw2-home .dw-home-season{background:var(--retail-night);color:var(--retail-white);border-color:#363747}
+.dw2-home .dw-home-season-copy .dw2-eyebrow{color:#c5b4e8}
+.dw2-home .dw-home-season-copy p{color:#c6c6d2}
+.dw2-home .dw-home-season-actions a{background:var(--retail-plum);color:var(--retail-white);border-color:#494454}
+.dw2-home .dw-home-season-actions a:first-child{background:var(--retail-panel);color:var(--retail-white);border-color:#555667}
+.dw2-home .dw-home-season-actions a:hover{border-color:#a997dc}
+.dw2-home .dw-commerce-light{background:var(--retail-white);color:#222330}
+.dw2-home .dw-commerce-search .dw-revenue-search button{background:var(--retail-accent);color:white}
+.dw2-home .dw-commerce-symbol{background:#eeedf2;color:#514765}
+.dw2-home .dw-commerce-savings>a{background:#eeedf2;color:#222330;border-color:#dedee5}
+.dw2-home .dw-commerce-savings>a:first-child{background:var(--retail-night);color:var(--retail-white);border-color:var(--retail-night)}
+.dw2-home .dw-commerce-savings>a:nth-child(3){background:#f3ede9;border-color:#e4dcd6}
+.dw2-home .dw-commerce-savings>a:last-child{background:#e8efed;border-color:#d6e2de}
+.dw2-home .dw2-intro-band{background:var(--retail-panel);color:var(--retail-white);border-color:#454656}
+.dw2-home .dw2-intro-inner span:nth-child(even){color:#c5b4e8}
+.dw2-home .dw2-collection-card{background:var(--retail-panel)}
+.dw2-home .dw2-collection-arrow{background:var(--retail-white);color:var(--retail-night)}
+.dw2-home .dw2-home-feature{background:#f3f1ef;color:var(--retail-night)}
+.dw2-home .dw2-feature-copy h2 em{color:#6342a9}
+.dw2-home .dw2-feature-copy>p,.dw2-home .dw2-feature-copy>small{color:#555462}
+.dw2-home .dw2-feature-picture{border-color:white;box-shadow:28px 30px 0 #d7d3d0,0 25px 50px #15162520}
+.dw2-home .dw2-feature-sticker{background:#eeeaf2;color:#29223b;box-shadow:0 8px 22px #15162520}
+.dw2-home .dw-wow-hero :focus-visible,.dw2-home .dw-home-season :focus-visible{outline:3px solid #f7f7fa!important;outline-offset:4px}
