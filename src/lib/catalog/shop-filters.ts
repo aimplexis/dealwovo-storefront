@@ -1,4 +1,18 @@
 export const budgets=["all","25","50","100","150plus"] as const;
+// Custom upper limits use integer cents; inclusive and exclusive limits remain distinct.
+export function preciseBudget(value:string,exclusive=false):string|null{
+ if(!/^\d{1,7}(?:\.\d{1,2})?$/.test(value))return null;
+ const [whole,fraction=""]=value.split(".");
+ const cents=Number(whole)*100+Number(fraction.padEnd(2,"0"));
+ if(!Number.isSafeInteger(cents)||cents<1||cents>100000000)return null;
+ return (exclusive?"lt:":"lte:")+cents;
+}
+export function parsePreciseBudget(value:string):{cents:number;exclusive:boolean}|null{
+ const match=/^(lt|lte):([1-9]\d{0,8})$/.exec(value);
+ if(!match)return null;
+ const cents=Number(match[2]);
+ return cents<=100000000?{cents,exclusive:match[1]==="lt"}:null;
+}
 export const sortOptions=["recent","price_low","price_high","name"] as const;
 export type Filters={q:string;category:string;budget:typeof budgets[number];sort:typeof sortOptions[number]};
 export const defaults:Filters={q:"",category:"all",budget:"all",sort:"recent"};
@@ -10,7 +24,7 @@ export function parseShopFilters(input:Record<string,string|string[]|undefined>)
 type Offer={id:string;price_cents:number|null;currency:string;verified_at:string;product:{title:string;description:string;category:{slug:string;name:string}};merchant:{name:string}};
 export function filterOffers<T extends Offer>(offers:readonly T[],f:Filters){
  const words=f.q.toLowerCase().split(/\s+/).filter(Boolean);
- const validPrice=(o:Offer)=>o.currency==="USD"&&typeof o.price_cents==="number"&&Number.isSafeInteger(o.price_cents)&&o.price_cents>=0;
+ const validPrice=(o:Offer)=>o.currency==="USD"&&typeof o.price_cents==="number"&&Number.isSafeInteger(o.price_cents)&&o.price_cents>0;
  return offers.filter(o=>{
   if(f.category!=="all"&&o.product.category.slug!==f.category)return false;
   const text=[o.product.title,o.product.description,o.product.category.name,o.merchant.name].join(" ").toLowerCase();
