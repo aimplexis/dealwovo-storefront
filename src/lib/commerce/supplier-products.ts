@@ -16,3 +16,15 @@ export function supplierCSV(csv:string,id:string,now=Date.now()){
  const rows=readBoundedCsvRows(csv,100,102400),h=rows.shift()!;if(h.length!==headers.length||headers.some((v,i)=>h[i].trim()!==v))throw Error("Invalid header");
  const seen=new Set<string>();return rows.map(row=>{const p=product(row,id,now);if(seen.has(p.sku))throw Error("Duplicate SKU");seen.add(p.sku);return p;});
 }
+
+// Refresh decisions are private intake only. An older or conflicting observation must never replace current supplier evidence.
+export type SupplierObservation=Pick<ReturnType<typeof product>,"supplier_id"|"sku"|"observed_at"|"wholesale_cents"|"retail_cents"|"shipping_cents"|"reported_quantity"|"source_reference">;
+export function classifySupplierRefresh(current:SupplierObservation,incoming:SupplierObservation,now=Date.now()):"refresh"|"unchanged"|"hold"{
+ if(current.supplier_id!==incoming.supplier_id||current.sku!==incoming.sku)return "hold";
+ const previous=Date.parse(current.observed_at),next=Date.parse(incoming.observed_at);
+ if(!Number.isFinite(now)||!Number.isFinite(previous)||!Number.isFinite(next)||previous>now||next>now||next<previous||now-next>86400000)return "hold";
+ const valid=(p:SupplierObservation)=>Number.isSafeInteger(p.wholesale_cents)&&p.wholesale_cents>0&&p.wholesale_cents<=100000000&&Number.isSafeInteger(p.retail_cents)&&p.retail_cents>0&&p.retail_cents<=100000000&&(p.shipping_cents===null||Number.isSafeInteger(p.shipping_cents)&&p.shipping_cents>=0&&p.shipping_cents<=100000000)&&(p.reported_quantity===null||Number.isSafeInteger(p.reported_quantity)&&p.reported_quantity>=0&&p.reported_quantity<=10000000)&&typeof p.source_reference==="string"&&p.source_reference.trim().length>=3&&p.source_reference.length<=500;
+ if(!valid(incoming))return "hold";
+ if(next===previous)return (["wholesale_cents","retail_cents","shipping_cents","reported_quantity","source_reference"] as const).every(k=>current[k]===incoming[k])?"unchanged":"hold";
+ return "refresh";
+}
