@@ -16,5 +16,9 @@ for(const patch of [{need:"not wireless"},{need:"under $50.999"},{need:"between 
 assert.deepEqual(r(rows,p({...req,need:"notebook",maxBudget:"50"}),now),[]);
 assert.deepEqual(r(rows,p({...req,category:"kitchen",maxBudget:"50"}),now),[]);
 assert.ok(r(rows,plan,now)[0].reasons.includes("Within your recorded USD budget"));
+assert.equal(p({...req,need:"headphones under $1,000"}).ok,false);
+assert.deepEqual(p({...req,need:"watches"}).words,["watch"]);
+assert.deepEqual(p({...req,need:"boxes"}).words,["box"]);
+assert.deepEqual(r([offer("watch",1000,"Smart Watch")],p({...req,need:"watches"}),now).map(x=>x.offer.id),["watch"]);
 console.log("PASS shopping assistant: natural-language upper bounds, exact keyword matches, no budget widening, expiry, deduplication and no-match handling");
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
