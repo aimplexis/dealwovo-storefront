@@ -11,7 +11,7 @@ export async function registerSupplier(form:FormData){
  revalidatePath("/admin/suppliers");redirect("/admin/suppliers?message=saved");
 }
 
-import {headers,field,product,supplierCSV} from "../../../src/lib/commerce/supplier-products";
+import {headers,field,product,supplierCSV,classifySupplierRefresh,type SupplierObservation} from "../../../src/lib/commerce/supplier-products";
 export async function importSupplierProducts(form:FormData){
  const a=await visualAccess();if(!a.ok)redirect("/admin/login");
  const fail=()=>redirect("/admin/suppliers/products?message=invalid");
@@ -41,4 +41,28 @@ export async function reviewSupplier(form:FormData){
  const {error}=await a.db.from("retail_supplier_reviews").insert({supplier_id,decision,...refs,asset_light_confirmed});
  if(error)redirect("/admin/suppliers?message=review-failed");
  revalidatePath("/admin/suppliers");redirect("/admin/suppliers?message=review-saved");
+}
+
+export async function refreshSupplierProducts(form:FormData){
+ const a=await visualAccess();if(!a.ok)redirect("/admin/login");
+ const fail=()=>redirect("/admin/suppliers/products?message=refresh-failed");
+ if(form.get("confirmed")!=="yes")return fail();
+ const id=field(form,"supplier_id"),file=form.get("csv");
+ if(!(file instanceof File)||file.size>102400||file.size===0)return fail();
+ let records:ReturnType<typeof product>[];
+ try{records=supplierCSV(await file.text(),id);}catch{return fail();}
+ if(!records.length)return fail();
+ const {data,error}=await a.db.from("retail_supplier_current_products").select("id,supplier_id,sku,observed_at,wholesale_cents,retail_cents,shipping_cents,reported_quantity,source_reference").eq("supplier_id",id).in("sku",records.map(r=>r.sku));
+ if(error||!data||data.length!==records.length)return fail();
+ const bySku=new Map((data as (SupplierObservation&{id:string})[]).map(p=>[p.sku,p]));
+ const updates=[];
+ for(const record of records){
+  const current=bySku.get(record.sku);if(!current)return fail();
+  const incoming={...record,retail_cents:current.retail_cents};
+  const decision=classifySupplierRefresh(current,incoming);
+  if(decision==="hold")return fail();
+  if(decision==="refresh")updates.push({product_id:current.id,observed_at:incoming.observed_at,wholesale_cents:incoming.wholesale_cents,shipping_cents:incoming.shipping_cents,reported_quantity:incoming.reported_quantity,source_reference:incoming.source_reference});
+ }
+ if(updates.length){const {error:writeError}=await a.db.from("retail_supplier_observations").insert(updates);if(writeError)return fail();}
+ revalidatePath("/admin/suppliers/products");redirect("/admin/suppliers/products?message=refreshed");
 }
