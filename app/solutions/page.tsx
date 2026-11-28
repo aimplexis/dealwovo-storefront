@@ -2,7 +2,7 @@ import Link from "next/link";
 import {indexingHold,siteOrigin} from "../../src/lib/marketing/seo-readiness";
 import "../lifestyle/lifestyle.css";
 
-export const metadata={title:"Shop by Problem | Dealwovo",description:"Find practical ways to organize your home, improve your workspace, travel easier and simplify everyday routines.",alternates:{canonical:siteOrigin+"/solutions"},robots:indexingHold};
+export const metadata={title:"Shop by Problem",description:"Find practical ways to organize your home, improve your workspace, travel easier and simplify everyday routines.",alternates:{canonical:siteOrigin+"/solutions"},robots:indexingHold};
 
 const solutions=[
  {id:"organize-home",title:"Organize my home",symbol:"⌂",goal:"Make the things you use easy to find.",first:"Sort one drawer or shelf, remove what you no longer need, and measure the remaining space.",ideas:[["Drawer dividers","Separate frequently used items without wasting drawer space."],["Storage containers","Group similar items and make shelves easier to manage."],["Labels","Identify contents without opening every container."]],check:"Measure interior dimensions and clearance; check materials and cleaning guidance.",query:"organizer",guide:"/guides/kitchen-organization-buying-guide"},
