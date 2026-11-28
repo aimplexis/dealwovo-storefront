@@ -31,6 +31,10 @@ export default async function Home(){
    <nav aria-label="Quick shopping links"><Link href="/deals">Today's Deals</Link><Link href="/shop">Shop All</Link><Link href="/wishlist">Saved products</Link></nav>
   </div></section>
   <ShopSpotlight/>
+  <section className="dw-home-season" aria-labelledby="home-season-title"><div className="wrap dw-home-season-inner">
+   <div className="dw-home-season-copy"><span className="dw2-eyebrow">THE CELEBRATION EDIT · YEAR-ROUND DISCOVERY</span><h2 id="home-season-title">Make every occasion count.</h2><p>Find thoughtful gifts, plan your holiday budget and explore everyday value. Current retailer offers appear only when reviewed and available.</p></div>
+   <div className="dw-home-season-actions"><Link href="/gifts"><strong>Find a gift</strong><span>By recipient and budget ↗</span></Link><Link href="/deals"><strong>Explore deals</strong><span>Seasonal shopping ideas ↗</span></Link><Link href="/guides/holiday-shopping-budget-guide"><strong>Shop smarter</strong><span>Plan your spending ↗</span></Link></div>
+  </div></section>
   {!offers.length&&<ShoppingShortcuts hasOffers={false} available={available}/>}
   <div className="dw-commerce-light">
   <section className="wrap dw-commerce-departments" aria-labelledby="commerce-department-title">
