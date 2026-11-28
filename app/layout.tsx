@@ -12,6 +12,7 @@ import "./wishlist/wishlist.css";
 import "./daily-feature.css";
 import "./merchandising.css";
 import "./newsletter/newsletter.css";
+import "./premium-midnight.css";
 import {WishlistProvider} from "../src/components/WishlistProvider";
 import ExperienceMotion from "./ExperienceMotion";
 import SiteHeader from "../src/components/SiteHeader";
