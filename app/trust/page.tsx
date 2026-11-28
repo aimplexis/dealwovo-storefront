@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {indexingHold,siteOrigin} from "../../src/lib/marketing/seo-readiness";
 import "../lifestyle/lifestyle.css";
-export const metadata={title:"Shopping Trust & Editorial Standards | Dealwovo",description:"Understand how Dealwovo selects shopping ideas, reviews offers, explains recommendations and discloses affiliate relationships.",alternates:{canonical:siteOrigin+"/trust"},robots:indexingHold};
+export const metadata={title:"Shopping Trust & Editorial Standards",description:"Understand how Dealwovo selects shopping ideas, reviews offers, explains recommendations and discloses affiliate relationships.",alternates:{canonical:siteOrigin+"/trust"},robots:indexingHold};
 const principles=[
  {title:"Purpose before purchases",text:"Start with a need, routine or interest. Our solution guides include practical steps you can try before spending money.",href:"/solutions",label:"Explore everyday solutions"},
  {title:"Explainable recommendations",text:"Our guided catalog matching uses product keywords, categories, recorded budgets and review dates. Gift matching may also use recipient and occasion language in catalog descriptions. These signals are not proof of suitability or independent product testing.",href:"/assistant",label:"Explore the Shopping Concierge"},
