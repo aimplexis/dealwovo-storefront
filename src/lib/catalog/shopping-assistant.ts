@@ -6,7 +6,7 @@ const money=(v:string)=>{if(!/^\d{1,6}(?:\.\d{1,2})?$/.test(v))return null;const
 const normalize=(v:string)=>v.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 const words=(v:string)=>normalize(v).match(/[a-z0-9]+/g)??[];
 const stop=new Set(["i","im","am","looking","for","a","an","the","some","need","want","find","me","please","show","would","like","to","buy","shop","shopping","something","gift","gifts","present","my","under","with"]);
-const token=(v:string)=>v.length>4&&v.endsWith("ies")?v.slice(0,-3)+"y":v.length>3&&v.endsWith("s")&&!v.endsWith("ss")&&!v.endsWith("us")&&!v.endsWith("is")?v.slice(0,-1):v;
+const token=(v:string)=>/^[a-z]+(?:boxes|watches|brushes|dishes)$/.test(v)||/^(boxes|watches|brushes|dishes)$/.test(v)?v.slice(0,-2):v.length>4&&v.endsWith("ies")?v.slice(0,-3)+"y":v.length>3&&v.endsWith("s")&&!v.endsWith("ss")&&!v.endsWith("us")&&!v.endsWith("is")?v.slice(0,-1):v;
 export function planShopping(r:Request):Plan{
  if(r.need.length>240||r.maxBudget.length>10||!(r.category==="all"||/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(r.category)&&r.category.length<=150))return {ok:false,message:"Check the product description, category and budget."};
  let need=normalize(r.need).replace(/\b(?:i'm|i’m)\b/g,"im");
@@ -14,6 +14,7 @@ export function planShopping(r:Request):Plan{
  if(r.maxBudget.trim()){maxCents=money(r.maxBudget.trim());if(maxCents===null)return {ok:false,message:"Enter a positive USD budget, with up to two decimal places."};}
  // Only recognize explicit USD upper limits. Do not interpret ranges, lower bounds, negation or other currencies.
  if(/\b(?:not|without|except|exclude|avoid|between|over|above|at least|more than|minimum|starting at)\b|[€£¥]|\b(?:eur|gbp|cad|aud)\b/.test(need))return {ok:false,message:"This assistant supports product keywords and a maximum USD budget. For exclusions, ranges or other currencies, refine your search."};
+ if(/\d,\d/.test(need))return {ok:false,message:"Enter your USD budget without commas, such as 1000."};
  let invalid=false;
  need=need.replace(/\b(under|less than|up to|at most|maximum|max|budget(?: of)?)\s*\$?\s*(\d+(?:\.\d{1,2})?)(?![\d.])(?:\s*(?:usd|dollars))?/g,(_m:string,kind:string,value:string)=>{
   const n=money(value);if(n===null){invalid=true;return "";}const strict=kind==="under"||kind==="less than";
