@@ -9,7 +9,7 @@ with matched as (
  and o.verified_at<=now() and o.expires_at>now() and o.expires_at<=o.verified_at+interval '30 days'
  and (p_category='all' or c.slug=p_category)
  and (coalesce(p_retailer,'')='' or lower(m.name)=lower(left(p_retailer,100)))
- and (p_budget='all' or (o.currency='USD' and o.price_cents>0 and case p_budget when '25' then o.price_cents<2500 when '50' then o.price_cents<5000 when '100' then o.price_cents<10000 when '150plus' then o.price_cents>=15000 else false end))
+ and (p_budget='all' or (o.currency='USD' and o.price_cents>0 and case p_budget when '25' then o.price_cents<2500 when '50' then o.price_cents<5000 when '100' then o.price_cents<10000 when '150plus' then o.price_cents>=15000 else case when p_budget ~ '^(lt|lte):[1-9][0-9]{0,8}$' then case when split_part(p_budget,':',2)::integer <= 100000000 then case when split_part(p_budget,':',1)='lt' then o.price_cents < split_part(p_budget,':',2)::integer else o.price_cents <= split_part(p_budget,':',2)::integer end else false end else false end end))
  and not exists (select 1 from regexp_split_to_table(lower(trim(left(coalesce(p_query,''),100))), '[[:space:]]+') as word where word<>'' and strpos(lower(concat_ws(' ',p.title,p.description,c.name,m.name)),word)=0)
  and p_page between 1 and 500 and p_sort in ('recent','price_low','price_high','name')
 ), paged as (
