@@ -100,6 +100,9 @@ export async function getReviewedPriceChanges(ids:string[]):Promise<{available:b
 }
 
 export async function searchPublicCatalog(filters:import("./shop-filters").Filters,page:number,retailer:string):Promise<{available:boolean;offers:PublicOffer[];hasMore:boolean}>{
+ if(filters.budget==="invalid")return {available:true,offers:[],hasMore:false};
+ // The shared database still uses legacy price bands until the staged SQL is explicitly activated.
+ if((filters.budget.startsWith("lt:")||filters.budget.startsWith("lte:"))&&process.env.DEALWOVO_PRECISE_BUDGET_ENABLED!=="true")return {available:false,offers:[],hasMore:false};
  const client=publicSupabase();if(!client)return {available:false,offers:[],hasMore:false};
  const {data,error}=await client.rpc("search_public_catalog",{p_query:filters.q,p_category:filters.category,p_budget:filters.budget,p_sort:filters.sort,p_page:page,p_retailer:retailer});
  if(error||!data||!Array.isArray(data.offers)||typeof data.hasMore!=="boolean")return {available:false,offers:[],hasMore:false};
