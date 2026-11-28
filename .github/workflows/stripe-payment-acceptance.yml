@@ -1,0 +1,72 @@
+name: Stripe payment database acceptance
+on:
+  push:
+    branches: [feature/intelligent-shopping-conversion]
+    paths:
+      - 'docs/commerce/sql/retail_stripe_test_payments.sql'
+      - 'tests/stripe-payment-*.sql'
+      - 'tests/supplier-observation-fixture.sql'
+      - '.github/workflows/stripe-payment-acceptance.yml'
+  pull_request:
+    paths:
+      - 'docs/commerce/sql/retail_stripe_test_payments.sql'
+      - 'tests/stripe-payment-*.sql'
+      - 'tests/supplier-observation-fixture.sql'
+      - '.github/workflows/stripe-payment-acceptance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-postgres:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: disposable-ci-only
+          POSTGRES_DB: dealwovo_stripe_test
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd "pg_isready -U postgres -d dealwovo_stripe_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Run database assertions inside disposable service
+        env:
+          DB_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          set -euo pipefail
+          for file in tests/supplier-observation-fixture.sql docs/commerce/sql/retail_stripe_test_payments.sql tests/stripe-payment-acceptance.sql; do
+            docker exec -i "$DB_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d dealwovo_stripe_test < "$file"
+          done
+
+      - name: Verify concurrent webhook replay
+        env:
+          DB_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          set -euo pipefail
+          db() { docker exec -i "$DB_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d dealwovo_stripe_test "$@"; }
+          db -c "insert into public.retail_stripe_test_orders(id,total_cents,created_at) values ('00000000-0000-4000-8000-000000000001',2500,now()-interval '1 hour'); select public.bind_stripe_test_session('00000000-0000-4000-8000-000000000001','cs_test_concurrent',2500);"
+          event_at=$(db -Atc "select date_trunc('second',now()-interval '1 minute')")
+          sql="select public.record_stripe_test_payment('00000000-0000-4000-8000-000000000001','cs_test_concurrent','evt_concurrent','pi_concurrent',2500,'USD','$event_at')"
+          db -Atc "begin; $sql; select pg_sleep(4); commit;" > /tmp/stripe-first.log 2>&1 &
+          first=$!
+          ready=0
+          for i in $(seq 1 30); do
+            if [ "$(db -Atc "select count(*) from pg_stat_activity where wait_event='PgSleep' and query like '%evt_concurrent%'")" = 1 ]; then ready=1; break; fi
+            sleep 0.1
+          done
+          test "$ready" = 1
+          test "$(db -Atc "$sql")" = duplicate
+          wait "$first"
+          grep -x recorded /tmp/stripe-first.log
+          test "$(db -Atc "select count(*) from public.retail_stripe_test_events")" = 1
+          test "$(db -Atc "select count(*) from public.retail_stripe_test_orders where payment_ref='pi_concurrent' and paid_at is not null")" = 1
+          echo "PASS concurrent Stripe webhook replay"
