@@ -100,4 +100,59 @@ returns setof public.marketing_execution_jobs language sql stable security invok
 $$;
 revoke all on function public.revalidate_marketing_execution(uuid,uuid) from public,anon,authenticated;
 grant execute on function public.revalidate_marketing_execution(uuid,uuid) to service_role;
+
+-- Append-only state history. Trusted worker can append via trigger, but cannot rewrite history.
+create table public.marketing_execution_events (
+ id uuid primary key default gen_random_uuid(),
+ job_id uuid not null references public.marketing_execution_jobs(id) on delete restrict,
+ previous_state text,
+ new_state text not null,
+ occurred_at timestamptz not null default clock_timestamp()
+);
+create index marketing_execution_events_job on public.marketing_execution_events(job_id,occurred_at);
+alter table public.marketing_execution_events enable row level security;
+revoke all on public.marketing_execution_events from public,anon,authenticated,service_role;
+grant select on public.marketing_execution_events to authenticated,service_role;
+grant insert on public.marketing_execution_events to service_role;
+create policy execution_events_owner_read on public.marketing_execution_events for select to authenticated using ((select exists(select 1 from public.catalog_admins where user_id=auth.uid() and role='owner')));
+create function public.guard_marketing_execution_transition() returns trigger language plpgsql security invoker set search_path='' as $$
+begin
+ if tg_op='INSERT' then
+  if new.state not in ('held','pending') or new.claim_token is not null or new.claimed_at is not null then raise exception 'Invalid initial execution state'; end if;
+ else
+  if new.id is distinct from old.id or new.plan_id is distinct from old.plan_id or new.channel is distinct from old.channel then raise exception 'Immutable execution identity'; end if;
+  if old.state in ('published','failed','cancelled') then raise exception 'Terminal execution is immutable'; end if;
+  if old.state<>new.state and not (
+    (old.state='held' and new.state in ('pending','cancelled')) or
+    (old.state='pending' and new.state in ('held','dispatching','cancelled')) or
+    (old.state='dispatching' and new.state in ('published','failed','uncertain')) or
+    (old.state='uncertain' and new.state='published')
+  ) then raise exception 'Invalid execution state transition'; end if;
+  if old.claim_token is not null and (new.claim_token is distinct from old.claim_token or new.account_id is distinct from old.account_id) then raise exception 'Immutable execution claim'; end if;
+ end if;
+ return new;
+end;
+$$;
+revoke all on function public.guard_marketing_execution_transition() from public,anon,authenticated;
+create trigger marketing_execution_transition before insert or update on public.marketing_execution_jobs for each row execute function public.guard_marketing_execution_transition();
+create function public.audit_marketing_execution_transition() returns trigger language plpgsql security invoker set search_path='' as $$
+begin
+ if tg_op='INSERT' then
+  insert into public.marketing_execution_events(job_id,previous_state,new_state) values(new.id,null,new.state);
+ elsif old.state<>new.state then
+  insert into public.marketing_execution_events(job_id,previous_state,new_state) values(new.id,old.state,new.state);
+ end if;
+ return new;
+end;
+$$;
+revoke all on function public.audit_marketing_execution_transition() from public,anon,authenticated;
+create trigger marketing_execution_audit after insert or update on public.marketing_execution_jobs for each row execute function public.audit_marketing_execution_transition();
+-- Cancelling an in-flight or uncertain publication would misrepresent the external outcome.
+create function public.cancel_marketing_execution(p_id uuid) returns boolean language sql security invoker set search_path='' as $$
+ with changed as (update public.marketing_execution_jobs set state='cancelled',updated_at=clock_timestamp()
+ where id=p_id and state in ('held','pending') returning id)
+ select exists(select 1 from changed);
+$$;
+revoke all on function public.cancel_marketing_execution(uuid) from public,anon,authenticated;
+grant execute on function public.cancel_marketing_execution(uuid) to service_role;
 commit;
