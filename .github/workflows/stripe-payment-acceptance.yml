@@ -3,13 +3,13 @@ on:
   push:
     branches: [feature/intelligent-shopping-conversion]
     paths:
-      - 'docs/commerce/sql/retail_stripe_test_payments.sql'
+      - 'docs/commerce/sql/retail_*.sql'
       - 'tests/stripe-payment-*.sql'
       - 'tests/supplier-observation-fixture.sql'
       - '.github/workflows/stripe-payment-acceptance.yml'
   pull_request:
     paths:
-      - 'docs/commerce/sql/retail_stripe_test_payments.sql'
+      - 'docs/commerce/sql/retail_*.sql'
       - 'tests/stripe-payment-*.sql'
       - 'tests/supplier-observation-fixture.sql'
       - '.github/workflows/stripe-payment-acceptance.yml'
@@ -43,7 +43,7 @@ jobs:
           DB_CONTAINER: ${{ job.services.postgres.id }}
         run: |
           set -euo pipefail
-          for file in tests/supplier-observation-fixture.sql docs/commerce/sql/retail_stripe_test_payments.sql tests/stripe-payment-acceptance.sql; do
+          for file in tests/supplier-observation-fixture.sql docs/commerce/sql/retail_supplier_intake.sql docs/commerce/sql/retail_supplier_products.sql docs/commerce/sql/retail_order_ledger.sql docs/commerce/sql/retail_stripe_test_payments.sql tests/stripe-payment-acceptance.sql; do
             docker exec -i "$DB_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d dealwovo_stripe_test < "$file"
           done
 
@@ -70,3 +70,12 @@ jobs:
           test "$(db -Atc "select count(*) from public.retail_stripe_test_events")" = 1
           test "$(db -Atc "select count(*) from public.retail_stripe_test_orders where payment_ref='pi_concurrent' and paid_at is not null")" = 1
           echo "PASS concurrent Stripe webhook replay"
+      - name: Verify restricted Stripe writer authorization
+        env:
+          DB_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          set -euo pipefail
+          db() { docker exec -i "$DB_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d dealwovo_stripe_test "$@"; }
+          db -c "create role authenticator nologin noinherit;"
+          db < docs/commerce/sql/retail_stripe_test_writer.sql
+          db < tests/stripe-payment-writer-acceptance.sql
