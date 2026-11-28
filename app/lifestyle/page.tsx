@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {indexingHold,siteOrigin} from "../../src/lib/marketing/seo-readiness";
 import "./lifestyle.css";
-export const metadata={title:"Shop by Lifestyle | Dealwovo",description:"Find practical shopping ideas for your routines, interests and everyday goals.",alternates:{canonical:siteOrigin+"/lifestyle"},robots:indexingHold};
+export const metadata={title:"Shop by Lifestyle",description:"Find practical shopping ideas for your routines, interests and everyday goals.",alternates:{canonical:siteOrigin+"/lifestyle"},robots:indexingHold};
 const lifestyles=[
  {id:"tech",name:"The tech enthusiast",symbol:"⌘",goal:"Make technology work for your day.",ideas:["Listening and commuting accessories","Workspace peripherals","Compatible charging accessories"],check:"Check the exact model, connectors, supported devices and warranty before buying.",href:"/trending",label:"Explore tech inspiration",guide:"/guides/wireless-headphone-buying-guide"},
  {id:"home",name:"The home lover",symbol:"⌂",goal:"Create a home that feels comfortable and organized.",ideas:["Drawer and pantry organizers","Cozy textiles","Practical kitchen accessories"],check:"Measure your space, consider care instructions and choose items that solve a real storage or comfort need.",href:"/essentials",label:"Explore everyday living",guide:"/guides/kitchen-organization-buying-guide"},
