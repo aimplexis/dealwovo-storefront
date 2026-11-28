@@ -36,7 +36,13 @@ set role service_role;
 do $$ declare token uuid; jid uuid:='50000000-0000-4000-8000-000000000001'; begin
  select claim_token into token from public.marketing_execution_jobs where id=jid;
  if exists(select 1 from public.revalidate_marketing_execution(jid,token)) then raise exception 'Emergency hold bypassed'; end if;
- update public.marketing_execution_jobs set claimed_at=now()-interval '16 minutes' where id=jid;
+end $$;
+reset role;
+-- Only the disposable fixture administrator may simulate an expired claim.
+update public.marketing_execution_jobs set claimed_at=now()-interval '16 minutes' where id='50000000-0000-4000-8000-000000000001';
+set role service_role;
+do $$ declare token uuid; jid uuid:='50000000-0000-4000-8000-000000000001'; begin
+ select claim_token into token from public.marketing_execution_jobs where id=jid;
  if public.mark_uncertain_marketing_execution()<>1 then raise exception 'Lost worker not recovered'; end if;
  if public.finish_marketing_execution(jid,token,'failed',null) then raise exception 'Uncertain outcome erased'; end if;
  if not public.finish_marketing_execution(jid,token,'published','fixture-post') then raise exception 'Reconciliation failed'; end if;
@@ -52,11 +58,10 @@ do $$ declare jid uuid:='50000000-0000-4000-8000-000000000001'; begin
  begin
   update public.marketing_execution_jobs set state='pending',external_id=null where id=jid;
   raise exception 'Terminal reset accepted';
- exception when raise_exception then
-  if sqlerrm<>'Terminal execution is immutable' then raise; end if;
+ exception when insufficient_privilege then null;
  end;
  if (select array_agg(new_state order by occurred_at,id) from public.marketing_execution_events where job_id=jid) is distinct from array['pending','dispatching','uncertain','published']::text[] then raise exception 'Audit history incomplete'; end if;
- if has_table_privilege('service_role','public.marketing_execution_events','update,delete,truncate') then raise exception 'Worker can rewrite audit history'; end if;
+ if has_table_privilege('service_role','public.marketing_execution_events','insert,update,delete,truncate') then raise exception 'Worker can rewrite audit history'; end if;
 end $$;
 reset role;
 insert into public.marketing_social_plans values ('40000000-0000-4000-8000-000000000003','prepared',(now() at time zone 'UTC')::date,'20000000-0000-4000-8000-000000000001','30000000-0000-4000-8000-000000000001');
@@ -77,3 +82,11 @@ do $$ begin
 end $$;
 reset role;
 select 'PASS execution cancellation, terminal state protection and audit history' as result;
+
+-- API worker cannot create approvals, mutate queue rows, or forge history directly.
+do $$ begin
+ if has_table_privilege('service_role','public.marketing_execution_jobs','insert,update,delete,truncate') then raise exception 'Worker has direct queue writes'; end if;
+ if has_table_privilege('service_role','public.marketing_execution_control','insert,update,delete,truncate') then raise exception 'Worker can change emergency hold'; end if;
+ if pg_has_role('service_role','dealwovo_execution_writer','MEMBER') then raise exception 'Worker can assume execution principal'; end if;
+ if has_function_privilege('authenticated','dealwovo_execution_internal.claim_marketing_execution(uuid,text)','execute') then raise exception 'Authenticated can invoke private claim'; end if;
+end $$;
