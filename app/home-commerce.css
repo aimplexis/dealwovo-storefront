@@ -35,3 +35,20 @@
 @media(prefers-reduced-motion:reduce){.dw-commerce-department{transition:none}.dw-commerce-department:hover{transform:none}}
 
 .dw-home-more{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;padding-block:0 28px}.dw-home-more p{color:#62596b;font-size:13px;margin:0}.dw-home-more a{min-height:44px}
+
+/* Seasonal discovery: useful shopping destinations, not promotional price claims. */
+.dw-home-season{background:#211831;color:#f8f4ff;border-block:1px solid #ffffff20}
+.dw-home-season-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);align-items:center;gap:30px;padding-block:34px}
+.dw-home-season-copy .dw2-eyebrow{color:#d9c7ff}
+.dw-home-season-copy h2{font-size:clamp(26px,3vw,42px);letter-spacing:-.045em;line-height:1.1;margin:9px 0}
+.dw-home-season-copy p{color:#ded5eb;font-size:13px;line-height:1.6;margin:0;max-width:440px}
+.dw-home-season-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.dw-home-season-actions a{min-width:0;min-height:100px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;padding:18px;border-radius:14px;background:#35264e;border:1px solid #78638d;color:#fff;transition:background .2s,transform .2s}
+.dw-home-season-actions a:first-child{background:#d9c7ff;color:#211831;border-color:#d9c7ff}
+.dw-home-season-actions a:hover{transform:translateY(-3px);border-color:#d9c7ff}
+.dw-home-season-actions strong{font-size:19px;letter-spacing:-.025em;overflow-wrap:anywhere}
+.dw-home-season-actions span{font-size:12px;line-height:1.4}
+.dw-home-season-actions a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+@media(max-width:850px){.dw-home-season-inner{grid-template-columns:1fr;gap:20px}}
+@media(max-width:480px){.dw-home-season-inner{padding-block:24px}.dw-home-season-actions{grid-template-columns:1fr;gap:8px}.dw-home-season-actions a{min-height:60px;flex-direction:row;align-items:center;padding:13px}.dw-home-season-actions strong{font-size:16px}.dw-home-season-actions span{text-align:right;max-width:50%}}
+@media(prefers-reduced-motion:reduce){.dw-home-season-actions a{transition:none}.dw-home-season-actions a:hover{transform:none}}
