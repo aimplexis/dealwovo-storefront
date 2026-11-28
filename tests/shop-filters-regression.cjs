@@ -1,6 +1,6 @@
 const assert=require("node:assert/strict"),fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=require("node:child_process");
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),"dw-shop-"));
-try{cp.execFileSync(process.execPath,[require.resolve("typescript/bin/tsc"),"--target","ES2022","--module","commonjs","--strict","--skipLibCheck","--outDir",dir,"src/lib/catalog/shop-filters.ts"],{stdio:"inherit"});const {parseShopFilters:p,filterOffers:f,defaults:d}=require(path.join(dir,"shop-filters.js"));
+try{cp.execFileSync(process.execPath,[require.resolve("typescript/bin/tsc"),"--target","ES2022","--module","commonjs","--strict","--skipLibCheck","--outDir",dir,"src/lib/catalog/shop-filters.ts"],{stdio:"inherit"});const {parseShopFilters:p,filterOffers:f,defaults:d,preciseBudget:encode,parsePreciseBudget:decode}=require(path.join(dir,"shop-filters.js"));
 const offer=(id,price,title,category="electronics",currency="USD")=>({id,price_cents:price,currency,verified_at:"2026-11-24T00:00:00Z",product:{title,description:"Useful gift",category:{slug:category,name:category}},merchant:{name:"Fixture retailer"}});
 const rows=[offer("a",2499,"Wireless headphones"),offer("b",2500,"Portable charger"),offer("c",null,"Unpriced gift"),offer("d",15000,"Coffee maker","kitchen"),offer("e",1000,"Other currency","electronics","EUR")];
 assert.deepEqual(f(rows,{...d,budget:"25"}).map(r=>r.id),["a"]);
@@ -12,5 +12,14 @@ assert.deepEqual(f(rows,{...d,sort:"price_high"}).map(r=>r.id),["d","b","a","c",
 assert.deepEqual(f(rows,{...d,sort:"price_low"}).map(r=>r.id),["a","b","d","c","e"]);
 assert.deepEqual(p({budget:"oops",sort:"weird",category:"../",q:["a","b"]}),d);
 assert.equal(p({q:"x".repeat(200)}).q.length,100);assert.equal(p({budget:"50"}).budget,"50");
+assert.equal(encode("75.50"),"lte:7550");
+assert.equal(encode("25",true),"lt:2500");
+assert.equal(encode("0.01"),"lte:1");
+assert.equal(encode("1000000"),"lte:100000000");
+for(const value of ["0","-1","1e2","2.001","1000000.01","1,000","Infinity",""])assert.equal(encode(value),null,value);
+assert.deepEqual(decode("lte:7550"),{cents:7550,exclusive:false});
+assert.deepEqual(decode("lt:2500"),{cents:2500,exclusive:true});
+for(const value of ["lte:0","lt:-1","lte:001","lte:100000001","lte:1.5","lte:1e3","all"])assert.equal(decode(value),null,value);
+assert.deepEqual(f([offer("zero",0,"Placeholder"),offer("valid",1,"Valid")],{...d,budget:"25"}).map(r=>r.id),["valid"]);
 console.log("PASS shopper filters: strict budget boundaries, unknown price exclusion, combined search, sorting and URL validation");
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
