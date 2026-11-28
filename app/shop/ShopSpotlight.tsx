@@ -87,12 +87,12 @@ export default function ShopSpotlight() {
       <div className="dw-wow-copy">
         <div className="dw-wow-overline"><span className="dw-wow-ping"/> THOUGHTFUL SHOPPING STARTS HERE <span className="dw-wow-rule"/></div>
         <h1>GOOD FINDS.<br/><span className="dw-wow-headline-pop">GREAT FEELINGS<span className="dw-wow-period">.</span></span></h1>
-        <p className="dw-wow-lead">For everyday life and every special moment. Discover useful essentials, clever upgrades, thoughtful gifts and ideas that fit your lifestyle. Explore reviewed retailer offers when available.</p>
+        <p className="dw-wow-lead">Find what fits your needs and budget. Explore thoughtful gifts, everyday essentials and technology, compare reviewed retailer offers when available, or get guidance before you buy.</p>
         <div className="dw-wow-actions">
-          <Link className="dw-wow-primary" href="/#shopping-start">Discover your next find <span aria-hidden="true">↗</span></Link>
-          <Link className="dw-wow-secondary" href="/lifestyle">Explore your lifestyle <span aria-hidden="true">→</span></Link>
+          <Link className="dw-wow-primary" href="/shop#catalog-search">Shop by product or budget <span aria-hidden="true">↗</span></Link>
+          <Link className="dw-wow-secondary" href="/assistant">Help me choose <span aria-hidden="true">→</span></Link>
         </div>
-        <div className="dw-wow-social-proof"><span className="dw-wow-spark" aria-hidden="true">✳</span><div><strong>SHOP WITH CONFIDENCE.</strong><small>A fresh approach to thoughtful shopping.</small></div></div>
+        <div className="dw-wow-social-proof"><span className="dw-wow-spark" aria-hidden="true">✳</span><div><strong>SHOP WITH CONFIDENCE.</strong><small>Reviewed offers and clear retailer destinations when available.</small></div></div>
       </div>
       <div className="dw-wow-scene" ref={scene} onPointerMove={move} onPointerLeave={reset} aria-label="Animated, clickable shopping inspiration">
         <div className="dw-wow-ring dw-wow-ring-one" aria-hidden="true"/><div className="dw-wow-ring dw-wow-ring-two" aria-hidden="true"/>
