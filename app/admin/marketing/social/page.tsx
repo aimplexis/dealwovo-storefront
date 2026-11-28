@@ -2,6 +2,7 @@ import Link from "next/link";
 import {redirect} from "next/navigation";
 import {visualAccess} from "../visual/access";
 import {createPlan,reviewPlan} from "./actions";
+import {socialHandoff} from "../../../../src/lib/marketing/social-handoff";
 import "../../admin.css";
 export const dynamic="force-dynamic";
 export const metadata={title:"Social Media Command Center | Dealwovo",robots:{index:false,follow:false}};
@@ -30,7 +31,7 @@ export default async function Page({searchParams}:{searchParams:Promise<{page?:s
  <section><h2>Campaign calendar</h2>{failed||!r?<p role="alert">Calendar unavailable. No counts or readiness can be confirmed.</p>:<><nav className="dw-admin-actions" aria-label="Calendar filters">{filters.map(f=><Link key={f} href={href(1,f)} aria-current={f===filter?"page":undefined}>{f} ({r.totals[f]})</Link>)}</nav><p>{r.matching} matching plans · Page {r.page} of {Math.max(1,Math.ceil(r.matching/r.pageSize))}</p>
  <div className="dw-admin-grid">{r.items.map(v=><article key={v.id} className="dw-admin-panel"><p className="dw-admin-kicker">{v.planned_on} · {v.channel}</p><h3>{v.campaign_name}</h3><p><strong>{readiness[v.readiness]??"Readiness unknown"}</strong></p><p>{v.hook}</p><p>{v.body}</p><p>CTA: {v.cta}</p><p>Graphic: {v.theme} · {v.format} · {v.palette}</p><p>Copy: {v.copy_status} · Visual: {v.visual_status}</p><details><summary>Review history</summary>{v.history.map((e,i)=><p key={i}>{e.previous_status} → {e.new_status} · {e.created_at}</p>)}</details>
  {v.readiness==="needs_review"&&<form action={reviewPlan} className="dw-admin-form"><input type="hidden" name="id" value={v.id}/><label><span><input type="checkbox" name="confirm" value="yes" required/> I reviewed the combined copy, visual, claims and proposed date.</span></label><button name="status" value="prepared">Mark internally prepared</button></form>}
- {v.readiness==="internally_prepared"&&<p><a href={"/admin/marketing/visual/download/"+v.asset_id}>Download reviewed SVG</a> · Recheck before external use.</p>}
+ {socialHandoff(v,r.today)!==null&&<details><summary>Private manual publishing handoff</summary><p>Copy this draft into your native channel tools only after independent release approval. This is not a publishing action.</p><textarea aria-label="Private campaign handoff" readOnly rows={12} style={{width:"100%"}} value={socialHandoff(v,r.today)??""}/><p><a href={"/admin/marketing/visual/download/"+v.asset_id}>Download reviewed SVG source</a> · Convert to an upload-ready format and recheck before external use.</p></details>}
  {v.status!=="archived"&&<form action={reviewPlan}><input type="hidden" name="id" value={v.id}/><button className="dw-admin-secondary" name="status" value="archived">Archive</button></form>}</article>)}</div>{!r.items.length&&<p>No private plans match this filter.</p>}
  <nav className="dw-admin-actions" aria-label="Calendar pagination">{r.page>1&&<Link href={href(r.page-1)}>← Previous</Link>}{r.page*r.pageSize<r.matching&&<Link href={href(r.page+1)}>Next →</Link>}</nav></>}</section></div></main>;
 }
