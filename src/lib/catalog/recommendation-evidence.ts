@@ -14,5 +14,5 @@ export function buyingChecks(category:string):readonly string[]{
 }
 export function recommendationEvidence(offer:{price_cents:number|null;currency:string;verified_at:string;product:{category:{slug:string}}},reasons:readonly string[]){
  const price=offer.price_cents;
- return {reasons:[...reasons],checks:buyingChecks(offer.product.category.slug),priceKnown:offer.currency==="USD"&&typeof price==="number"&&Number.isSafeInteger(price)&&price>=0,reviewedAt:offer.verified_at,limitation:"Catalog matching is not hands-on testing, a quality rating or proof of personal suitability."};
+ return {reasons:[...reasons],checks:buyingChecks(offer.product.category.slug),priceKnown:offer.currency==="USD"&&typeof price==="number"&&Number.isSafeInteger(price)&&price>0,reviewedAt:offer.verified_at,limitation:"Catalog matching is not hands-on testing, a quality rating or proof of personal suitability."};
 }
