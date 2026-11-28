@@ -19,6 +19,14 @@ const base="http://127.0.0.1:3000";
     assert.ok(metrics.scrollWidth<=metrics.width+2,route+" horizontal overflow at "+width);
    }
    await page.goto(base+"/");
+   const seasonal=page.getByRole("region",{name:"Make every occasion count."});
+   assert.equal(await seasonal.count(),1);
+   for(const [name,href] of [["Find a gift","/gifts"],["Explore deals","/deals"],["Shop smarter","/guides/holiday-shopping-budget-guide"]]){
+    const link=seasonal.getByRole("link",{name:new RegExp(name)});
+    assert.equal(await link.getAttribute("href"),href);
+    await link.focus();
+    assert.equal(await link.evaluate(e=>document.activeElement===e),true);
+   }
    const skip=page.getByRole("link",{name:"Skip to content"});
    await skip.focus();assert.equal(await skip.evaluate(e=>document.activeElement===e),true);
    if(width<=960){
