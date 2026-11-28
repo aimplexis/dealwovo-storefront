@@ -5,11 +5,13 @@ on:
     paths:
       - 'docs/commerce/sql/marketing_execution_queue.sql'
       - 'tests/marketing-queue-*.sql'
+      - 'tests/marketing-queue-*.sh'
       - '.github/workflows/marketing-queue-acceptance.yml'
   pull_request:
     paths:
       - 'docs/commerce/sql/marketing_execution_queue.sql'
       - 'tests/marketing-queue-*.sql'
+      - 'tests/marketing-queue-*.sh'
       - '.github/workflows/marketing-queue-acceptance.yml'
   workflow_dispatch:
 permissions:
@@ -44,3 +46,8 @@ jobs:
           for file in tests/marketing-queue-fixture.sql docs/commerce/sql/marketing_execution_queue.sql tests/marketing-queue-acceptance.sql; do
             docker exec -i "$DB_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d dealwovo_queue_test < "$file"
           done
+
+      - name: Verify independent concurrent claims
+        env:
+          DB_CONTAINER: ${{ job.services.postgres.id }}
+        run: bash tests/marketing-queue-concurrency.sh
