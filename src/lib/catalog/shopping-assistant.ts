@@ -31,7 +31,7 @@ export function recommendOffers(offers:readonly AssistantOffer[],plan:Extract<Pl
   const verified=Date.parse(o.verified_at),expires=Date.parse(o.expires_at);
   if(!Number.isFinite(verified)||!Number.isFinite(expires)||verified>now||expires<=now)return [];
   if(plan.category!=="all"&&o.product.category.slug!==plan.category)return [];
-  const price=o.price_cents,validPrice=o.currency==="USD"&&typeof price==="number"&&Number.isSafeInteger(price)&&price>=0;
+  const price=o.price_cents,validPrice=o.currency==="USD"&&typeof price==="number"&&Number.isSafeInteger(price)&&price>0;
   if(plan.maxCents!==null&&(!validPrice||(plan.exclusive?price!>=plan.maxCents:price!>plan.maxCents)))return [];
   const title=new Set(words(o.product.title).map(token)),category=new Set(words(o.product.category.name).map(token)),description=new Set(words(o.product.description).map(token));
   if(!plan.words.every(w=>title.has(w)||category.has(w)||description.has(w)))return [];
