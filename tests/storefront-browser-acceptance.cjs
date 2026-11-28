@@ -19,6 +19,9 @@ const base="http://127.0.0.1:3000";
     assert.ok(metrics.scrollWidth<=metrics.width+2,route+" horizontal overflow at "+width);
    }
    await page.goto(base+"/");
+   const hero=page.getByRole("region",{name:"Discover Dealwovo shopping categories"});
+   assert.equal(await hero.getByRole("link",{name:"Shop by product or budget"}).getAttribute("href"),"/shop#catalog-search");
+   assert.equal(await hero.getByRole("link",{name:"Help me choose"}).getAttribute("href"),"/assistant");
    const seasonal=page.getByRole("region",{name:"Make every occasion count."});
    assert.equal(await seasonal.count(),1);
    for(const [name,href] of [["Find a gift","/gifts"],["Explore deals","/deals"],["Shop smarter","/guides/holiday-shopping-budget-guide"]]){
