@@ -47,3 +47,16 @@ export function recommendOffers(offers:readonly AssistantOffer[],plan:Extract<Pl
  const seen=new Set<string>();
  return result.filter(r=>{if(seen.has(r.offer.product.id))return false;seen.add(r.offer.product.id);return true;});
 }
+
+// Only hand off budgets the existing catalog can represent exactly in whole cents.
+export function catalogSearchHref(plan:Extract<Plan,{ok:true}>):string|null{
+ const q=plan.words.join(" ");
+ if(q.length>100)return null;
+ let budget="all";
+ if(plan.maxCents!==null){
+  const exclusiveLimit=plan.maxCents+(plan.exclusive?0:1);
+  if(![2500,5000,10000].includes(exclusiveLimit))return null;
+  budget=String(exclusiveLimit/100);
+ }
+ return "/shop?"+new URLSearchParams({q,category:plan.category,budget,sort:"recent"}).toString()+"#verified-offers";
+}
