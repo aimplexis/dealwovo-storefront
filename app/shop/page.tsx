@@ -33,7 +33,7 @@ export default async function ShopPage({searchParams}:{searchParams:Promise<Reco
     <div className="dw2-shop-hero-rule"><span aria-hidden="true">✳</span> CURATED IDEAS / REAL RETAILER OFFERS / NO INVENTED DISCOUNTS</div>
    </div>
    <div className="dw2-shop-hero-visual">
-    <div className="dw2-shop-hero-photo"><Image src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=1400&q=88" alt="Premium beauty and self-care editorial imagery" fill priority sizes="(max-width: 850px) 90vw, 45vw" quality={80}/></div>
+    <div className="dw2-shop-hero-photo"><Image src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=1400&q=88" alt="Premium beauty and self-care editorial imagery" fill priority sizes="(max-width: 850px) 90vw, 45vw" quality={90}/></div>
     <div className="dw2-shop-orb">THE FINDS<br/><b>FEEL GOOD.</b><span>✳</span></div>
     <span className="dw2-shop-photo-label">CURIOUSLY GOOD / 2026</span>
    </div>
